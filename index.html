@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MojaKasa 20.4</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#F5F5F7">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #F5F5F7;
+            -webkit-tap-highlight-color: transparent;
+            color: #1D1D1F;
+            padding-bottom: 120px;
+        }
+
+        /* Helpers */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .ios-card {
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            transition: transform 0.2s ease;
+        }
+        .ios-input:focus { outline: none; }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Custom Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 2px solid currentColor;
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: #E5E7EB;
+            border-radius: 999px;
+        }
+
+        /* Chart Animations */
+        .chart-segment {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+            cursor: pointer;
+        }
+        .chart-segment:hover { opacity: 0.9; transform: scale(1.02); }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* Navigation Styles */
+        .nav-item { transition: color 0.2s; }
+        .nav-item.active { color: #3B82F6; }
+        .view-section { display: none; opacity: 0; transition: opacity 0.2s ease-in-out; }
+        .view-section.active { display: block; opacity: 1; }
+
+        /* Calendar Styles */
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .calendar-day.selected {
+            background-color: #F97316;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.3);
+        }
+        .calendar-day:not(.selected):hover {
+            background-color: #F3F4F6;
+        }
+        .calendar-day.empty { pointer-events: none; }
+
+        /* Toast */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 50px;
+            padding: 16px;
+            position: fixed;
+            z-index: 200;
+            left: 50%;
+            bottom: 110px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        #toast.show { visibility: visible; opacity: 1; }
+        
+        /* Error Shake */
+        .shake { animation: shake 0.5s; border-color: #EF4444 !important; }
+        @keyframes shake {
+            0% { transform: translateX(0); } 25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); } 75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="view-home" class="view-section active max-w-xl mx-auto p-6 space-y-6 pt-12">
+        <header class="flex justify-between items-center mb-6">
+            <div>
+                <p class="text-sm text-gray-400 font-medium uppercase tracking-wide">Portfel</p>
+                <h1 class="text-3xl font-bold text-gray-900">MojaKasa</h1>
+            </div>
+            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden shadow-sm">
+                <i class="fas fa-wallet text-gray-500 text-lg"></i>
+            </div>
+        </header>
+
+        <div class="ios-card bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-6 shadow-blue-200 shadow-xl">
+            <p class="text-blue-100 text-xs font-semibold uppercase tracking-wider mb-1">Aktualny Budżet</p>
+            <h2 class="text-4xl font-bold mb-4 tabular-nums" id="home-total-income">0.00 zł</h2>
+            <div class="flex gap-4">
+                <div>
+                    <p class="text-blue-200 text-xs uppercase tracking-wide opacity-80">Rozporządzono</p>
+                    <p class="font-semibold text-lg tabular-nums" id="home-spent">0.00 zł</p>
+                </div>
+                <div class="w-px bg-white/20"></div>
+                <div>
+                    <p class="text-blue-200 text-xs uppercase tracking-wide opacity-80">Pozostało</p>
+                    <p class="font-semibold text-lg tabular-nums" id="home-remaining">0.00 zł</p>
+                </div>
+            </div>
+            <div id="zero-success-msg" class="hidden mt-4 bg-white/10 backdrop-blur-md rounded-lg p-2 text-center text-sm font-bold text-green-300 border border-white/20">
+                Perfekcyjne Zero! 🎉 Budżet domknięty.
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4">
+            <div id="home-work-summary" class="hidden ios-card p-5 border-l-4 border-orange-400 bg-white">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Godziny w tym miesiącu</p>
+                        <p class="text-2xl font-bold text-gray-900 mt-1"><span id="home-work-hours">0</span> h</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ios-card p-5">
+                <div class="flex justify-between items-center mb-3">
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Plan budżetowy</p>
+                    <button onclick="switchTab('budget')" class="text-blue-500 text-xs font-semibold hover:text-blue-600 transition">Edytuj</button>
+                </div>
+                <div id="home-categories-list" class="space-y-3">
+                    <p class="text-sm text-gray-400 italic">Brak kategorii. Dodaj w zakładce Budżet.</p>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="text-lg font-bold text-gray-800 mt-4">Narzędzia</h3>
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="switchTab('budget')" class="ios-card p-5 hover:bg-gray-50 transition text-left group border border-transparent hover:border-blue-100">
+                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <p class="font-bold text-gray-900">Budżet</p>
+                <p class="text-xs text-gray-500 mt-1">Zarządzaj wydatkami</p>
+            </button>
+
+            <button onclick="switchTab('hours')" class="ios-card p-5 hover:bg-gray-50 transition text-left group border border-transparent hover:border-orange-100">
+                <div class="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <p class="font-bold text-gray-900">Grafik</p>
+                <p class="text-xs text-gray-500 mt-1">Śledź godziny</p>
+            </button>
+
+            <button onclick="switchTab('calculator')" class="ios-card p-5 hover:bg-gray-50 transition text-left group border border-transparent hover:border-green-100 col-span-2">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div>
+                        <p class="font-bold text-gray-900">Kalkulator Wypłaty</p>
+                        <p class="text-xs text-gray-500 mt-1">Oblicz wynagrodzenie netto</p>
+                    </div>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div id="view-budget" class="view-section max-w-xl mx-auto p-4 space-y-5 pt-6">
+        <header class="flex justify-between items-center mb-4">
+            <button onclick="switchTab('home')" class="text-blue-500 font-semibold flex items-center gap-1 hover:bg-blue-50 px-3 py-1.5 rounded-full transition">
+                <i class="fas fa-chevron-left text-xs"></i> Wróć
+            </button>
+            <h1 class="text-xl font-bold text-gray-900">Budżet</h1>
+            <div class="w-16"></div>
+        </header>
+
+        <div class="text-center py-2">
+            <p class="text-sm font-medium text-gray-500 mb-2">Twój miesięczny budżet</p>
+            <div id="budget-input-container" class="inline-flex items-baseline justify-center relative group rounded-xl transition-all border border-transparent p-1">
+                <span class="text-2xl font-bold text-gray-400 absolute -left-12 top-4 transition-colors group-focus-within:text-blue-400">PLN</span>
+                <input type="number" id="total-income" value="" placeholder="0" min="0"
+                    class="ios-input text-6xl font-bold text-center bg-transparent w-full max-w-[280px] placeholder-gray-300 text-gray-900 tabular-nums caret-blue-500" 
+                    oninput="updateApp()"
+                    onfocus="handleInputFocus(this)"
+                    onblur="handleInputBlur(this)">
+            </div>
+        </div>
+
+        <div class="relative h-[280px] w-full flex items-center justify-center mt-2 mb-2">
+            <svg id="budget-chart" viewBox="0 0 440 320" class="w-full h-full drop-shadow-md z-10"></svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-0 pt-4">
+                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Rozporządzono</span>
+                <span id="center-percentage" class="text-5xl font-bold text-gray-800 tabular-nums tracking-tight">0%</span>
+            </div>
+        </div>
+
+        <div class="flex justify-center gap-3 -mt-4 mb-6 relative z-20">
+            <button onclick="saveState(); showToast('Zapisano budżet!');" class="bg-white border border-green-100 text-green-600 px-8 py-2.5 rounded-full shadow-sm text-sm font-bold hover:bg-green-50 transition flex items-center gap-2 hover:shadow-md">
+                <i class="fas fa-save"></i> Zapisz
+            </button>
+            <button onclick="exportToClipboard()" class="bg-white border border-blue-100 text-blue-600 px-4 py-2.5 rounded-full shadow-sm text-xs font-bold hover:bg-blue-50 transition flex items-center gap-2 hover:shadow-md">
+                <i class="fas fa-share-square"></i> Eksportuj
+            </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div class="ios-card p-5 flex flex-col justify-between border-l-[6px] border-blue-500 h-24">
+                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wide">Rozporządzono</span>
+                <div>
+                    <span id="stat-allocated-pln" class="block text-xl font-bold text-gray-800 tabular-nums leading-tight">0.00 zł</span>
+                    <span id="stat-allocated-pct" class="block text-xs text-blue-500 font-semibold tabular-nums mt-1">0%</span>
+                </div>
+            </div>
+            <div class="ios-card p-5 flex flex-col justify-between border-l-[6px] border-green-500 transition-colors id='remaining-card' h-24">
+                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wide">Pozostało</span>
+                <div>
+                    <span id="stat-remaining-pln" class="block text-xl font-bold text-gray-800 tabular-nums leading-tight">0.00 zł</span>
+                    <span id="stat-remaining-pct" class="block text-xs text-green-500 font-semibold tabular-nums mt-1">100%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex gap-2 mt-4">
+            <button onclick="applyGoldenRule()" class="flex-grow bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-3 rounded-xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 font-semibold active:scale-95">
+                <i class="fas fa-wand-magic-sparkles"></i> Zastosuj metodę 50/30/20
+            </button>
+            <button onclick="toggleInfo503020()" class="w-12 flex-shrink-0 bg-white text-indigo-500 border border-indigo-100 rounded-xl shadow-sm hover:bg-indigo-50 flex items-center justify-center transition active:scale-95">
+                <i class="fas fa-info-circle text-xl"></i>
+            </button>
+        </div>
+        
+        <div id="method-info" class="hidden ios-card p-5 bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 shadow-sm relative overflow-hidden mt-4">
+            <div class="flex justify-between items-start mb-3 relative z-10">
+                <h3 class="font-bold text-indigo-900 text-lg">Złota Zasada 50/30/20</h3>
+                <button onclick="toggleInfo503020()" class="w-6 h-6 rounded-full bg-white text-gray-400 shadow-sm flex items-center justify-center hover:text-gray-600"><i class="fas fa-times text-xs"></i></button>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">Zasada ta pomaga utrzymać równowagę finansową dzieląc dochód netto na trzy główne koszyki:</p>
+            <ul class="space-y-3 text-sm relative z-10">
+                <li class="flex items-center p-2 bg-white/60 rounded-lg"><span class="w-12 font-bold text-blue-600 text-lg">50%</span> <div class="ml-2"><span class="font-bold text-gray-800">Potrzeby</span><br><span class="text-xs text-gray-500">Opłaty, jedzenie, transport - to co niezbędne.</span></div></li>
+                <li class="flex items-center p-2 bg-white/60 rounded-lg"><span class="w-12 font-bold text-purple-600 text-lg">30%</span> <div class="ml-2"><span class="font-bold text-gray-800">Zachcianki</span><br><span class="text-xs text-gray-500">Rozrywka, wyjścia, hobby - to co sprawia przyjemność.</span></div></li>
+                <li class="flex items-center p-2 bg-white/60 rounded-lg"><span class="w-12 font-bold text-green-600 text-lg">20%</span> <div class="ml-2"><span class="font-bold text-gray-800">Oszczędności</span><br><span class="text-xs text-gray-500">Poduszka finansowa, nadpłata długów, inwestycje.</span></div></li>
+            </ul>
+        </div>
+
+        <div class="mt-4">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-2">Twoje Kategorie <span id="cat-count" class="text-gray-300 font-normal ml-1">(0/8)</span></h2>
+            </div>
+            <div id="category-list" class="space-y-3"></div>
+            <button onclick="addCategory()" id="add-btn" class="mt-4 w-full py-4 rounded-xl border-2 border-dashed border-gray-300 text-gray-400 font-semibold hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50/50 transition-all flex items-center justify-center gap-2 group">
+                <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                    <i class="fas fa-plus text-sm"></i>
+                </div>
+                Dodaj kategorię
+            </button>
+        </div>
+    </div>
+
+    <div id="view-hours" class="view-section max-w-xl mx-auto p-4 space-y-6 pt-6">
+        <header class="flex justify-between items-center mb-4">
+            <button onclick="switchTab('home')" class="text-blue-500 font-semibold flex items-center gap-1 hover:bg-blue-50 px-3 py-1.5 rounded-full transition">
+                <i class="fas fa-chevron-left text-xs"></i> Wróć
+            </button>
+            <h1 class="text-xl font-bold text-gray-900">Grafik</h1>
+            <div class="w-9"></div>
+        </header>
+        
+        <div class="ios-card p-4 mb-4 border border-orange-100 bg-orange-50/50">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-orange-200 text-orange-600 flex items-center justify-center text-xs"><i class="fas fa-magic"></i></div>
+                    <span class="font-bold text-gray-700 text-sm">Stałe godziny</span>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="fixed-hours-toggle" class="sr-only peer" onchange="toggleFixedMode()">
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+                </label>
+            </div>
+            
+            <div id="fixed-hours-settings" class="hidden mt-3 pt-3 border-t border-orange-200">
+                 <div class="flex justify-center bg-white rounded-lg p-1 text-xs mb-3 mx-auto max-w-[200px]">
+                    <button onclick="setFixedType('simple')" id="fixed-type-simple" class="flex-1 py-1.5 rounded-md transition font-bold text-center">Liczbowo</button>
+                    <button onclick="setFixedType('range')" id="fixed-type-range" class="flex-1 py-1.5 rounded-md transition font-bold text-center">Zegarowo</button>
+                </div>
+                
+                <div id="fixed-input-simple" class="flex justify-center">
+                     <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-xl border border-gray-200 w-32">
+                        <input type="number" id="fixed-val" value="8" onchange="updateFixedVal(this.value)" class="w-full text-center font-bold text-gray-800 outline-none">
+                        <span class="text-xs text-gray-400">h</span>
+                     </div>
+                </div>
+                
+                <div id="fixed-input-range" class="hidden flex justify-center gap-2">
+                     <input type="time" id="fixed-start" value="08:00" onchange="updateFixedRange('start', this.value)" class="bg-white px-2 py-2 rounded-xl border border-gray-200 text-sm font-bold text-gray-800 outline-none">
+                     <span class="text-gray-300 self-center">-</span>
+                     <input type="time" id="fixed-end" value="16:00" onchange="updateFixedRange('end', this.value)" class="bg-white px-2 py-2 rounded-xl border border-gray-200 text-sm font-bold text-gray-800 outline-none">
+                </div>
+                <p class="text-[10px] text-center text-orange-400 mt-2">Kliknij dzień w kalendarzu, aby dodać te godziny.</p>
+            </div>
+        </div>
+
+        <div class="ios-card p-4">
+            <div class="flex justify-between items-center mb-4">
+                <button onclick="changeMonth(-1)" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200"><i class="fas fa-chevron-left"></i></button>
+                <div class="text-center">
+                    <span id="calendar-month-year" class="text-lg font-bold text-gray-900 block">Październik 2024</span>
+                </div>
+                <button onclick="changeMonth(1)" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 font-bold mb-2">
+                <div>PN</div><div>WT</div><div>ŚR</div><div>CZ</div><div>PT</div><div>SB</div><div>ND</div>
+            </div>
+            <div id="calendar-grid" class="grid grid-cols-7 gap-1"></div>
+        </div>
+        
+        <div class="flex justify-between items-end mt-6 mb-2 px-1">
+            <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider">Wprowadź godziny</h3>
+            <button onclick="toggleListCollapse()" class="text-orange-500 text-xs font-bold hover:text-orange-600 flex items-center gap-1">
+                <span id="collapse-text">Zwiń listę</span> <i id="collapse-icon" class="fas fa-chevron-up"></i>
+            </button>
+        </div>
+
+        <div id="hours-list-container" class="space-y-3 transition-all duration-300 origin-top">
+            <p class="text-center text-gray-400 text-sm py-4">Wybierz dni w kalendarzu, aby dodać godziny.</p>
+        </div>
+        
+        <div id="hours-list-summary" class="hidden bg-white rounded-xl p-4 text-center border border-gray-200 text-gray-500 text-sm shadow-sm">
+            Lista zwinięta. <span class="font-bold text-gray-800" id="hidden-count">0</span> wpisów.
+        </div>
+
+        <div class="fixed bottom-[85px] left-0 w-full bg-white border-t border-gray-200 p-4 z-40">
+            <div class="max-w-md mx-auto flex justify-between items-center mb-3">
+                <span class="text-gray-500 text-sm font-medium">Suma godzin:</span>
+                <span id="total-hours-sum" class="text-2xl font-bold text-orange-500 tabular-nums">0 h</span>
+            </div>
+            <div class="max-w-md mx-auto grid grid-cols-2 gap-3">
+                <button onclick="saveHoursToHome()" class="py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition">Zapisz godziny</button>
+                <button onclick="exportHoursToCalc()" class="py-3 bg-orange-500 text-white font-bold rounded-xl shadow-lg shadow-orange-200 hover:bg-orange-600 transition">Oblicz Wypłatę</button>
+            </div>
+        </div>
+        <div class="h-24"></div>
+    </div>
+
+    <div id="view-calculator" class="view-section max-w-xl mx-auto p-4 space-y-6 pt-6">
+        <header class="flex justify-between items-center mb-4">
+            <button onclick="switchTab('home')" class="text-blue-500 font-semibold flex items-center gap-1 hover:bg-blue-50 px-3 py-1.5 rounded-full transition">
+                <i class="fas fa-chevron-left text-xs"></i> Wróć
+            </button>
+            <h1 class="text-xl font-bold text-gray-900">Kalkulator</h1>
+            <div class="w-9"></div>
+        </header>
+
+        <div class="ios-card p-6 space-y-6">
+            <h2 class="text-lg font-bold text-gray-800 border-b pb-2">Umowa Zlecenie / Godzinowa</h2>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Stawka / h</label>
+                    <div class="relative">
+                        <input type="number" id="calc-rate" placeholder="0" class="w-full bg-gray-50 rounded-xl p-3 text-xl font-bold text-gray-900 focus:ring-2 focus:ring-green-500 transition outline-none" oninput="calculateSalary()">
+                        <span class="absolute right-3 top-3.5 text-gray-400 font-bold text-sm">zł</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 uppercase mb-2">Liczba godzin</label>
+                    <input type="number" id="calc-hours" placeholder="0" class="w-full bg-gray-50 rounded-xl p-3 text-xl font-bold text-gray-900 focus:ring-2 focus:ring-green-500 transition outline-none" oninput="calculateSalary()">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between bg-blue-50 p-3 rounded-xl border border-blue-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-blue-200 rounded-full flex items-center justify-center text-blue-700">
+                        <i class="fas fa-user-graduate text-xs"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-blue-900">Student / Uczeń < 26 lat</p>
+                        <p class="text-[10px] text-blue-600">Brutto = Netto</p>
+                    </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="calc-student" class="sr-only peer" onchange="calculateSalary()" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+            </div>
+
+            <div id="calc-zus-container" class="hidden flex items-center justify-between bg-orange-50 p-3 rounded-xl border border-orange-100 transition-all">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-orange-200 rounded-full flex items-center justify-center text-orange-700">
+                        <i class="fas fa-file-invoice text-xs"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-orange-900">Naliczać składki?</p>
+                        <p class="text-[10px] text-orange-600">Wyłącz, jeżeli stawka godzinowa obejmuje odliczenie składek</p>
+                    </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="calc-zus" class="sr-only peer" onchange="calculateSalary()" checked>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-500"></div>
+                </label>
+            </div>
+
+            <div id="calc-breakdown" class="hidden text-xs text-gray-500 space-y-1 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                <p class="font-bold text-gray-700 mb-1">Składki (Osoba bez statusu):</p>
+                <div class="flex justify-between" id="row-emerytalne"><span>Emerytalne (9,76%):</span> <span id="val-emerytalne" class="font-mono">0.00</span></div>
+                <div class="flex justify-between" id="row-rentowe"><span>Rentowe (1,5%):</span> <span id="val-rentowe" class="font-mono">0.00</span></div>
+                <div class="flex justify-between" id="row-chorobowe"><span>Chorobowe (2,45%):</span> <span id="val-chorobowe" class="font-mono">0.00</span></div>
+                
+                <div class="flex justify-between items-center border-t pt-1 mt-1 text-blue-600">
+                    <span>Zdrowotne (9%):</span> <span id="val-zdrowotne" class="font-mono font-bold">0.00</span>
+                </div>
+                <div class="flex justify-between items-center text-blue-600">
+                    <span>PIT (12%):</span> <span id="val-pit" class="font-mono font-bold">0.00</span>
+                </div>
+            </div>
+
+            <div class="bg-gray-900 text-white rounded-2xl p-5 text-center mt-4 shadow-lg shadow-gray-200">
+                <p class="text-gray-400 text-xs uppercase tracking-widest mb-1">Wypłata (Netto)</p>
+                <h3 class="text-4xl font-bold" id="calc-result">0.00 zł</h3>
+            </div>
+
+            <button onclick="transferToBudget()" class="w-full py-3 bg-green-500 text-white font-bold rounded-xl shadow-lg shadow-green-200 hover:bg-green-600 transition flex items-center justify-center gap-2">
+                <i class="fas fa-file-import"></i> Ustaw jako mój budżet
+            </button>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-xl border-t border-gray-200 pb-safe pt-2 px-6 z-50 h-[85px]">
+        <div class="max-w-md mx-auto flex justify-between items-center">
+            <button onclick="switchTab('home')" data-tab="home" class="nav-item active flex flex-col items-center gap-1 p-2 text-gray-400 w-16">
+                <i class="fas fa-home text-xl"></i><span class="text-[10px] font-medium">Start</span>
+            </button>
+            <button onclick="switchTab('budget')" data-tab="budget" class="nav-item flex flex-col items-center gap-1 p-2 text-gray-400 w-16">
+                <i class="fas fa-chart-pie text-xl"></i><span class="text-[10px] font-medium">Budżet</span>
+            </button>
+            <button onclick="switchTab('hours')" data-tab="hours" class="nav-item flex flex-col items-center gap-1 p-2 text-gray-400 w-16">
+                <i class="fas fa-calendar-alt text-xl"></i><span class="text-[10px] font-medium">Grafik</span>
+            </button>
+            <button onclick="switchTab('calculator')" data-tab="calculator" class="nav-item flex flex-col items-center gap-1 p-2 text-gray-400 w-16">
+                <i class="fas fa-calculator text-xl"></i><span class="text-[10px] font-medium">Kalkulator</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="toast"><i class="fas fa-check-circle mr-2"></i> Wykonano!</div>
+
+    <div id="ai-advice-modal" class="fixed inset-0 bg-black/40 backdrop-blur-md z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl transform scale-95 transition-transform duration-300 m-4 border border-blue-100 relative" id="ai-advice-card">
+             </div>
+    </div>
+
+    <script>
+        const apiKey = ""; 
+        const STORAGE_KEY = "mycash_app_data_v20_4_final"; 
+
+        // --- GLOBAL VARS ---
+        let state = {
+            totalIncome: 0,
+            categories: [],
+            workLog: {}, 
+            totalWorkHours: 0,
+            fixedHours: { enabled: false, type: 'simple', val: 8, start: '08:00', end: '16:00' },
+            listCollapsed: false
+        };
+        let currentTab = 'home';
+        let calendarDate = new Date();
+        const monthsNominative = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"];
+        const monthsGenitive = ["stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca", "lipca", "sierpnia", "września", "października", "listopada", "grudnia"];
+
+        // --- HELPER FUNCTIONS ---
+        function formatMoney(amount) {
+            return amount.toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' zł';
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById("toast"); 
+            if(!t) return;
+            t.innerText = msg; 
+            t.className = "show";
+            setTimeout(() => t.className = t.className.replace("show", ""), 3000);
+        }
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            updateHomeUI();
+        }
+
+        // --- FUNCTION DEFINITIONS ---
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            const view = document.getElementById('view-' + tabId);
+            if(view) view.classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active', 'text-blue-600'));
+            const btn = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+            if(btn) btn.classList.add('active', 'text-blue-600');
+
+            if(tabId === 'home') updateHomeUI();
+            if(tabId === 'budget') drawChart();
+            if(tabId === 'hours') { renderCalendar(); }
+        }
+
+        function updateHomeUI() {
+            const allocated = state.categories.reduce((acc, c) => acc + c.amount, 0);
+            const remaining = Math.max(0, state.totalIncome - allocated);
+
+            document.getElementById('home-total-income').innerText = formatMoney(state.totalIncome);
+            document.getElementById('home-spent').innerText = formatMoney(allocated);
+            document.getElementById('home-remaining').innerText = formatMoney(remaining);
+            
+            const workDiv = document.getElementById('home-work-summary');
+            if(workDiv) {
+                if(state.totalWorkHours > 0) {
+                    workDiv.classList.remove('hidden');
+                    document.getElementById('home-work-hours').innerText = state.totalWorkHours;
+                } else {
+                    workDiv.classList.add('hidden');
+                }
+            }
+            
+            const successMsg = document.getElementById('zero-success-msg');
+            if (state.totalIncome > 0 && Math.abs(remaining) < 0.05) {
+                successMsg.classList.remove('hidden');
+            } else {
+                successMsg.classList.add('hidden');
+            }
+            
+            renderHomeCategoryList();
+        }
+
+        function renderHomeCategoryList() {
+            const container = document.getElementById('home-categories-list');
+            if(!container) return;
+            container.innerHTML = '';
+            if(state.categories.length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-400 italic">Brak kategorii. Dodaj w zakładce Budżet.</p>';
+                return;
+            }
+            const sorted = [...state.categories].sort((a,b) => b.amount - a.amount); 
+            sorted.forEach(cat => {
+                const pct = state.totalIncome > 0 ? Math.round((cat.amount / state.totalIncome)*100) : 0;
+                const div = document.createElement('div');
+                div.className = "flex justify-between items-center text-sm border-b border-gray-100 last:border-0 pb-2 last:pb-0";
+                div.innerHTML = `<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full" style="background-color: ${cat.color}"></div><span class="font-medium text-gray-700">${cat.name}</span></div><div class="text-right"><span class="font-bold text-gray-900 block">${cat.amount.toFixed(2)} zł</span><span class="text-[10px] text-gray-400 font-bold">${pct}%</span></div>`;
+                container.appendChild(div);
+            });
+        }
+
+        function updateBudgetUI(shouldSave = true) {
+            const incomeInput = document.getElementById('total-income');
+            let newIncome = state.totalIncome;
+            if(incomeInput && document.activeElement === incomeInput) {
+                let val = parseFloat(incomeInput.value);
+                if(isNaN(val)) val = 0; // Negative check removed per request, but still good to check NaN
+                newIncome = val;
+            } else if (incomeInput && parseFloat(incomeInput.value) !== state.totalIncome) {
+                 const val = parseFloat(incomeInput.value);
+                 if(!isNaN(val)) newIncome = val;
+            }
+            
+            if (newIncome !== state.totalIncome) {
+                state.categories.forEach(cat => {
+                    if (cat.isPercentageMode) {
+                        if (typeof cat.ratio !== 'number') cat.ratio = state.totalIncome > 0 ? (cat.amount / state.totalIncome) : 0;
+                        cat.amount = newIncome * cat.ratio;
+                    }
+                });
+            }
+            state.totalIncome = newIncome;
+
+            const totalAllocated = state.categories.reduce((acc, cat) => acc + cat.amount, 0);
+            const remaining = Math.max(0, state.totalIncome - totalAllocated);
+            const percentageUsed = state.totalIncome > 0 ? (totalAllocated / state.totalIncome) * 100 : 0;
+
+            if(currentTab === 'budget') drawChart();
+            
+            updateStatsUI(totalAllocated, remaining, percentageUsed);
+            state.categories.forEach(cat => updateCategoryRowVisuals(cat));
+            
+            const cc = document.getElementById('cat-count');
+            if(cc) cc.innerText = `(${state.categories.length}/8)`;
+
+            const addBtn = document.getElementById('add-btn');
+            if(addBtn) {
+                if (state.categories.length >= 8) {
+                    addBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    addBtn.innerHTML = '<span class="text-sm">Osiągnięto limit (8)</span>';
+                } else {
+                    addBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    addBtn.innerHTML = '<div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-blue-100 transition-colors"><i class="fas fa-plus text-sm"></i></div>Dodaj kategorię';
+                }
+            }
+
+            if(shouldSave) saveState();
+        }
+
+        function updateStatsUI(allocated, remaining, percentageUsed) {
+            const ap = document.getElementById('stat-allocated-pln'); if(ap) ap.innerText = formatMoney(allocated);
+            const ac = document.getElementById('stat-allocated-pct'); if(ac) ac.innerText = percentageUsed.toFixed(1) + '%';
+            const rp = document.getElementById('stat-remaining-pln'); if(rp) rp.innerText = formatMoney(remaining);
+            
+            const remainingPct = state.totalIncome > 0 ? Math.max(0, (remaining / state.totalIncome * 100)) : 0;
+            const rc = document.getElementById('stat-remaining-pct'); if(rc) rc.innerText = remainingPct.toFixed(1) + '%';
+
+            const remCard = document.getElementById('remaining-card');
+            const remText = document.getElementById('stat-remaining-pct');
+            if (remCard && remText) {
+                if (allocated > state.totalIncome) {
+                    remCard.classList.replace('border-green-500', 'border-red-500');
+                    remText.classList.replace('text-green-500', 'text-red-500');
+                } else {
+                    remCard.classList.replace('border-red-500', 'border-green-500');
+                    remText.classList.replace('text-red-500', 'text-green-500');
+                }
+            }
+            const cp = document.getElementById('center-percentage'); if(cp) cp.innerText = Math.round(percentageUsed) + '%';
+        }
+
+        function drawChart() {
+             const svg = document.getElementById('budget-chart');
+             if(!svg) return;
+             svg.innerHTML = '';
+             if(state.totalIncome<=0 || state.categories.length===0) {
+                 const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+                 c.setAttribute("cx","220");c.setAttribute("cy","160");c.setAttribute("r","105");c.setAttribute("fill","none");c.setAttribute("stroke","#F3F4F6");c.setAttribute("stroke-width","25");
+                 svg.appendChild(c); return;
+             }
+             let ang=-90; const cx=220, cy=160, r=105;
+             state.categories.filter(c=>c.amount>0).forEach(c=>{
+                 let p = c.amount/state.totalIncome;
+                 const a = p*360;
+                 const circ=document.createElementNS("http://www.w3.org/2000/svg","circle");
+                 circ.setAttribute("cx",cx);circ.setAttribute("cy",cy);circ.setAttribute("r",r);
+                 circ.setAttribute("fill","none");circ.setAttribute("stroke",c.color);circ.setAttribute("stroke-width","30");
+                 const circLen = 2*Math.PI*r;
+                 circ.setAttribute("stroke-dasharray", `${p*circLen} ${circLen}`);
+                 circ.setAttribute("stroke-dashoffset", -1*(ang+90)/360*circLen);
+                 circ.classList.add('chart-segment'); svg.appendChild(circ);
+                 ang+=a;
+             });
+        }
+
+        function addCategory(n="", a=0, c="#9CA3AF") {
+            if(state.categories.length>=8) { alert("Limit 8!"); return; }
+            state.categories.push({id:Date.now()+Math.floor(Math.random()*100000),name:n,amount:a,color:c,isPercentageMode:false, ratio:0});
+            renderCategoryList(); updateBudgetUI(true);
+        }
+
+        function removeCategory(id) {
+            state.categories = state.categories.filter(c => c.id !== id);
+            renderCategoryList(); updateBudgetUI(true);
+        }
+
+        function updateCatName(id,v){ const c=state.categories.find(x=>x.id===id); if(c){c.name=v; drawChart(); saveState();} }
+        function updateCatColor(id,v){ 
+            const c=state.categories.find(x=>x.id===id); if(c){
+                c.color=v; 
+                const el = document.getElementById(`cat-${id}`);
+                if(el) {
+                    const dot = el.querySelector('.rounded-full');
+                    if(dot) dot.style.backgroundColor=v;
+                }
+                drawChart(); saveState();
+            } 
+        }
+        
+        function handleCatInput(id,v){ 
+            const c=state.categories.find(x=>x.id===id); if(!c)return;
+            let val=parseFloat(v);
+            if(isNaN(val)) val = 0; // Allow negative inputs by just defaulting NaN to 0
+
+            if(c.isPercentageMode) {
+                 c.ratio = val / 100;
+                 c.amount = c.ratio * state.totalIncome;
+            } else {
+                 c.amount = val;
+                 c.ratio = state.totalIncome > 0 ? (c.amount / state.totalIncome) : 0;
+            }
+            updateBudgetUI(true);
+        }
+
+        function toggleMode(id){ 
+            const c=state.categories.find(x=>x.id===id); 
+            if(c){
+                c.isPercentageMode=!c.isPercentageMode; 
+                c.ratio = state.totalIncome > 0 ? (c.amount / state.totalIncome) : 0;
+                renderCategoryList();
+            }
+        }
+
+        function updateCategoryRowVisuals(cat) {
+            const input = document.getElementById(`input-${cat.id}`);
+            const toggle = document.getElementById(`toggle-${cat.id}`); 
+            const unitSpan = document.getElementById(`unit-span-${cat.id}`);
+
+            if(!input) return;
+            
+            if(toggle) toggle.checked = cat.isPercentageMode;
+
+            if(document.activeElement !== input) {
+                const displayVal = cat.isPercentageMode 
+                    ? (state.totalIncome > 0 ? (cat.amount / state.totalIncome * 100).toFixed(1) : 0) 
+                    : cat.amount.toFixed(2);
+                input.value = displayVal;
+            }
+            
+            if (unitSpan) {
+                unitSpan.innerText = cat.isPercentageMode ? '%' : 'zł';
+            }
+        }
+        
+        function renderCategoryList() {
+            const container = document.getElementById('category-list');
+            if(!container) return;
+            container.innerHTML = '';
+            state.categories.forEach(cat => {
+                const div = document.createElement('div');
+                div.id = `cat-${cat.id}`;
+                div.className = "ios-card p-4 transition-all duration-300 overflow-hidden";
+                
+                div.innerHTML = `
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="relative w-8 h-8 rounded-full overflow-hidden shadow-sm flex-shrink-0 cursor-pointer border-2 border-white ring-1 ring-gray-100 transition-transform hover:scale-110" style="background-color: ${cat.color}">
+                            <input type="color" value="${cat.color}" onchange="updateCatColor(${cat.id}, this.value)" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        </div>
+                        <input type="text" value="${cat.name}" placeholder="Nazwa" onchange="updateCatName(${cat.id}, this.value)" class="ios-input flex-grow font-semibold text-gray-700 bg-transparent text-lg placeholder-gray-300">
+                        <button onclick="removeCategory(${cat.id})" class="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full transition"><i class="fas fa-trash-alt text-sm"></i></button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between pl-1">
+                        <div class="flex items-center gap-1">
+                            <span class="text-[9px] font-bold ${!cat.isPercentageMode ? 'text-blue-600' : 'text-gray-300'}">PLN</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="toggle-${cat.id}" onchange="toggleMode(${cat.id})" class="sr-only peer" ${cat.isPercentageMode ? 'checked' : ''}>
+                                <div class="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-blue-500"></div>
+                            </label>
+                            <span class="text-[9px] font-bold ${cat.isPercentageMode ? 'text-blue-600' : 'text-gray-300'}">%</span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <div class="bg-gray-50 px-2 py-1.5 rounded-lg border border-transparent focus-within:border-blue-300 focus-within:bg-white transition-colors w-28">
+                                 <input type="number" id="input-${cat.id}" oninput="handleCatInput(${cat.id}, this.value)" onfocus="handleInputFocus(this)" onblur="handleInputBlur(this)" class="ios-input text-right font-bold text-xl text-gray-800 bg-transparent w-full tabular-nums">
+                            </div>
+                            <span id="unit-span-${cat.id}" class="text-sm font-bold text-gray-500 w-5 text-center">${cat.isPercentageMode ? '%' : 'zł'}</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            state.categories.forEach(cat => updateCategoryRowVisuals(cat));
+        }
+
+        function applyGoldenRule(){
+            const incomeInput = document.getElementById('total-income');
+            let currentBudget = 0;
+            if(incomeInput && incomeInput.value) currentBudget = parseFloat(incomeInput.value);
+            else currentBudget = state.totalIncome;
+            
+            if(isNaN(currentBudget) || currentBudget <= 0){
+                showToast("⚠️ Najpierw wpisz kwotę budżetu!");
+                if(incomeInput) incomeInput.focus(); return;
+            }
+            state.totalIncome = currentBudget;
+            state.categories = [
+                {id:Date.now()+1, name:"Potrzeby (50%)", amount:currentBudget*0.5, color:"#3B82F6", isPercentageMode:true, ratio: 0.5},
+                {id:Date.now()+2, name:"Zachcianki (30%)", amount:currentBudget*0.3, color:"#A855F7", isPercentageMode:true, ratio: 0.3},
+                {id:Date.now()+3, name:"Oszczędności (20%)", amount:currentBudget*0.2, color:"#22C55E", isPercentageMode:true, ratio: 0.2}
+            ];
+            renderCategoryList();
+            updateBudgetUI(true);
+            document.getElementById('method-info').classList.remove('hidden');
+            setTimeout(() => document.getElementById('category-list').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+            showToast("✅ Zastosowano metodę 50/30/20");
+        }
+
+        function toggleInfo503020() {
+             const el = document.getElementById('method-info');
+             if(el) el.classList.toggle('hidden');
+        }
+        
+        function exportToClipboard() {
+            if(state.totalIncome <= 0) { showToast("Najpierw uzupełnij budżet!"); return; }
+            let text = `📊 Mój Budżet: ${formatMoney(state.totalIncome)}\n\n`;
+            const allocated = state.categories.reduce((acc, c) => acc + c.amount, 0);
+            const remaining = Math.max(0, state.totalIncome - allocated);
+            state.categories.forEach(c => { text += `• ${c.name}: ${formatMoney(c.amount)}\n`; });
+            text += `\n💰 Pozostało: ${formatMoney(remaining)}`;
+            navigator.clipboard.writeText(text).then(() => showToast("Skopiowano do schowka!")).catch(err => showToast("Błąd kopiowania"));
+        }
+
+        // --- CALCULATOR ---
+        function calculateSalary() {
+            const rate = parseFloat(document.getElementById('calc-rate').value) || 0;
+            const hours = parseFloat(document.getElementById('calc-hours').value) || 0;
+            const isStudent = document.getElementById('calc-student').checked;
+            const calculateZus = document.getElementById('calc-zus').checked;
+            const zusContainer = document.getElementById('calc-zus-container');
+            const breakdown = document.getElementById('calc-breakdown');
+
+            if (isStudent) {
+                zusContainer.classList.add('hidden');
+                breakdown.classList.add('hidden');
+            } else {
+                zusContainer.classList.remove('hidden');
+                if (calculateZus) breakdown.classList.remove('hidden'); else breakdown.classList.add('hidden');
+            }
+
+            const gross = rate * hours;
+            let net = 0;
+            if (isStudent) net = gross;
+            else if (!calculateZus) net = gross;
+            else {
+                const e = gross*0.0976, r=gross*0.015, c=gross*0.0245, sum=e+r+c;
+                const baseH=gross-sum, h=baseH*0.09, tax=Math.max(0,Math.round((baseH-baseH*0.2)*0.12));
+                net = gross - sum - h - tax;
+                document.getElementById('val-emerytalne').innerText=formatMoney(e);
+                document.getElementById('val-rentowe').innerText=formatMoney(r);
+                document.getElementById('val-chorobowe').innerText=formatMoney(c);
+                document.getElementById('val-zdrowotne').innerText=formatMoney(h);
+                document.getElementById('val-pit').innerText=formatMoney(tax);
+            }
+            document.getElementById('calc-result').innerText = formatMoney(net);
+            return net;
+        }
+
+        function transferToBudget() {
+            const net = calculateSalary(); 
+            if(net <= 0) { alert("Brak kwoty!"); return; }
+            state.totalIncome = parseFloat(net.toFixed(2));
+            const inp = document.getElementById('total-income'); if(inp) inp.value = state.totalIncome;
+            updateBudgetUI(true);
+            showToast("Przeniesiono do budżetu!");
+            switchTab('budget');
+        }
+
+        // --- WORK LOG ---
+        function changeMonth(delta) { calendarDate.setMonth(calendarDate.getMonth() + delta); renderCalendar(); }
+        function getKey(day) { return `${calendarDate.getFullYear()}-${String(calendarDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`; }
+        function renderCalendar() {
+            document.getElementById('calendar-month-year').innerText = `${monthsNominative[calendarDate.getMonth()]} ${calendarDate.getFullYear()}`;
+            const grid = document.getElementById('calendar-grid'); grid.innerHTML = '';
+            const daysInMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 0).getDate();
+            let startDay = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1).getDay();
+            startDay = startDay === 0 ? 6 : startDay - 1; 
+            for(let i=0; i<startDay; i++) { const div=document.createElement('div'); div.className="calendar-day empty"; grid.appendChild(div); }
+            for(let i=1; i<=daysInMonth; i++) {
+                const div = document.createElement('div'); const key = getKey(i); const isSelected = !!state.workLog[key];
+                div.className = `calendar-day ${isSelected ? 'selected' : ''}`; div.innerText = i; div.onclick = () => toggleDay(i); grid.appendChild(div);
+            }
+            renderWorkInputs(); calculateTotalWorkHours();
+        }
+
+        function toggleFixedMode() { state.fixedHours.enabled = !state.fixedHours.enabled; updateFixedUI(); saveState(); }
+        function updateFixedUI() {
+            const t = document.getElementById('fixed-hours-toggle'); t.checked = state.fixedHours.enabled;
+            document.getElementById('fixed-hours-settings').classList.toggle('hidden', !state.fixedHours.enabled);
+            const isSimple = state.fixedHours.type === 'simple';
+            document.getElementById('fixed-type-simple').className = `flex-1 py-1.5 rounded-md transition font-bold text-center ${isSimple?'bg-orange-500 text-white shadow':'text-gray-500'}`;
+            document.getElementById('fixed-type-range').className = `flex-1 py-1.5 rounded-md transition font-bold text-center ${!isSimple?'bg-orange-500 text-white shadow':'text-gray-500'}`;
+            document.getElementById('fixed-input-simple').classList.toggle('hidden', !isSimple);
+            document.getElementById('fixed-input-range').classList.toggle('hidden', isSimple);
+            document.getElementById('fixed-val').value = state.fixedHours.val;
+        }
+        function setFixedType(t) { state.fixedHours.type = t; updateFixedUI(); saveState(); }
+        function updateFixedVal(v) { state.fixedHours.val = parseFloat(v)||0; saveState(); }
+        function updateFixedRange(f,v) { state.fixedHours[f]=v; saveState(); }
+        function toggleDay(day) {
+            const key = getKey(day);
+            if(state.workLog[key]) delete state.workLog[key];
+            else {
+                if(state.fixedHours.enabled) {
+                    if(state.fixedHours.type === 'simple') state.workLog[key] = { type: 'simple', val: state.fixedHours.val, start:'', end:'' };
+                    else {
+                        const h = calcDiff(state.fixedHours.start, state.fixedHours.end);
+                        state.workLog[key] = { type: 'range', val: h, start: state.fixedHours.start, end: state.fixedHours.end };
+                    }
+                } else state.workLog[key] = { type: 'simple', val: 0, start:'', end:'' };
+            }
+            renderCalendar(); saveState();
+        }
+        function calcDiff(s,e) { if(!s||!e) return 0; const start=s.split(':').map(Number); const end=e.split(':').map(Number); let m=(end[0]*60+end[1])-(start[0]*60+start[1]); if(m<0)m=0; return Math.round((m/60)*100)/100; }
+        function toggleListCollapse() { state.listCollapsed = !state.listCollapsed; renderWorkInputs(); saveState(); }
+        function renderWorkInputs() {
+            const c = document.getElementById('hours-list-container');
+            const days = Object.keys(state.workLog).filter(k => k.startsWith(`${calendarDate.getFullYear()}-${String(calendarDate.getMonth()+1).padStart(2,'0')}-`)).sort();
+            
+            if(state.listCollapsed) { c.classList.add('hidden'); document.getElementById('hours-list-summary').classList.remove('hidden'); document.getElementById('hidden-count').innerText=days.length; document.getElementById('collapse-text').innerText="Rozwiń"; return; }
+            else { c.classList.remove('hidden'); document.getElementById('hours-list-summary').classList.add('hidden'); document.getElementById('collapse-text').innerText="Zwiń"; }
+
+            c.innerHTML = days.length===0 ? '<p class="text-center text-gray-400 text-sm py-4">Wybierz dni w kalendarzu.</p>' : '';
+            days.forEach(k => {
+                const d = state.workLog[k];
+                const div = document.createElement('div'); div.className="ios-card p-4 border border-gray-100 flex flex-col gap-3";
+                div.innerHTML = `<div class="flex justify-between border-b border-gray-100 pb-2"><span class="font-bold text-gray-800">${parseInt(k.split('-')[2])} ${monthsGenitive[parseInt(k.split('-')[1])-1]}</span><div class="flex bg-gray-100 rounded p-1 text-xs"><button onclick="window.setWorkTypeI('${k}','simple')" class="px-2 rounded ${d.type==='simple'?'bg-white shadow':''}">Licz</button><button onclick="window.setWorkTypeI('${k}','range')" class="px-2 rounded ${d.type==='range'?'bg-white shadow':''}">Zeg</button></div></div>
+                ${d.type==='simple' ? `<input type="number" value="${d.val}" onchange="window.updateW('${k}','val',this.value)" class="w-full bg-gray-50 rounded p-2 font-bold text-center">` : `<div class="flex gap-2"><input type="time" value="${d.start||'08:00'}" onchange="window.updateW('${k}','start',this.value)" class="bg-gray-50 rounded p-2 w-1/2"><input type="time" value="${d.end||'16:00'}" onchange="window.updateW('${k}','end',this.value)" class="bg-gray-50 rounded p-2 w-1/2"></div><p class="text-right text-xs text-orange-500 font-bold" id="calc-${k}">${d.val}h</p>`}`;
+                c.appendChild(div);
+            });
+        }
+        
+        function calcRangeHours(k) { const d=state.workLog[k]; d.val=calcDiff(d.start,d.end); calculateTotalWorkHours(); }
+        function calculateTotalWorkHours() {
+            const p = `${calendarDate.getFullYear()}-${String(calendarDate.getMonth()+1).padStart(2,'0')}-`;
+            let sum=0; Object.keys(state.workLog).forEach(k=>{ if(k.startsWith(p)) sum+=state.workLog[k].val||0; });
+            state.totalWorkHours=parseFloat(sum.toFixed(2)); document.getElementById('total-hours-sum').innerText=`${state.totalWorkHours} h`;
+        }
+        
+        function saveHoursToHome() { saveState(); showToast("Zapisano godziny!"); }
+        function exportHoursToCalc() { document.getElementById('calc-hours').value = state.totalWorkHours; calculateSalary(); switchTab('calculator'); showToast("Przeniesiono!"); }
+
+        function setWorkTypeI(k,t) { state.workLog[k].type=t; if(t==='range'){state.workLog[k].start="08:00";state.workLog[k].end="16:00";calcRangeHours(k);} renderWorkInputs(); saveState(); }
+        function updateW(k,f,v) { if(f==='val') state.workLog[k].val=parseFloat(v)||0; else { state.workLog[k][f]=v; if(state.workLog[k].type==='range') calcRangeHours(k); } calculateTotalWorkHours(); saveState(); }
+        
+        // Placeholder for AI (safe removal)
+        function askAIForAdvice() { alert("Funkcja analizy AI została wyłączona."); }
+
+        function updateApp() { updateBudgetUI(true); }
+        function handleInputFocus(el) { if(el.value==='0'||el.value==='0.00') el.value=''; }
+        function handleInputBlur(el) { if(el.value==='') { el.value='0'; if(el.id!=='total-income') handleCatInput(parseFloat(el.id.split('-')[1]),'0'); else updateBudgetUI(true); } }
+
+        // --- GLOBAL EXPORTS ---
+        window.switchTab = switchTab;
+        window.updateApp = updateApp;
+        window.addCategory = addCategory;
+        window.removeCategory = removeCategory;
+        window.updateCatName = updateCatName;
+        window.updateCatColor = updateCatColor;
+        window.handleCatInput = handleCatInput;
+        window.toggleMode = toggleMode;
+        window.handleInputFocus = handleInputFocus;
+        window.handleInputBlur = handleInputBlur;
+        window.applyGoldenRule = applyGoldenRule;
+        window.calculateSalary = calculateSalary;
+        window.transferToBudget = transferToBudget;
+        window.changeMonth = changeMonth;
+        window.toggleDay = toggleDay;
+        window.toggleFixedMode = toggleFixedMode;
+        window.setFixedType = setFixedType;
+        window.updateFixedVal = updateFixedVal;
+        window.updateFixedRange = updateFixedRange;
+        window.toggleListCollapse = toggleListCollapse;
+        window.saveHoursToHome = saveHoursToHome;
+        window.exportHoursToCalc = exportHoursToCalc;
+        window.setWorkTypeI = setWorkTypeI;
+        window.updateW = updateW;
+        window.askAIForAdvice = askAIForAdvice;
+        window.closeAdviceModal = function(){document.getElementById('ai-advice-modal').classList.add('hidden');}
+        window.toggleInfo503020 = toggleInfo503020;
+        window.saveState = saveState;
+        window.exportToClipboard = exportToClipboard;
+
+        // --- INIT ---
+        function init() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    state = { ...state, ...parsed }; 
+                    if(!state.workLog) state.workLog = {};
+                    if(!state.fixedHours) state.fixedHours = { enabled: false, type: 'simple', val: 8, start: '08:00', end: '16:00' };
+                    
+                    if(state.categories.length > 0) {
+                         state.categories.forEach(cat => {
+                             if(cat.isPercentageMode && cat.ratio === undefined) {
+                                 cat.ratio = state.totalIncome > 0 ? cat.amount / state.totalIncome : 0;
+                             }
+                         });
+                    }
+                } catch(e) { console.error("Data corrupt"); }
+            } else {
+                addCategory("Opłaty", 0, "#3B82F6");
+            }
+
+            if (state.categories.length > 0) renderCategoryList();
+            updateBudgetUI(false); 
+            renderCalendar();
+            calculateTotalWorkHours(); 
+            updateHomeUI();
+            updateFixedUI(); 
+            renderWorkInputs(); 
+            
+            const totalInput = document.getElementById('total-income');
+            if(state.totalIncome > 0 && totalInput) totalInput.value = state.totalIncome;
+        }
+
+        init();
+    </script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(() => console.log('Service Worker zarejestrowany!'))
+            .catch((err) => console.log('Błąd SW:', err));
+        });
+      }
+    </script>
+    </body>
+</html>
