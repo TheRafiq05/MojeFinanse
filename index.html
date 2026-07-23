@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MojeFinanse</title>
     
-    <!-- Ikony i ustawienia PWA (Aplikacji Mobilnej) -->
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="manifest" href="manifest.json">
@@ -13,12 +12,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#FF8A65">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Phosphor Icons (Nowoczesne ikony) -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     
-    <!-- Konfiguracja Tailwind -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -158,15 +154,14 @@
 </head>
 <body class="bg-dynamic-rent text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative" id="body-bg">
 
-    <!-- Bloby w tle -->
     <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <div id="blob1" class="absolute top-[-10%] left-[-10%] w-72 h-72 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700"></div>
         <div id="blob2" class="absolute top-[20%] right-[-10%] w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 dark:opacity-20 transition-colors duration-700"></div>
         <div id="blob3" class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700"></div>
     </div>
 
-    <!-- Pływający Header idealnie wpasowany -->
-    <header class="fixed left-4 right-4 z-40 glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg max-w-md mx-auto" style="top: max(1rem, env(safe-area-inset-top));">
+    <!-- Pływający Header (Sztywne marginesy Tailwind) -->
+    <header class="fixed top-6 left-4 right-4 z-40 glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg max-w-md mx-auto">
         <h1 id="app-title" class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
             MojeFinanse
         </h1>
@@ -181,12 +176,12 @@
         </div>
     </header>
 
-    <div id="toast" class="fixed left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300" style="top: calc(max(1rem, env(safe-area-inset-top)) + 5rem);">
+    <div id="toast" class="fixed top-28 left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300">
         Komunikat
     </div>
 
-    <!-- Dynamiczny margines zawartości -->
-    <main class="px-4 max-w-md mx-auto min-h-screen relative z-10" style="padding-top: calc(max(1rem, env(safe-area-inset-top)) + 6.5rem); padding-bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 6.5rem);">
+    <!-- Główna zawartość ze sztywnymi, dużymi marginesami góra/dół (pt-32, pb-36) -->
+    <main class="pt-32 pb-36 px-4 max-w-md mx-auto min-h-screen relative z-10">
         
         <!-- ZAKŁADKA 1: CZYNSZ -->
         <div id="view-rent" class="tab-content active space-y-6">
@@ -323,9 +318,9 @@
         </div>
     </main>
 
-    <!-- Zgrabniejszy Dolny pasek nawigacyjny -->
-    <nav class="fixed bottom-0 left-0 right-0 w-full z-50 glass-nav rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]" style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom));">
-        <div class="flex justify-center items-center px-6 pt-3 pb-1 gap-8 max-w-md mx-auto">
+    <!-- Pasek Nawigacyjny ze sztywnymi marginesami -->
+    <nav class="fixed bottom-0 left-0 right-0 w-full z-50 glass-nav pb-8 pt-3 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+        <div class="flex justify-center items-center px-6 gap-8 max-w-md mx-auto">
             <button id="nav-rent" class="flex flex-col items-center justify-center w-20 relative text-rent-500 transition-colors" onclick="switchTab('rent')">
                 <div id="nav-rent-bg" class="absolute inset-0 bg-rent-100 dark:bg-rent-900/30 rounded-2xl transition-opacity opacity-100"></div>
                 <i class="ph-fill ph-house text-[22px] mb-1 relative z-10 mt-1"></i>
@@ -339,22 +334,22 @@
         </div>
     </nav>
 
-    <!-- Modal: Dodaj Operację / Transfer -->
+    <!-- Modal: Dodaj/Edytuj Operację / Transfer -->
     <div id="transaction-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="trans-backdrop" onclick="closeTransactionModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 transform transition-transform translate-y-full shadow-2xl" id="trans-panel" style="padding-bottom: max(2rem, env(safe-area-inset-bottom));">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-12 transform transition-transform translate-y-full shadow-2xl" id="trans-panel">
             <button onclick="closeTransactionModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
             <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6"></div>
-            <h3 class="text-2xl font-black mb-6 flex items-center gap-2"><i class="ph-fill ph-arrows-left-right text-savings-500"></i> Nowy ruch</h3>
+            <h3 id="trans-modal-title" class="text-2xl font-black mb-6 flex items-center gap-2"><i class="ph-fill ph-arrows-left-right text-savings-500"></i> Nowy ruch</h3>
             
             <div class="space-y-4">
                 <div class="flex bg-slate-100 dark:bg-black/30 p-1 rounded-2xl relative">
                     <div id="type-bg" class="absolute w-1/3 h-[calc(100%-8px)] bg-white dark:bg-slate-700 shadow-sm rounded-xl transition-transform top-1 left-1"></div>
-                    <button type="button" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-green-600 transition-colors tracking-wide" onclick="setType('in', this)">WPŁYWA</button>
-                    <button type="button" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('out', this)">WYDAJĘ</button>
-                    <button type="button" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('transfer', this)">TRANSFER</button>
+                    <button type="button" id="btn-type-in" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-green-600 transition-colors tracking-wide" onclick="setType('in', this)">WPŁYWA</button>
+                    <button type="button" id="btn-type-out" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('out', this)">WYDAJĘ</button>
+                    <button type="button" id="btn-type-transfer" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('transfer', this)">TRANSFER</button>
                 </div>
                 <input type="hidden" id="trans-type" value="in">
                 
@@ -387,22 +382,22 @@
         </div>
     </div>
 
-    <!-- Modal: Dodaj Kieszeń -->
+    <!-- Modal: Dodaj/Edytuj Kieszeń -->
     <div id="pocket-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="pocket-backdrop" onclick="closePocketModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 transform transition-transform translate-y-full shadow-2xl" id="pocket-panel" style="padding-bottom: max(2rem, env(safe-area-inset-bottom));">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-12 transform transition-transform translate-y-full shadow-2xl" id="pocket-panel">
             <button onclick="closePocketModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
             <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6"></div>
-            <h3 class="text-2xl font-black mb-6 flex items-center gap-2"><i class="ph-fill ph-folder-plus text-savings-500"></i> Nowa kieszeń</h3>
+            <h3 id="pocket-modal-title" class="text-2xl font-black mb-6 flex items-center gap-2"><i class="ph-fill ph-folder-plus text-savings-500"></i> Nowa kieszeń</h3>
             
             <div class="space-y-4">
                 <div class="relative">
                     <i class="ph-fill ph-tag absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg"></i>
                     <input type="text" id="pocket-name" placeholder="Nazwa (np. Na wakacje)" class="input-wow pl-12 focus:border-savings-500 border-savings-100">
                 </div>
-                <button onclick="savePocket()" class="w-full mt-4 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-transform">
+                <button id="pocket-modal-btn" onclick="savePocket()" class="w-full mt-4 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-transform">
                     Utwórz
                 </button>
             </div>
@@ -412,7 +407,7 @@
     <!-- Modal: Ustawienia -->
     <div id="settings-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="settings-backdrop" onclick="closeSettingsModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 transform transition-transform translate-y-full shadow-2xl" id="settings-panel" style="padding-bottom: max(2rem, env(safe-area-inset-bottom));">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-12 transform transition-transform translate-y-full shadow-2xl" id="settings-panel">
             <button onclick="closeSettingsModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -420,7 +415,7 @@
             <h3 class="text-2xl font-black mb-6 flex items-center gap-2"><i class="ph-fill ph-gear text-slate-500"></i> Ustawienia</h3>
             
             <div class="space-y-4">
-                <p class="text-sm font-semibold text-slate-500">Zapisz kopię zapasową swoich danych, albo wczytaj je z pliku. Aplikacja zapisuje się automatycznie sama na tym urządzeniu.</p>
+                <p class="text-sm font-semibold text-slate-500">Zapisz kopię zapasową swoich danych, albo wczytaj je z pliku. Aplikacja zapisuje się automatycznie.</p>
                 <div class="relative focus-within:text-savings-500 text-slate-400 transition-colors">
                     <i class="ph-fill ph-file-text absolute left-4 top-1/2 transform -translate-y-1/2 text-lg"></i>
                     <input type="text" id="export-filename" placeholder="Nazwa pliku" class="input-wow pl-12 focus:border-slate-500 border-slate-200 w-full" value="moje_finanse">
@@ -441,6 +436,8 @@
 
 <script>
     const STORAGE_KEY = 'mojeFinanseAutoSaveData';
+    let editingPocketId = null;
+    let editingTransactionId = null;
 
     function getAppStateData() {
         const data = {
@@ -852,6 +849,9 @@
                         <button onclick="deletePocket(${p.id})" class="absolute top-2 right-2 w-6 h-6 bg-red-100 text-red-500 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 active:scale-90 transition-all z-20">
                             <i class="ph-bold ph-trash text-[10px]"></i>
                         </button>
+                        <button onclick="openEditPocketModal(${p.id})" class="absolute top-2 right-10 w-6 h-6 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 active:scale-90 transition-all z-20">
+                            <i class="ph-bold ph-pencil-simple text-[10px]"></i>
+                        </button>
                         <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1 truncate pr-5 relative z-10 uppercase tracking-wider"><i class="ph-fill ph-folder-open text-savings-400"></i> ${p.name}</p>
                         <p class="text-lg font-black text-slate-800 dark:text-white relative z-10">${p.balance.toFixed(2)} <span class="text-[10px] font-bold text-slate-400">zł</span></p>
                     </div>
@@ -882,18 +882,21 @@
                 }
 
                 return `
-                    <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-white/5 last:border-0 group animate-fade-in relative pr-8">
+                    <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-white/5 last:border-0 group animate-fade-in relative pr-16">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl ${bgClass} flex items-center justify-center shadow-sm">
                                 <i class="ph-bold ${iconClass} text-lg"></i>
                             </div>
                             <div>
-                                <p class="font-extrabold text-sm truncate max-w-[150px]">${t.desc}</p>
+                                <p class="font-extrabold text-sm truncate max-w-[130px]">${t.desc}</p>
                                 <p class="text-[10px] text-slate-400 font-bold uppercase mt-0.5 flex items-center"><i class="ph-fill ph-folder text-savings-400 mr-1"></i> ${subtitle}</p>
                             </div>
                         </div>
                         <p class="font-black text-sm ${colorClass}">${sign}${t.amount.toFixed(2)} zł</p>
                         
+                        <button onclick="openEditTransactionModal(${t.id})" class="absolute right-8 top-1/2 -translate-y-1/2 w-7 h-7 bg-blue-100 text-blue-500 dark:bg-blue-500/20 rounded-full flex items-center justify-center active:scale-90 transition-all opacity-70 hover:opacity-100">
+                            <i class="ph-bold ph-pencil-simple text-[11px]"></i>
+                        </button>
                         <button onclick="deleteTransaction(${t.id})" class="absolute right-0 top-1/2 -translate-y-1/2 w-7 h-7 bg-red-100 text-red-500 dark:bg-red-500/20 rounded-full flex items-center justify-center active:scale-90 transition-all opacity-70 hover:opacity-100">
                             <i class="ph-bold ph-trash text-[11px]"></i>
                         </button>
@@ -916,12 +919,31 @@
     }
 
     function openPocketModal() {
+        editingPocketId = null;
+        document.getElementById('pocket-modal-title').innerHTML = '<i class="ph-fill ph-folder-plus text-savings-500"></i> Nowa kieszeń';
+        document.getElementById('pocket-name').value = '';
+        document.getElementById('pocket-modal-btn').innerText = 'Utwórz';
+
         const modal = document.getElementById('pocket-modal');
         const panel = document.getElementById('pocket-panel');
         const backdrop = document.getElementById('pocket-backdrop');
         modal.classList.remove('hidden'); modal.classList.add('flex');
         setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
-        document.getElementById('pocket-name').value = '';
+    }
+
+    function openEditPocketModal(id) {
+        editingPocketId = id;
+        const pocket = pockets.find(p => p.id === id);
+        
+        document.getElementById('pocket-modal-title').innerHTML = '<i class="ph-fill ph-pencil-simple text-savings-500"></i> Edytuj kieszeń';
+        document.getElementById('pocket-name').value = pocket.name;
+        document.getElementById('pocket-modal-btn').innerText = 'Zapisz zmiany';
+
+        const modal = document.getElementById('pocket-modal');
+        const panel = document.getElementById('pocket-panel');
+        const backdrop = document.getElementById('pocket-backdrop');
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+        setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
     }
 
     function closePocketModal() {
@@ -935,11 +957,19 @@
     function savePocket() {
         const name = document.getElementById('pocket-name').value.trim();
         if (name === "") { showToast("Podaj nazwę kieszeni!"); return; }
-        pockets.push({ id: Date.now(), name: name, balance: 0 });
+        
+        if (editingPocketId) {
+            const pocket = pockets.find(p => p.id === editingPocketId);
+            if (pocket) pocket.name = name;
+            showToast("Zaktualizowano kieszeń!");
+        } else {
+            pockets.push({ id: Date.now(), name: name, balance: 0 });
+            showToast("Utworzono kieszeń!");
+        }
+        
         closePocketModal();
         renderSavings();
         saveToLocal();
-        showToast("Utworzono kieszeń!");
     }
 
     function deletePocket(id) {
@@ -953,17 +983,47 @@
 
     function openTransactionModal() {
         if(pockets.length === 0) { showToast("Najpierw stwórz kieszeń!"); return; }
+        editingTransactionId = null;
+        
+        document.getElementById('trans-modal-title').innerHTML = '<i class="ph-fill ph-arrows-left-right text-savings-500"></i> Nowy ruch';
+        document.getElementById('trans-amount').value = '';
+        document.getElementById('trans-desc').value = '';
+        setType('in', document.getElementById('btn-type-in'));
+        renderPocketChips('trans-pocket-chips', 'trans-pocket-id');
+        renderPocketChips('trans-to-pocket-chips', 'trans-to-pocket-id', true);
+
         const modal = document.getElementById('transaction-modal');
         const panel = document.getElementById('trans-panel');
         const backdrop = document.getElementById('trans-backdrop');
         modal.classList.remove('hidden'); modal.classList.add('flex');
         setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
+    }
+
+    function openEditTransactionModal(id) {
+        editingTransactionId = id;
+        const t = transactions.find(t => t.id === id);
         
-        document.getElementById('trans-amount').value = '';
-        document.getElementById('trans-desc').value = '';
-        setType('in', document.querySelector('#transaction-modal button'));
+        document.getElementById('trans-modal-title').innerHTML = '<i class="ph-fill ph-pencil-simple text-savings-500"></i> Edytuj ruch';
+        document.getElementById('trans-amount').value = t.amount;
+        document.getElementById('trans-desc').value = t.desc;
+        
+        setType(t.type, document.getElementById('btn-type-' + t.type));
         renderPocketChips('trans-pocket-chips', 'trans-pocket-id');
         renderPocketChips('trans-to-pocket-chips', 'trans-to-pocket-id', true);
+        
+        // Zaznaczamy odpowiednie chipy po chwili
+        setTimeout(() => {
+            selectPocketChip(t.pocketId, 'trans-pocket-chips', 'trans-pocket-id');
+            if(t.type === 'transfer' && t.toPocketId) {
+                selectPocketChip(t.toPocketId, 'trans-to-pocket-chips', 'trans-to-pocket-id');
+            }
+        }, 50);
+
+        const modal = document.getElementById('transaction-modal');
+        const panel = document.getElementById('trans-panel');
+        const backdrop = document.getElementById('trans-backdrop');
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+        setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
     }
 
     function closeTransactionModal() {
@@ -984,7 +1044,7 @@
             </button>
         `}).join('');
         
-        if(pockets.length > 0) {
+        if(pockets.length > 0 && !editingTransactionId) {
             document.getElementById(hiddenInputId).value = isTransferTo && pockets.length > 1 ? pockets[1].id : pockets[0].id;
         }
     }
@@ -1042,6 +1102,27 @@
 
         if (isNaN(amount) || amount <= 0) { showToast("Podaj prawidłową kwotę!"); return; }
 
+        // Odwracamy efekt starej transakcji przed zapisaniem nowej (jeśli edytujemy)
+        if (editingTransactionId) {
+            const oldTIndex = transactions.findIndex(t => t.id === editingTransactionId);
+            if (oldTIndex > -1) {
+                const oldT = transactions[oldTIndex];
+                if(oldT.type === 'in') {
+                    const p = pockets.find(p => p.id === oldT.pocketId);
+                    if(p) p.balance -= oldT.amount;
+                } else if(oldT.type === 'out') {
+                    const p = pockets.find(p => p.id === oldT.pocketId);
+                    if(p) p.balance += oldT.amount;
+                } else if(oldT.type === 'transfer') {
+                    const pFrom = pockets.find(p => p.id === oldT.pocketId);
+                    const pTo = pockets.find(p => p.id === oldT.toPocketId);
+                    if(pFrom) pFrom.balance += oldT.amount;
+                    if(pTo) pTo.balance -= oldT.amount;
+                }
+                transactions.splice(oldTIndex, 1);
+            }
+        }
+
         if (type === 'transfer') {
             const toPocketId = parseInt(document.getElementById('trans-to-pocket-id').value);
             if(pocketId === toPocketId) { showToast("Wybierz różne kieszenie!"); return; }
@@ -1053,7 +1134,7 @@
                 fromPkt.balance -= amount;
                 toPkt.balance += amount;
                 transactions.push({
-                    id: Date.now(), type: 'transfer', amount: amount, desc: desc || 'Transfer środków', pocketId: pocketId, toPocketId: toPocketId
+                    id: editingTransactionId || Date.now(), type: 'transfer', amount: amount, desc: desc || 'Transfer środków', pocketId: pocketId, toPocketId: toPocketId
                 });
             } else { showToast("Błąd kieszeni!"); return; }
         } else {
@@ -1061,7 +1142,7 @@
             if (pocket) {
                 if (type === 'in') { pocket.balance += amount; } else { pocket.balance -= amount; }
                 transactions.push({
-                    id: Date.now(), type: type, amount: amount, desc: desc || (type === 'in' ? 'Wpływ' : 'Wydatek'), pocketId: pocketId
+                    id: editingTransactionId || Date.now(), type: type, amount: amount, desc: desc || (type === 'in' ? 'Wpływ' : 'Wydatek'), pocketId: pocketId
                 });
             } else { showToast("Błąd kieszeni!"); return; }
         }
@@ -1069,7 +1150,7 @@
         closeTransactionModal();
         renderSavings();
         saveToLocal();
-        showToast("Zapisano operację!");
+        showToast(editingTransactionId ? "Zaktualizowano ruch!" : "Zapisano operację!");
     }
 
     function deleteTransaction(id) {
@@ -1153,7 +1234,6 @@
 
 </script>
 
-<!-- Rejestracja Service Workera -->
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -1170,4 +1250,3 @@
 
 </body>
 </html>
-
