@@ -158,14 +158,15 @@
 </head>
 <body class="bg-dynamic-rent text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative" id="body-bg">
 
+    <!-- Bloby w tle -->
     <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <div id="blob1" class="absolute top-[-10%] left-[-10%] w-72 h-72 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700"></div>
         <div id="blob2" class="absolute top-[20%] right-[-10%] w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 dark:opacity-20 transition-colors duration-700"></div>
         <div id="blob3" class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700"></div>
     </div>
 
-    <!-- Pływający Header (Sztywno przy górnej krawędzi) -->
-    <header class="fixed top-4 left-4 right-4 z-40 glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg max-w-md mx-auto">
+    <!-- Pływający Header idealnie wpasowany -->
+    <header class="fixed left-4 right-4 z-40 glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg max-w-md mx-auto" style="top: max(1rem, env(safe-area-inset-top));">
         <h1 id="app-title" class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
             MojeFinanse
         </h1>
@@ -180,12 +181,12 @@
         </div>
     </header>
 
-    <div id="toast" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="toast" class="fixed left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300" style="top: calc(max(1rem, env(safe-area-inset-top)) + 5rem);">
         Komunikat
     </div>
 
-    <!-- Optymalne marginesy pod nowy, sztywny header i stopkę -->
-    <main class="pt-28 pb-28 px-4 max-w-md mx-auto min-h-screen relative z-10">
+    <!-- Dynamiczny margines zawartości -->
+    <main class="px-4 max-w-md mx-auto min-h-screen relative z-10" style="padding-top: calc(max(1rem, env(safe-area-inset-top)) + 6.5rem); padding-bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 6.5rem);">
         
         <!-- ZAKŁADKA 1: CZYNSZ -->
         <div id="view-rent" class="tab-content active space-y-6">
@@ -322,9 +323,9 @@
         </div>
     </main>
 
-    <!-- Dolny pasek nawigacyjny (Odpowiednio zwarty i schludny) -->
-    <nav class="fixed bottom-0 left-0 right-0 w-full z-50 glass-nav pb-6 pt-2 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
-        <div class="flex justify-center items-center px-6 gap-8 max-w-md mx-auto">
+    <!-- Zgrabniejszy Dolny pasek nawigacyjny -->
+    <nav class="fixed bottom-0 left-0 right-0 w-full z-50 glass-nav rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]" style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom));">
+        <div class="flex justify-center items-center px-6 pt-3 pb-1 gap-8 max-w-md mx-auto">
             <button id="nav-rent" class="flex flex-col items-center justify-center w-20 relative text-rent-500 transition-colors" onclick="switchTab('rent')">
                 <div id="nav-rent-bg" class="absolute inset-0 bg-rent-100 dark:bg-rent-900/30 rounded-2xl transition-opacity opacity-100"></div>
                 <i class="ph-fill ph-house text-[22px] mb-1 relative z-10 mt-1"></i>
@@ -341,7 +342,7 @@
     <!-- Modal: Dodaj Operację / Transfer -->
     <div id="transaction-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="trans-backdrop" onclick="closeTransactionModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] transform transition-transform translate-y-full shadow-2xl" id="trans-panel">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 transform transition-transform translate-y-full shadow-2xl" id="trans-panel" style="padding-bottom: max(2rem, env(safe-area-inset-bottom));">
             <button onclick="closeTransactionModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -367,14 +368,12 @@
                     <input type="text" id="trans-desc" placeholder="Tytuł (np. Wynagrodzenie)" class="input-wow pl-12 focus:border-savings-500 border-savings-100">
                 </div>
                 
-                <!-- Wybór pierwszej kieszeni -->
                 <div>
                     <label id="pocket-from-label" class="text-xs font-bold text-slate-400 mb-2 block">Wybierz kieszeń</label>
                     <div id="trans-pocket-chips" class="flex flex-wrap gap-2"></div>
                     <input type="hidden" id="trans-pocket-id" value="">
                 </div>
 
-                <!-- Wybór drugiej kieszeni (tylko w Transferze) -->
                 <div id="trans-to-pocket-div" class="hidden">
                     <label class="text-xs font-bold text-slate-400 mb-2 block">Do kieszeni</label>
                     <div id="trans-to-pocket-chips" class="flex flex-wrap gap-2"></div>
@@ -391,7 +390,7 @@
     <!-- Modal: Dodaj Kieszeń -->
     <div id="pocket-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="pocket-backdrop" onclick="closePocketModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] transform transition-transform translate-y-full shadow-2xl" id="pocket-panel">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 transform transition-transform translate-y-full shadow-2xl" id="pocket-panel" style="padding-bottom: max(2rem, env(safe-area-inset-bottom));">
             <button onclick="closePocketModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -413,7 +412,7 @@
     <!-- Modal: Ustawienia -->
     <div id="settings-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="settings-backdrop" onclick="closeSettingsModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] transform transition-transform translate-y-full shadow-2xl" id="settings-panel">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 transform transition-transform translate-y-full shadow-2xl" id="settings-panel" style="padding-bottom: max(2rem, env(safe-area-inset-bottom));">
             <button onclick="closeSettingsModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -1171,3 +1170,4 @@
 
 </body>
 </html>
+
