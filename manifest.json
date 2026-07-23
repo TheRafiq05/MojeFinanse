@@ -1,11 +1,10 @@
 {
-  "name": "MojaKasa 20.4",
-  "short_name": "MojaKasa",
+  "name": "MojeFinanse",
+  "short_name": "MojeFinanse",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#F5F5F7",
-  "theme_color": "#F5F5F7",
-  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#FF8A65",
   "icons": [
     {
       "src": "icon-192.png",
