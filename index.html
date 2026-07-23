@@ -42,7 +42,7 @@
                             gradientEnd: '#E040FB'
                         },
                         transfer: {
-                            500: '#8B5CF6', // Fioletowy dla transferów
+                            500: '#8B5CF6',
                         },
                         darkBg: '#121212',
                         darkCard: '#1E1E1E'
@@ -75,8 +75,6 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
         }
 
         ::-webkit-scrollbar { display: none; }
@@ -156,9 +154,6 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
-        
-        .safe-pb { padding-bottom: calc(env(safe-area-inset-bottom) + 1rem); }
-        .safe-pt { padding-top: calc(env(safe-area-inset-top) + 1rem); }
     </style>
 </head>
 <body class="bg-dynamic-rent text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative" id="body-bg">
@@ -169,29 +164,28 @@
         <div id="blob3" class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700"></div>
     </div>
 
-    <!-- Pływający Header (Safe-pt uwzględnia Notcha) -->
-    <header class="fixed safe-pt left-4 right-4 z-40">
-        <div class="glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg">
-            <h1 id="app-title" class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
-                MojeFinanse
-            </h1>
-            <div class="flex items-center gap-2">
-                <button onclick="openSettingsModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
-                    <i class="ph-fill ph-gear text-xl text-slate-600 dark:text-slate-300"></i>
-                </button>
-                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
-                    <i class="ph-fill ph-moon text-xl dark:hidden text-slate-700"></i>
-                    <i class="ph-fill ph-sun text-xl hidden dark:block text-yellow-400"></i>
-                </button>
-            </div>
+    <!-- Pływający Header (Sztywno przy górnej krawędzi) -->
+    <header class="fixed top-4 left-4 right-4 z-40 glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg max-w-md mx-auto">
+        <h1 id="app-title" class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
+            MojeFinanse
+        </h1>
+        <div class="flex items-center gap-2">
+            <button onclick="openSettingsModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
+                <i class="ph-fill ph-gear text-xl text-slate-600 dark:text-slate-300"></i>
+            </button>
+            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
+                <i class="ph-fill ph-moon text-xl dark:hidden text-slate-700"></i>
+                <i class="ph-fill ph-sun text-xl hidden dark:block text-yellow-400"></i>
+            </button>
         </div>
     </header>
 
-    <div id="toast" class="fixed top-32 left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="toast" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300">
         Komunikat
     </div>
 
-    <main class="pt-32 pb-32 px-4 max-w-md mx-auto min-h-screen relative z-10">
+    <!-- Optymalne marginesy pod nowy, sztywny header i stopkę -->
+    <main class="pt-28 pb-28 px-4 max-w-md mx-auto min-h-screen relative z-10">
         
         <!-- ZAKŁADKA 1: CZYNSZ -->
         <div id="view-rent" class="tab-content active space-y-6">
@@ -328,18 +322,18 @@
         </div>
     </main>
 
-    <!-- Dolny pasek nawigacyjny (Safe-pb uwzględnia gesty systemowe) -->
-    <nav class="fixed bottom-0 w-full z-50 glass-nav safe-pb rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
-        <div class="flex justify-center items-center px-6 py-4 gap-8 max-w-md mx-auto">
+    <!-- Dolny pasek nawigacyjny (Odpowiednio zwarty i schludny) -->
+    <nav class="fixed bottom-0 left-0 right-0 w-full z-50 glass-nav pb-6 pt-2 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+        <div class="flex justify-center items-center px-6 gap-8 max-w-md mx-auto">
             <button id="nav-rent" class="flex flex-col items-center justify-center w-20 relative text-rent-500 transition-colors" onclick="switchTab('rent')">
                 <div id="nav-rent-bg" class="absolute inset-0 bg-rent-100 dark:bg-rent-900/30 rounded-2xl transition-opacity opacity-100"></div>
-                <i class="ph-fill ph-house text-2xl mb-1 relative z-10"></i>
-                <span class="text-[10px] font-bold uppercase tracking-wider relative z-10">Czynsz</span>
+                <i class="ph-fill ph-house text-[22px] mb-1 relative z-10 mt-1"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider relative z-10 mb-1">Czynsz</span>
             </button>
             <button id="nav-savings" class="flex flex-col items-center justify-center w-20 relative text-slate-400 hover:text-savings-400 transition-colors" onclick="switchTab('savings')">
                 <div id="nav-savings-bg" class="absolute inset-0 bg-savings-100 dark:bg-savings-900/30 rounded-2xl transition-opacity opacity-0"></div>
-                <i class="ph-fill ph-piggy-bank text-2xl mb-1 relative z-10"></i>
-                <span class="text-[10px] font-bold uppercase tracking-wider relative z-10">Kasa</span>
+                <i class="ph-fill ph-piggy-bank text-[22px] mb-1 relative z-10 mt-1"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider relative z-10 mb-1">Kasa</span>
             </button>
         </div>
     </nav>
@@ -347,7 +341,7 @@
     <!-- Modal: Dodaj Operację / Transfer -->
     <div id="transaction-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="trans-backdrop" onclick="closeTransactionModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 safe-pb transform transition-transform translate-y-full shadow-2xl" id="trans-panel">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] transform transition-transform translate-y-full shadow-2xl" id="trans-panel">
             <button onclick="closeTransactionModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -397,7 +391,7 @@
     <!-- Modal: Dodaj Kieszeń -->
     <div id="pocket-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="pocket-backdrop" onclick="closePocketModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 safe-pb transform transition-transform translate-y-full shadow-2xl" id="pocket-panel">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] transform transition-transform translate-y-full shadow-2xl" id="pocket-panel">
             <button onclick="closePocketModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -416,10 +410,10 @@
         </div>
     </div>
 
-    <!-- Modal: Ustawienia (Zapis/Odczyt) -->
+    <!-- Modal: Ustawienia -->
     <div id="settings-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="settings-backdrop" onclick="closeSettingsModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 safe-pb transform transition-transform translate-y-full shadow-2xl" id="settings-panel">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] transform transition-transform translate-y-full shadow-2xl" id="settings-panel">
             <button onclick="closeSettingsModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -447,9 +441,6 @@
     </div>
 
 <script>
-    // ==========================================
-    // AUTO-ZAPIS W PRZEGLĄDARCE (LOCAL STORAGE)
-    // ==========================================
     const STORAGE_KEY = 'mojeFinanseAutoSaveData';
 
     function getAppStateData() {
@@ -543,9 +534,6 @@
         }
     }
 
-    // ==========================================
-    // SYSTEM POWIADOMIEŃ (TOAST)
-    // ==========================================
     function showToast(message) {
         const toast = document.getElementById('toast');
         toast.innerText = message;
@@ -557,9 +545,6 @@
         }, 3000);
     }
 
-    // ==========================================
-    // NAWIGACJA I MOTYW
-    // ==========================================
     function toggleTheme() {
         document.documentElement.classList.toggle('dark');
     }
@@ -570,7 +555,6 @@
         document.getElementById(`view-${tabId}`).classList.add('active');
 
         const bg = document.getElementById('body-bg');
-        const title = document.getElementById('app-title');
         const btnRent = document.getElementById('nav-rent');
         const btnRentBg = document.getElementById('nav-rent-bg');
         const btnSavings = document.getElementById('nav-savings');
@@ -599,9 +583,6 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ==========================================
-    // ZAKŁADKA CZYNSZ - Logika
-    // ==========================================
     let tenants = [];
     let totalBaseRent = 0;
 
@@ -852,9 +833,6 @@
         if(autoSave) saveToLocal();
     }
 
-    // ==========================================
-    // ZAKŁADKA OSZCZĘDNOŚCI - Logika
-    // ==========================================
     let pockets = [];
     let transactions = [];
 
@@ -938,7 +916,6 @@
         }
     }
 
-    // Modal: Kieszenie
     function openPocketModal() {
         const modal = document.getElementById('pocket-modal');
         const panel = document.getElementById('pocket-panel');
@@ -975,7 +952,6 @@
         }
     }
 
-    // Modal: Operacje / Transfer
     function openTransactionModal() {
         if(pockets.length === 0) { showToast("Najpierw stwórz kieszeń!"); return; }
         const modal = document.getElementById('transaction-modal');
@@ -1122,7 +1098,6 @@
         }
     }
 
-    // Modal: Ustawienia
     function openSettingsModal() {
         const modal = document.getElementById('settings-modal');
         const panel = document.getElementById('settings-panel');
@@ -1164,7 +1139,7 @@
             try {
                 const data = JSON.parse(e.target.result);
                 applyLoadedData(data);
-                saveToLocal(); // Nadpisz LocalStorage
+                saveToLocal();
                 closeSettingsModal();
                 showToast("Dane wczytane pomyślnie!");
             } catch(error) {
@@ -1175,9 +1150,24 @@
         reader.readAsText(file);
     }
 
-    // Start
     window.onload = loadFromLocal;
 
 </script>
+
+<!-- Rejestracja Service Workera -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(registration => {
+                    console.log('ServiceWorker zarejestrowany pomyślnie!');
+                })
+                .catch(err => {
+                    console.log('Błąd rejestracji ServiceWorkera: ', err);
+                });
+        });
+    }
+</script>
+
 </body>
 </html>
