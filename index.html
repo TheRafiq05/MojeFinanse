@@ -21,32 +21,12 @@
             theme: {
                 extend: {
                     colors: {
-                        rent: {
-                            light: '#FFF0ED',
-                            400: '#FF8A65',
-                            500: '#FF7043',
-                            600: '#F4511E',
-                            gradientStart: '#FF8A65',
-                            gradientEnd: '#FF5252'
-                        },
-                        savings: {
-                            light: '#FCE4EC',
-                            400: '#F06292',
-                            500: '#E91E63',
-                            600: '#D81B60',
-                            gradientStart: '#FF4081',
-                            gradientEnd: '#E040FB'
-                        },
-                        transfer: {
-                            500: '#8B5CF6',
-                        },
-                        darkBg: '#121212',
-                        darkCard: '#1E1E1E'
+                        rent: { light: '#FFF0ED', 400: '#FF8A65', 500: '#FF7043', 600: '#F4511E', gradientStart: '#FF8A65', gradientEnd: '#FF5252' },
+                        savings: { light: '#FCE4EC', 400: '#F06292', 500: '#E91E63', 600: '#D81B60', gradientStart: '#FF4081', gradientEnd: '#E040FB' },
+                        transfer: { 500: '#8B5CF6' },
+                        darkBg: '#121212', darkCard: '#1E1E1E'
                     },
-                    animation: {
-                        'blob': 'blob 7s infinite',
-                        'fade-in': 'fadeIn 0.3s ease-out forwards'
-                    },
+                    animation: { 'blob': 'blob 7s infinite', 'fade-in': 'fadeIn 0.3s ease-out forwards' },
                     keyframes: {
                         blob: {
                             '0%': { transform: 'translate(0px, 0px) scale(1)' },
@@ -54,10 +34,7 @@
                             '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
                             '100%': { transform: 'translate(0px, 0px) scale(1)' },
                         },
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        }
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } }
                     }
                 }
             }
@@ -67,271 +44,212 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
-        }
-
+        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
         ::-webkit-scrollbar { display: none; }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-        }
-        
-        .dark .glass-card {
-            background: rgba(30, 30, 30, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
+        .glass-card { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05); }
+        .dark .glass-card { background: rgba(30, 30, 30, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
 
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-top: 1px solid rgba(255, 255, 255, 0.5);
-        }
+        .glass-nav { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid rgba(255, 255, 255, 0.5); }
+        .dark .glass-nav { background: rgba(20, 20, 20, 0.85); border-top: 1px solid rgba(255, 255, 255, 0.05); }
 
-        .dark .glass-nav {
-            background: rgba(20, 20, 20, 0.85);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .input-wow {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.8);
-            border: 2px solid transparent;
-            padding: 0.875rem 1rem;
-            border-radius: 1.25rem;
-            outline: none;
-            transition: all 0.3s;
-            color: #1f2937;
-            font-weight: 500;
-        }
-        .input-wow:focus {
-            background: #fff;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        }
-        .dark .input-wow {
-            background: rgba(0, 0, 0, 0.3);
-            color: #f3f4f6;
-            border-color: rgba(255,255,255,0.05);
-        }
-        .dark .input-wow:focus {
-            background: rgba(0, 0, 0, 0.5);
-            border-color: rgba(255,255,255,0.1);
-        }
+        .input-wow { width: 100%; background: rgba(255, 255, 255, 0.8); border: 2px solid transparent; padding: 0.6rem 0.8rem; border-radius: 1rem; outline: none; transition: all 0.3s; color: #1f2937; font-weight: 500; font-size: 0.875rem; }
+        .input-wow:focus { background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .dark .input-wow { background: rgba(0, 0, 0, 0.3); color: #f3f4f6; border-color: rgba(255,255,255,0.05); }
+        .dark .input-wow:focus { background: rgba(0, 0, 0, 0.5); border-color: rgba(255,255,255,0.1); }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
 
-        .bg-dynamic-rent {
-            background: linear-gradient(135deg, #FFF0ED 0%, #FFE0B2 100%);
-        }
-        .dark .bg-dynamic-rent {
-            background: linear-gradient(135deg, #1A1210 0%, #2D1A15 100%);
-        }
-        .bg-dynamic-savings {
-            background: linear-gradient(135deg, #FCE4EC 0%, #F3E5F5 100%);
-        }
-        .dark .bg-dynamic-savings {
-            background: linear-gradient(135deg, #1A1014 0%, #1A1220 100%);
-        }
+        .bg-dynamic-rent { background: linear-gradient(135deg, #FFF0ED 0%, #FFE0B2 100%); }
+        .dark .bg-dynamic-rent { background: linear-gradient(135deg, #1A1210 0%, #2D1A15 100%); }
+        .bg-dynamic-savings { background: linear-gradient(135deg, #FCE4EC 0%, #F3E5F5 100%); }
+        .dark .bg-dynamic-savings { background: linear-gradient(135deg, #1A1014 0%, #1A1220 100%); }
 
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
+        input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
+        
+        /* Dodatkowe wymuszenie zmniejszenia czcionek bazowych */
+        html { font-size: 15px; }
     </style>
 </head>
 <body class="bg-dynamic-rent text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative" id="body-bg">
 
     <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div id="blob1" class="absolute top-[-10%] left-[-10%] w-72 h-72 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700"></div>
-        <div id="blob2" class="absolute top-[20%] right-[-10%] w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 dark:opacity-20 transition-colors duration-700"></div>
-        <div id="blob3" class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700"></div>
+        <div id="blob1" class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700"></div>
+        <div id="blob2" class="absolute top-[20%] right-[-10%] w-64 h-64 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 dark:opacity-20 transition-colors duration-700"></div>
+        <div id="blob3" class="absolute bottom-[-20%] left-[20%] w-80 h-80 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700"></div>
     </div>
 
-    <!-- Pływający Header (Inteligentnie omijający Dynamic Island) -->
-    <div class="fixed top-0 left-0 right-0 z-40 pointer-events-none" style="padding-top: env(safe-area-inset-top);">
-        <header class="mt-4 mx-4 glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg max-w-md sm:mx-auto pointer-events-auto">
-            <h1 id="app-title" class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
-                MojeFinanse
-            </h1>
-            <div class="flex items-center gap-2">
-                <button onclick="openSettingsModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
-                    <i class="ph-fill ph-gear text-xl text-slate-600 dark:text-slate-300"></i>
-                </button>
-                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
-                    <i class="ph-fill ph-moon text-xl dark:hidden text-slate-700"></i>
-                    <i class="ph-fill ph-sun text-xl hidden dark:block text-yellow-400"></i>
-                </button>
-            </div>
-        </header>
-    </div>
+    <!-- Pływający Header (Zdecydowanie odsunięty od góry, aby w 100% minąć Dynamic Island na iOS) -->
+    <header class="fixed top-[50px] sm:top-[60px] left-4 right-4 z-40 glass-card rounded-[1.5rem] px-5 py-3 flex justify-between items-center shadow-md max-w-md mx-auto">
+        <h1 id="app-title" class="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
+            MojeFinanse
+        </h1>
+        <div class="flex items-center gap-2">
+            <button onclick="openSettingsModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
+                <i class="ph-fill ph-gear text-lg text-slate-600 dark:text-slate-300"></i>
+            </button>
+            <button onclick="toggleTheme()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
+                <i class="ph-fill ph-moon text-lg dark:hidden text-slate-700"></i>
+                <i class="ph-fill ph-sun text-lg hidden dark:block text-yellow-400"></i>
+            </button>
+        </div>
+    </header>
 
-    <div id="toast" class="fixed left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300" style="top: calc(env(safe-area-inset-top) + 6rem);">
+    <div id="toast" class="fixed top-32 left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300">
         Komunikat
     </div>
 
-    <!-- Główna zawartość z bezpiecznym paddinigem dla każdej wielkości ekranu -->
-    <main class="px-4 max-w-md mx-auto min-h-screen relative z-10" style="padding-top: calc(env(safe-area-inset-top) + 7rem); padding-bottom: calc(env(safe-area-inset-bottom) + 7rem);">
+    <!-- Zwarta zawartość z bezpiecznym paddinigem dla każdej wielkości ekranu -->
+    <main class="px-4 max-w-md mx-auto min-h-screen relative z-10" style="padding-top: 130px; padding-bottom: 110px;">
         
         <!-- ZAKŁADKA 1: CZYNSZ -->
-        <div id="view-rent" class="tab-content active space-y-6">
-            <div class="glass-card rounded-[2rem] p-6 text-center shadow-xl relative overflow-hidden group">
+        <div id="view-rent" class="tab-content active space-y-4">
+            
+            <div class="glass-card rounded-[1.5rem] p-5 text-center shadow-lg relative overflow-hidden group">
                 <div class="absolute inset-0 bg-gradient-to-br from-rent-gradientStart to-rent-gradientEnd opacity-10 group-hover:opacity-20 transition-opacity"></div>
                 <div class="relative z-10">
-                    <div class="w-12 h-12 mx-auto bg-rent-100 dark:bg-rent-900/40 rounded-full flex items-center justify-center mb-3">
-                        <i class="ph-fill ph-house-line text-2xl text-rent-500"></i>
+                    <div class="w-10 h-10 mx-auto bg-rent-100 dark:bg-rent-900/40 rounded-full flex items-center justify-center mb-2">
+                        <i class="ph-fill ph-house-line text-xl text-rent-500"></i>
                     </div>
-                    <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider">Baza czynszu</p>
-                    <h2 class="text-5xl font-black text-slate-800 dark:text-white tracking-tight" id="total-rent-display">0 <span class="text-2xl text-slate-400">zł</span></h2>
-                    <div class="mt-3 inline-block bg-rent-100 dark:bg-rent-900/30 px-4 py-1.5 rounded-full">
-                        <p class="text-sm font-bold text-rent-600 dark:text-rent-400">≈ <span id="per-person-display">0</span> zł / osobę</p>
+                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-0.5 uppercase tracking-wider">Baza czynszu</p>
+                    <h2 class="text-4xl font-black text-slate-800 dark:text-white tracking-tight" id="total-rent-display">0 <span class="text-xl text-slate-400">zł</span></h2>
+                    <div class="mt-2 inline-block bg-rent-100 dark:bg-rent-900/30 px-3 py-1 rounded-full">
+                        <p class="text-[11px] font-bold text-rent-600 dark:text-rent-400">≈ <span id="per-person-display">0</span> zł / osobę</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Ustawienia Wynajmu -->
-            <div class="glass-card rounded-3xl p-2 shadow-sm border border-rent-200 dark:border-white/5">
-                <div class="p-4 flex justify-between items-center cursor-pointer" onclick="toggleSettings()">
-                    <div class="flex items-center gap-3">
-                        <div class="p-2.5 bg-rent-100 dark:bg-rent-900/30 rounded-xl text-rent-500">
-                            <i class="ph-fill ph-sliders-horizontal text-xl"></i>
+            <div class="glass-card rounded-[1.5rem] p-1.5 shadow-sm border border-rent-200 dark:border-white/5">
+                <div class="p-3 flex justify-between items-center cursor-pointer" onclick="toggleSettings()">
+                    <div class="flex items-center gap-2">
+                        <div class="p-2 bg-rent-100 dark:bg-rent-900/30 rounded-xl text-rent-500">
+                            <i class="ph-fill ph-sliders-horizontal text-lg"></i>
                         </div>
-                        <h2 class="font-bold text-lg">Parametry wynajmu</h2>
+                        <h2 class="font-bold text-base">Parametry wynajmu</h2>
                     </div>
-                    <i id="settings-icon" class="ph-bold ph-caret-down text-xl text-slate-400 transition-transform duration-300"></i>
+                    <i id="settings-icon" class="ph-bold ph-caret-down text-lg text-slate-400 transition-transform duration-300 mr-2"></i>
                 </div>
                 
-                <div id="settings-content" class="hidden px-4 pb-4 space-y-5">
-                    <div class="w-full h-px bg-slate-200 dark:bg-white/10 mb-4"></div>
+                <div id="settings-content" class="hidden px-3 pb-3 space-y-4">
+                    <div class="w-full h-px bg-slate-200 dark:bg-white/10 mb-2"></div>
                     
                     <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block flex items-center gap-1"><i class="ph-fill ph-coins"></i> Kwoty stałe</label>
-                        <div class="space-y-3">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block flex items-center gap-1"><i class="ph-fill ph-coins"></i> Kwoty stałe</label>
+                        <div class="space-y-2">
                             <div class="relative focus-within:text-rent-500 text-slate-400 transition-colors">
-                                <i class="ph-fill ph-key absolute left-4 top-1/2 transform -translate-y-1/2 text-lg"></i>
-                                <input type="number" id="base-rent" placeholder="Odstępne" class="input-wow pl-12 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
+                                <i class="ph-fill ph-key absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
+                                <input type="number" id="base-rent" placeholder="Odstępne" class="input-wow pl-9 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
                             </div>
                             <div class="relative focus-within:text-rent-500 text-slate-400 transition-colors">
-                                <i class="ph-fill ph-buildings absolute left-4 top-1/2 transform -translate-y-1/2 text-lg"></i>
-                                <input type="number" id="base-admin" placeholder="Czynsz adm." class="input-wow pl-12 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
+                                <i class="ph-fill ph-buildings absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
+                                <input type="number" id="base-admin" placeholder="Czynsz adm." class="input-wow pl-9 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
                             </div>
                             <div class="relative focus-within:text-rent-500 text-slate-400 transition-colors">
-                                <i class="ph-fill ph-lightning absolute left-4 top-1/2 transform -translate-y-1/2 text-lg"></i>
-                                <input type="number" id="base-electric" placeholder="Zaliczki" class="input-wow pl-12 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
+                                <i class="ph-fill ph-lightning absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
+                                <input type="number" id="base-electric" placeholder="Zaliczki (prąd, gaz)" class="input-wow pl-9 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
                             </div>
                         </div>
                     </div>
 
                     <div>
-                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block flex items-center gap-1"><i class="ph-fill ph-calendar-blank"></i> Start umowy</label>
-                        <div id="start-month-chips" class="grid grid-cols-4 gap-2"></div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block flex items-center gap-1"><i class="ph-fill ph-calendar-blank"></i> Start umowy</label>
+                        <div id="start-month-chips" class="grid grid-cols-4 gap-1.5"></div>
                         <input type="hidden" id="start-month" value="0">
                     </div>
 
-                    <div class="pt-2">
-                        <div class="flex justify-between items-center mb-2">
-                            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><i class="ph-fill ph-users"></i> Lokatorzy</label>
-                            <span class="bg-slate-200 dark:bg-slate-700 text-xs px-2 py-0.5 rounded-full font-bold" id="tenant-count">0</span>
+                    <div class="pt-1">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><i class="ph-fill ph-users"></i> Lokatorzy</label>
+                            <span class="bg-slate-200 dark:bg-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold" id="tenant-count">0</span>
                         </div>
-                        <div class="flex gap-2 mb-3">
-                            <input type="text" id="new-tenant-name" placeholder="Imię" class="input-wow border-rent-100 focus:border-rent-500">
-                            <button onclick="addTenant()" class="bg-rent-500 hover:bg-rent-600 text-white w-14 rounded-xl flex items-center justify-center font-bold active:scale-90 transition-all shadow-lg shadow-rent-500/30">
-                                <i class="ph-bold ph-plus text-xl"></i>
+                        <div class="flex gap-1.5 mb-2">
+                            <input type="text" id="new-tenant-name" placeholder="Imię (np. Ania)" class="input-wow border-rent-100 focus:border-rent-500">
+                            <button onclick="addTenant()" class="bg-rent-500 hover:bg-rent-600 text-white w-12 rounded-xl flex items-center justify-center font-bold active:scale-90 transition-all shadow-md shadow-rent-500/30">
+                                <i class="ph-bold ph-plus text-lg"></i>
                             </button>
                         </div>
-                        <div id="tenants-list" class="flex flex-wrap gap-2"></div>
+                        <div id="tenants-list" class="flex flex-wrap gap-1.5"></div>
                     </div>
 
-                    <button onclick="toggleSettings()" class="w-full mt-4 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-4 rounded-xl font-bold shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2">
+                    <button onclick="toggleSettings()" class="w-full mt-2 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-3 rounded-xl text-sm font-bold shadow-md active:scale-95 transition-all flex justify-center items-center gap-2">
                         <i class="ph-bold ph-check"></i> Gotowe, schowaj
                     </button>
                 </div>
             </div>
 
-            <div class="flex items-center justify-between mb-2 mt-8 px-2">
-                <h3 class="font-extrabold text-xl">Rozliczenie miesięcy</h3>
-                <button class="bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd text-white px-4 py-2 rounded-full text-sm font-bold shadow-md shadow-rent-500/30 active:scale-95 transition-transform flex items-center gap-1" onclick="generateMonths()">
+            <div class="flex items-center justify-between mb-1 mt-6 px-1">
+                <h3 class="font-extrabold text-lg">Miesiące</h3>
+                <button class="bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md shadow-rent-500/30 active:scale-95 transition-transform flex items-center gap-1" onclick="generateMonths()">
                     <i class="ph-bold ph-magic-wand"></i> Generuj
                 </button>
             </div>
             
-            <div id="months-container" class="space-y-5">
-                <div class="text-center py-10 glass-card rounded-3xl">
-                    <div class="w-16 h-16 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i class="ph-fill ph-calendar-plus text-3xl text-slate-400"></i>
+            <div id="months-container" class="space-y-3">
+                <div class="text-center py-8 glass-card rounded-[1.5rem]">
+                    <div class="w-12 h-12 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="ph-fill ph-calendar-plus text-2xl text-slate-400"></i>
                     </div>
-                    <p class="text-sm font-semibold text-slate-500">Brak miesięcy.<br>Ustaw dane i kliknij "Generuj".</p>
+                    <p class="text-xs font-semibold text-slate-500">Brak miesięcy.<br>Ustaw dane i kliknij "Generuj".</p>
                 </div>
             </div>
         </div>
 
         <!-- ZAKŁADKA 2: OSZCZĘDNOŚCI-->
-        <div id="view-savings" class="tab-content space-y-6">
-            <div class="bg-gradient-to-br from-savings-gradientStart to-savings-gradientEnd rounded-[2rem] p-8 text-center shadow-2xl shadow-savings-500/40 relative overflow-hidden text-white">
-                <div class="absolute top-0 right-0 w-48 h-48 bg-white/20 rounded-full filter blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
-                <div class="absolute bottom-0 left-0 w-32 h-32 bg-black/10 rounded-full filter blur-xl transform -translate-x-1/2 translate-y-1/2"></div>
+        <div id="view-savings" class="tab-content space-y-4">
+            <div class="bg-gradient-to-br from-savings-gradientStart to-savings-gradientEnd rounded-[1.5rem] p-6 text-center shadow-xl shadow-savings-500/30 relative overflow-hidden text-white">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full filter blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
                 
                 <div class="relative z-10">
-                    <i class="ph-fill ph-piggy-bank text-5xl mb-2 drop-shadow-md"></i>
-                    <p class="text-savings-light font-semibold mb-1 uppercase tracking-wider text-sm">Twoje oszczędności</p>
-                    <h2 class="text-5xl font-black tracking-tight drop-shadow-lg" id="total-savings-display">0 <span class="text-2xl text-white/70">zł</span></h2>
+                    <i class="ph-fill ph-piggy-bank text-4xl mb-1.5 drop-shadow-sm"></i>
+                    <p class="text-savings-light font-semibold mb-0.5 uppercase tracking-wider text-[11px]">Twoje oszczędności</p>
+                    <h2 class="text-4xl font-black tracking-tight drop-shadow-md" id="total-savings-display">0 <span class="text-xl text-white/70">zł</span></h2>
                 </div>
             </div>
 
             <div>
-                <div class="flex justify-between items-end mb-4 px-2">
-                    <h3 class="font-extrabold text-xl">Kieszenie</h3>
-                    <button onclick="openPocketModal()" class="text-savings-500 dark:text-savings-400 text-sm font-bold flex items-center gap-1 bg-savings-100 dark:bg-savings-900/30 px-3 py-1.5 rounded-full active:scale-95 transition-transform">
+                <div class="flex justify-between items-end mb-2.5 px-1">
+                    <h3 class="font-extrabold text-lg">Kieszenie</h3>
+                    <button onclick="openPocketModal()" class="text-savings-500 dark:text-savings-400 text-xs font-bold flex items-center gap-1 bg-savings-100 dark:bg-savings-900/30 px-2.5 py-1 rounded-full active:scale-95 transition-transform">
                         <i class="ph-bold ph-plus"></i> Dodaj
                     </button>
                 </div>
-                <div id="pockets-container" class="flex flex-wrap gap-3 pb-2"></div>
+                <div id="pockets-container" class="grid grid-cols-2 gap-2.5"></div>
             </div>
 
-            <div class="glass-card rounded-3xl p-6">
-                <div class="flex items-center justify-between mb-6">
+            <div class="glass-card rounded-[1.5rem] p-4">
+                <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-2 cursor-pointer flex-1" onclick="toggleTransactions()">
-                        <div class="p-2 bg-slate-100 dark:bg-white/10 rounded-lg text-slate-500">
-                            <i class="ph-fill ph-clock-counter-clockwise text-xl"></i>
+                        <div class="p-1.5 bg-slate-100 dark:bg-white/10 rounded-lg text-slate-500">
+                            <i class="ph-fill ph-clock-counter-clockwise text-lg"></i>
                         </div>
-                        <h3 class="font-extrabold text-lg">Ostatnie operacje</h3>
-                        <i id="trans-toggle-icon" class="ph-bold ph-caret-down text-slate-400 transition-transform"></i>
+                        <h3 class="font-extrabold text-base">Historia</h3>
+                        <i id="trans-toggle-icon" class="ph-bold ph-caret-down text-sm text-slate-400 transition-transform"></i>
                     </div>
-                    <button onclick="openTransactionModal()" class="text-savings-500 dark:text-savings-400 font-bold flex items-center gap-1 bg-savings-100 dark:bg-savings-900/30 px-3 py-1.5 rounded-full active:scale-95 transition-transform">
+                    <button onclick="openTransactionModal()" class="text-savings-500 dark:text-savings-400 text-xs font-bold flex items-center gap-1 bg-savings-100 dark:bg-savings-900/30 px-2.5 py-1 rounded-full active:scale-95 transition-transform">
                         <i class="ph-bold ph-plus"></i> Nowy ruch
                     </button>
                 </div>
                 <div id="transactions-list-wrapper" class="transition-all duration-300 overflow-hidden max-h-[2000px]">
-                    <div id="transactions-list" class="space-y-4"></div>
+                    <div id="transactions-list" class="space-y-2"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Pasek Nawigacyjny inteligentny wobec dolnej strefy gestów -->
-    <nav class="fixed bottom-0 left-0 right-0 w-full z-50 glass-nav rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]" style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="flex justify-center items-center px-6 pt-3 pb-3 gap-8 max-w-md mx-auto">
-            <button id="nav-rent" class="flex flex-col items-center justify-center w-20 relative text-rent-500 transition-colors" onclick="switchTab('rent')">
-                <div id="nav-rent-bg" class="absolute inset-0 bg-rent-100 dark:bg-rent-900/30 rounded-2xl transition-opacity opacity-100"></div>
-                <i class="ph-fill ph-house text-[22px] mb-1 relative z-10 mt-1"></i>
-                <span class="text-[9px] font-bold uppercase tracking-wider relative z-10 mb-1">Czynsz</span>
+    <!-- Zgrabny Dolny pasek nawigacyjny -->
+    <nav class="fixed bottom-0 left-0 right-0 w-full z-50 glass-nav rounded-t-[1.5rem] shadow-[0_-10px_30px_rgba(0,0,0,0.05)] pb-[env(safe-area-inset-bottom)]">
+        <div class="flex justify-center items-center px-6 pt-2.5 pb-2 gap-10 max-w-md mx-auto">
+            <button id="nav-rent" class="flex flex-col items-center justify-center w-16 relative text-rent-500 transition-colors" onclick="switchTab('rent')">
+                <div id="nav-rent-bg" class="absolute inset-0 bg-rent-100 dark:bg-rent-900/30 rounded-xl transition-opacity opacity-100"></div>
+                <i class="ph-fill ph-house text-[20px] mb-0.5 relative z-10 mt-1"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider relative z-10 mb-0.5">Czynsz</span>
             </button>
-            <button id="nav-savings" class="flex flex-col items-center justify-center w-20 relative text-slate-400 hover:text-savings-400 transition-colors" onclick="switchTab('savings')">
-                <div id="nav-savings-bg" class="absolute inset-0 bg-savings-100 dark:bg-savings-900/30 rounded-2xl transition-opacity opacity-0"></div>
-                <i class="ph-fill ph-piggy-bank text-[22px] mb-1 relative z-10 mt-1"></i>
-                <span class="text-[9px] font-bold uppercase tracking-wider relative z-10 mb-1">Kasa</span>
+            <button id="nav-savings" class="flex flex-col items-center justify-center w-16 relative text-slate-400 hover:text-savings-400 transition-colors" onclick="switchTab('savings')">
+                <div id="nav-savings-bg" class="absolute inset-0 bg-savings-100 dark:bg-savings-900/30 rounded-xl transition-opacity opacity-0"></div>
+                <i class="ph-fill ph-piggy-bank text-[20px] mb-0.5 relative z-10 mt-1"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider relative z-10 mb-0.5">Kasa</span>
             </button>
         </div>
     </nav>
@@ -339,45 +257,45 @@
     <!-- Modal: Dodaj/Edytuj Operację / Transfer -->
     <div id="transaction-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="trans-backdrop" onclick="closeTransactionModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-12 transform transition-transform translate-y-full shadow-2xl" id="trans-panel">
-            <button onclick="closeTransactionModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
-                <i class="ph-bold ph-x"></i>
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[1.5rem] p-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] transform transition-transform translate-y-full shadow-2xl" id="trans-panel">
+            <button onclick="closeTransactionModal()" class="absolute top-5 right-5 w-7 h-7 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
+                <i class="ph-bold ph-x text-sm"></i>
             </button>
-            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6"></div>
-            <h3 id="trans-modal-title" class="text-2xl font-black mb-6 flex items-center gap-2"><i class="ph-fill ph-arrows-left-right text-savings-500"></i> Nowy ruch</h3>
+            <div class="w-10 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-5"></div>
+            <h3 id="trans-modal-title" class="text-xl font-black mb-5 flex items-center gap-2"><i class="ph-fill ph-arrows-left-right text-savings-500"></i> Nowy ruch</h3>
             
-            <div class="space-y-4">
-                <div class="flex bg-slate-100 dark:bg-black/30 p-1 rounded-2xl relative">
-                    <div id="type-bg" class="absolute w-1/3 h-[calc(100%-8px)] bg-white dark:bg-slate-700 shadow-sm rounded-xl transition-transform top-1 left-1"></div>
-                    <button type="button" id="btn-type-in" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-green-600 transition-colors tracking-wide" onclick="setType('in', this)">WPŁYWA</button>
-                    <button type="button" id="btn-type-out" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('out', this)">WYDAJĘ</button>
-                    <button type="button" id="btn-type-transfer" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('transfer', this)">TRANSFER</button>
+            <div class="space-y-3">
+                <div class="flex bg-slate-100 dark:bg-black/30 p-1 rounded-xl relative">
+                    <div id="type-bg" class="absolute w-1/3 h-[calc(100%-8px)] bg-white dark:bg-slate-700 shadow-sm rounded-lg transition-transform top-1 left-1"></div>
+                    <button type="button" id="btn-type-in" class="w-1/3 py-2 text-[10px] font-bold relative z-10 text-green-600 transition-colors tracking-wide" onclick="setType('in', this)">WPŁYWA</button>
+                    <button type="button" id="btn-type-out" class="w-1/3 py-2 text-[10px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('out', this)">WYDAJĘ</button>
+                    <button type="button" id="btn-type-transfer" class="w-1/3 py-2 text-[10px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('transfer', this)">TRANSFER</button>
                 </div>
                 <input type="hidden" id="trans-type" value="in">
                 
                 <div class="relative">
-                    <span class="absolute left-4 top-1/2 transform -translate-y-1/2 font-bold text-slate-400">PLN</span>
-                    <input type="number" id="trans-amount" placeholder="0.00" class="input-wow pl-14 text-2xl font-black text-center focus:border-savings-500 border-savings-100">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 font-bold text-slate-400 text-sm">PLN</span>
+                    <input type="number" id="trans-amount" placeholder="0.00" class="input-wow pl-11 text-xl font-black text-center focus:border-savings-500 border-savings-100 py-3">
                 </div>
                 
                 <div class="relative">
-                    <i class="ph-fill ph-text-t absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="trans-desc" placeholder="Tytuł (np. Wynagrodzenie)" class="input-wow pl-12 focus:border-savings-500 border-savings-100">
+                    <i class="ph-fill ph-text-t absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="trans-desc" placeholder="Tytuł (np. Wypłata)" class="input-wow pl-9 focus:border-savings-500 border-savings-100">
                 </div>
                 
                 <div>
-                    <label id="pocket-from-label" class="text-xs font-bold text-slate-400 mb-2 block">Wybierz kieszeń</label>
-                    <div id="trans-pocket-chips" class="flex flex-wrap gap-2"></div>
+                    <label id="pocket-from-label" class="text-[10px] font-bold text-slate-400 mb-1.5 block">Wybierz kieszeń</label>
+                    <div id="trans-pocket-chips" class="flex flex-wrap gap-1.5"></div>
                     <input type="hidden" id="trans-pocket-id" value="">
                 </div>
 
                 <div id="trans-to-pocket-div" class="hidden">
-                    <label class="text-xs font-bold text-slate-400 mb-2 block">Do kieszeni</label>
-                    <div id="trans-to-pocket-chips" class="flex flex-wrap gap-2"></div>
+                    <label class="text-[10px] font-bold text-slate-400 mb-1.5 block">Do kieszeni</label>
+                    <div id="trans-to-pocket-chips" class="flex flex-wrap gap-1.5"></div>
                     <input type="hidden" id="trans-to-pocket-id" value="">
                 </div>
                 
-                <button onclick="saveTransaction()" class="w-full mt-4 bg-gradient-to-r from-savings-gradientStart to-savings-gradientEnd text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-savings-500/30 active:scale-95 transition-transform flex justify-center items-center gap-2">
+                <button onclick="saveTransaction()" class="w-full mt-3 bg-gradient-to-r from-savings-gradientStart to-savings-gradientEnd text-white py-3 rounded-xl font-black text-base shadow-lg shadow-savings-500/30 active:scale-95 transition-transform flex justify-center items-center gap-2">
                     <i class="ph-bold ph-check-circle"></i> Zapisz
                 </button>
             </div>
@@ -387,19 +305,19 @@
     <!-- Modal: Dodaj/Edytuj Kieszeń -->
     <div id="pocket-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="pocket-backdrop" onclick="closePocketModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-12 transform transition-transform translate-y-full shadow-2xl" id="pocket-panel">
-            <button onclick="closePocketModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
-                <i class="ph-bold ph-x"></i>
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[1.5rem] p-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] transform transition-transform translate-y-full shadow-2xl" id="pocket-panel">
+            <button onclick="closePocketModal()" class="absolute top-5 right-5 w-7 h-7 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
+                <i class="ph-bold ph-x text-sm"></i>
             </button>
-            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6"></div>
-            <h3 id="pocket-modal-title" class="text-2xl font-black mb-6 flex items-center gap-2"><i class="ph-fill ph-folder-plus text-savings-500"></i> Nowa kieszeń</h3>
+            <div class="w-10 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-5"></div>
+            <h3 id="pocket-modal-title" class="text-xl font-black mb-5 flex items-center gap-2"><i class="ph-fill ph-folder-plus text-savings-500"></i> Nowa kieszeń</h3>
             
-            <div class="space-y-4">
+            <div class="space-y-3">
                 <div class="relative">
-                    <i class="ph-fill ph-tag absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg"></i>
-                    <input type="text" id="pocket-name" placeholder="Nazwa (np. Na wakacje)" class="input-wow pl-12 focus:border-savings-500 border-savings-100">
+                    <i class="ph-fill ph-tag absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-base"></i>
+                    <input type="text" id="pocket-name" placeholder="Nazwa (np. Na wakacje)" class="input-wow pl-9 focus:border-savings-500 border-savings-100">
                 </div>
-                <button id="pocket-modal-btn" onclick="savePocket()" class="w-full mt-4 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-transform">
+                <button id="pocket-modal-btn" onclick="savePocket()" class="w-full mt-3 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-3 rounded-xl font-black text-base shadow-md active:scale-95 transition-transform">
                     Utwórz
                 </button>
             </div>
@@ -409,26 +327,26 @@
     <!-- Modal: Ustawienia -->
     <div id="settings-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="settings-backdrop" onclick="closeSettingsModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 pb-12 transform transition-transform translate-y-full shadow-2xl" id="settings-panel">
-            <button onclick="closeSettingsModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
-                <i class="ph-bold ph-x"></i>
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[1.5rem] p-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] transform transition-transform translate-y-full shadow-2xl" id="settings-panel">
+            <button onclick="closeSettingsModal()" class="absolute top-5 right-5 w-7 h-7 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
+                <i class="ph-bold ph-x text-sm"></i>
             </button>
-            <div class="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-6"></div>
-            <h3 class="text-2xl font-black mb-6 flex items-center gap-2"><i class="ph-fill ph-gear text-slate-500"></i> Ustawienia</h3>
+            <div class="w-10 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-5"></div>
+            <h3 class="text-xl font-black mb-5 flex items-center gap-2"><i class="ph-fill ph-gear text-slate-500"></i> Ustawienia</h3>
             
-            <div class="space-y-4">
-                <p class="text-sm font-semibold text-slate-500">Zapisz kopię zapasową swoich danych, albo wczytaj je z pliku. Aplikacja zapisuje się automatycznie.</p>
+            <div class="space-y-3">
+                <p class="text-xs font-semibold text-slate-500 leading-relaxed">Kopia zapasowa danych do pliku. Aplikacja zapisuje się automatycznie (LocalStorage).</p>
                 <div class="relative focus-within:text-savings-500 text-slate-400 transition-colors">
-                    <i class="ph-fill ph-file-text absolute left-4 top-1/2 transform -translate-y-1/2 text-lg"></i>
-                    <input type="text" id="export-filename" placeholder="Nazwa pliku" class="input-wow pl-12 focus:border-slate-500 border-slate-200 w-full" value="moje_finanse">
+                    <i class="ph-fill ph-file-text absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
+                    <input type="text" id="export-filename" placeholder="Nazwa pliku" class="input-wow pl-9 focus:border-slate-500 border-slate-200 w-full" value="moje_finanse">
                 </div>
                 <input type="file" id="import-file" class="hidden" accept=".json" onchange="handleFileUpload(event)">
                 
-                <div class="flex gap-3 mt-2">
-                    <button onclick="exportDataFile()" class="w-1/2 bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white py-3 rounded-2xl font-bold active:scale-95 transition-transform flex justify-center items-center gap-2">
+                <div class="flex gap-2.5 mt-1">
+                    <button onclick="exportDataFile()" class="w-1/2 bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white py-2.5 rounded-xl font-bold text-sm active:scale-95 transition-transform flex justify-center items-center gap-1.5">
                         <i class="ph-bold ph-export"></i> Zapisz
                     </button>
-                    <button onclick="document.getElementById('import-file').click()" class="w-1/2 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-3 rounded-2xl font-bold active:scale-95 transition-transform flex justify-center items-center gap-2 shadow-lg">
+                    <button onclick="document.getElementById('import-file').click()" class="w-1/2 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-2.5 rounded-xl font-bold text-sm active:scale-95 transition-transform flex justify-center items-center gap-1.5 shadow-md">
                         <i class="ph-bold ph-download-simple"></i> Wczytaj
                     </button>
                 </div>
@@ -558,8 +476,8 @@
         const btnSavings = document.getElementById('nav-savings');
         const btnSavingsBg = document.getElementById('nav-savings-bg');
 
-        btnRent.className = "flex flex-col items-center justify-center w-20 relative text-slate-400 transition-colors";
-        btnSavings.className = "flex flex-col items-center justify-center w-20 relative text-slate-400 transition-colors";
+        btnRent.className = "flex flex-col items-center justify-center w-16 relative text-slate-400 transition-colors";
+        btnSavings.className = "flex flex-col items-center justify-center w-16 relative text-slate-400 transition-colors";
         btnRentBg.classList.replace('opacity-100', 'opacity-0');
         btnSavingsBg.classList.replace('opacity-100', 'opacity-0');
 
@@ -568,15 +486,15 @@
             btnRent.classList.add('text-rent-500');
             btnRentBg.classList.replace('opacity-0', 'opacity-100');
             
-            document.getElementById('blob1').className = "absolute top-[-10%] left-[-10%] w-72 h-72 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700";
-            document.getElementById('blob3').className = "absolute bottom-[-20%] left-[20%] w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700";
+            document.getElementById('blob1').className = "absolute top-[-10%] left-[-10%] w-64 h-64 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700";
+            document.getElementById('blob3').className = "absolute bottom-[-20%] left-[20%] w-80 h-80 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700";
         } else {
             bg.className = "bg-dynamic-savings text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative";
             btnSavings.classList.add('text-savings-500');
             btnSavingsBg.classList.replace('opacity-0', 'opacity-100');
             
-            document.getElementById('blob1').className = "absolute top-[-10%] left-[-10%] w-72 h-72 bg-savings-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700";
-            document.getElementById('blob3').className = "absolute bottom-[-20%] left-[20%] w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700";
+            document.getElementById('blob1').className = "absolute top-[-10%] left-[-10%] w-64 h-64 bg-savings-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700";
+            document.getElementById('blob3').className = "absolute bottom-[-20%] left-[20%] w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700";
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -602,7 +520,7 @@
         const e = parseFloat(document.getElementById('base-electric').value.replace(',','.')) || 0;
         
         totalBaseRent = r + a + e;
-        document.getElementById('total-rent-display').innerHTML = totalBaseRent.toFixed(0) + ' <span class="text-2xl text-slate-400 dark:text-slate-500">zł</span>';
+        document.getElementById('total-rent-display').innerHTML = totalBaseRent.toFixed(0) + ' <span class="text-xl text-slate-400 dark:text-slate-500">zł</span>';
         updatePerPerson();
         if(autoSave) saveToLocal();
     }
@@ -640,8 +558,8 @@
         container.innerHTML = '';
         tenants.forEach((t, i) => {
             container.innerHTML += `
-            <div class="bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-xl flex items-center gap-2 shadow-sm text-sm font-bold animate-fade-in">
-                ${t} <i class="ph-bold ph-x text-slate-400 cursor-pointer hover:text-red-500 ml-1" onclick="removeTenant(${i})"></i>
+            <div class="bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 px-2.5 py-1 rounded-lg flex items-center gap-1.5 shadow-sm text-xs font-bold animate-fade-in">
+                ${t} <i class="ph-bold ph-x text-slate-400 cursor-pointer hover:text-red-500 ml-0.5" onclick="removeTenant(${i})"></i>
             </div>`;
         });
     }
@@ -654,8 +572,8 @@
         const currentSelected = parseInt(document.getElementById('start-month').value) || 0;
         
         container.innerHTML = shortMonthNames.map((m, index) => `
-            <button type="button" onclick="selectStartMonth(${index})" class="px-2 py-2 rounded-xl text-xs font-bold border transition-all flex flex-col items-center justify-center gap-1 active:scale-90 ${index === currentSelected ? 'bg-rent-500 text-white border-rent-500 shadow-md shadow-rent-500/30' : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400'}">
-                <i class="ph-fill ph-calendar-blank text-lg"></i>
+            <button type="button" onclick="selectStartMonth(${index})" class="px-1.5 py-1.5 rounded-lg text-[10px] font-bold border transition-all flex flex-col items-center justify-center gap-0.5 active:scale-90 ${index === currentSelected ? 'bg-rent-500 text-white border-rent-500 shadow-md shadow-rent-500/30' : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400'}">
+                <i class="ph-fill ph-calendar-blank text-base"></i>
                 <span>${m}</span>
             </button>
         `).join('');
@@ -691,41 +609,39 @@
 
     function renderMonthCard(container, monthName, id) {
         const tenantHTML = tenants.map((t, index) => `
-            <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-white/5 last:border-0">
-                <div class="w-[35%]">
-                    <p class="font-extrabold text-sm">${t}</p>
-                    <p class="text-[10px] text-slate-500 uppercase tracking-wide font-bold mt-1">Do zapłaty:</p>
-                    <p class="text-lg font-black text-rent-600 dark:text-rent-400"><span id="req-${id}-${index}">0</span> <span class="text-xs text-slate-400">zł</span></p>
+            <div class="flex items-center justify-between py-2 border-b border-slate-100 dark:border-white/5 last:border-0">
+                <div class="w-[30%] pr-1">
+                    <p class="font-extrabold text-[13px] truncate">${t}</p>
+                    <p class="text-[9px] text-slate-500 uppercase tracking-wide font-bold mt-0.5">Do zapłaty:</p>
+                    <p class="text-[15px] font-black text-rent-600 dark:text-rent-400 leading-none mt-0.5"><span id="req-${id}-${index}">0</span><span class="text-[10px] text-slate-400 ml-0.5">zł</span></p>
                 </div>
-                <div class="w-[40%] px-1">
-                    <div class="relative flex items-center bg-white dark:bg-black/40 border border-transparent focus-within:border-rent-400 rounded-xl overflow-hidden transition-colors shadow-sm">
-                        <span class="pl-2 text-[9px] text-slate-400 font-bold uppercase tracking-widest hidden sm:inline-block">Przelano:</span>
-                        <input type="number" id="paid-${id}-${index}" placeholder="Wpłata" class="w-full bg-transparent p-2 text-sm text-right outline-none font-bold" oninput="calcTenant(${id}, ${index})">
-                        <span class="pr-2 pl-1 text-[10px] text-slate-500 font-bold">zł</span>
+                <div class="w-[45%] px-1">
+                    <div class="relative flex items-center bg-white dark:bg-black/40 border border-transparent focus-within:border-rent-400 rounded-lg overflow-hidden transition-colors shadow-sm">
+                        <input type="number" id="paid-${id}-${index}" placeholder="Wpłata" class="w-full bg-transparent py-1.5 px-2 text-sm text-center outline-none font-bold" oninput="calcTenant(${id}, ${index})">
                     </div>
                 </div>
                 <div class="w-[25%] text-right flex flex-col items-end justify-center">
-                    <span id="status-${id}-${index}" class="text-xs font-bold text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-lg">Brak</span>
+                    <span id="status-${id}-${index}" class="text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md">Brak</span>
                 </div>
             </div>
         `).join('');
 
         const card = `
-            <div class="glass-card rounded-[2rem] p-5 transition-all duration-300 transform origin-top animate-fade-in" id="month-card-${id}">
-                <div class="flex justify-between items-center mb-4 pb-4 border-b border-slate-200 dark:border-white/10">
-                    <div class="flex items-center gap-3 cursor-pointer flex-1" onclick="toggleMonthCollapse(${id})">
-                        <button onclick="toggleMonthDone(${id}, event)" id="check-${id}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-slate-300 dark:text-slate-600 transition-all hover:scale-105 active:scale-95 shadow-inner">
-                            <i class="ph-bold ph-check text-lg"></i>
+            <div class="glass-card rounded-[1.5rem] p-4 transition-all duration-300 transform origin-top animate-fade-in" id="month-card-${id}">
+                <div class="flex justify-between items-center mb-3 pb-3 border-b border-slate-200 dark:border-white/10">
+                    <div class="flex items-center gap-2 cursor-pointer flex-1 min-w-0" onclick="toggleMonthCollapse(${id})">
+                        <button onclick="toggleMonthDone(${id}, event)" id="check-${id}" class="w-6 h-6 shrink-0 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-slate-300 dark:text-slate-600 transition-all hover:scale-105 active:scale-95 shadow-inner">
+                            <i class="ph-bold ph-check text-sm"></i>
                         </button>
-                        <h3 class="font-black text-xl flex items-center gap-2">
-                            ${monthName} <i id="month-caret-${id}" class="ph-bold ph-caret-down text-sm text-slate-400 transition-transform" style="transform: rotate(180deg);"></i>
+                        <h3 class="font-black text-base flex items-center gap-1.5 truncate">
+                            ${monthName} <i id="month-caret-${id}" class="ph-bold ph-caret-down text-xs text-slate-400 transition-transform shrink-0" style="transform: rotate(180deg);"></i>
                         </h3>
                     </div>
-                    <div class="text-right">
-                        <div class="relative flex items-center bg-white dark:bg-black/40 border border-rent-100 dark:border-white/10 focus-within:border-rent-500 rounded-xl overflow-hidden shadow-sm">
-                            <span class="pl-2 text-[9px] text-slate-400 font-bold uppercase tracking-widest">Faktura:</span>
-                            <input type="number" id="invoice-${id}" value="${totalBaseRent.toFixed(0)}" class="w-16 bg-transparent p-1.5 text-right font-black text-sm outline-none" oninput="updateInvoice(${id})">
-                            <span class="pr-2 pl-1 text-[10px] text-slate-500 font-bold">zł</span>
+                    <div class="text-right shrink-0 ml-2">
+                        <div class="relative flex items-center bg-white dark:bg-black/40 border border-rent-100 dark:border-white/10 focus-within:border-rent-500 rounded-lg overflow-hidden shadow-sm px-1.5 py-1">
+                            <span class="text-[8px] text-slate-400 font-bold uppercase tracking-widest mr-1 hidden sm:inline-block">Faktura:</span>
+                            <input type="number" id="invoice-${id}" value="${totalBaseRent.toFixed(0)}" class="w-[3.5rem] bg-transparent text-right font-black text-xs outline-none" oninput="updateInvoice(${id})">
+                            <span class="text-[9px] text-slate-500 font-bold ml-0.5">zł</span>
                         </div>
                     </div>
                 </div>
@@ -749,7 +665,6 @@
 
         tenants.forEach((_, index) => {
             const reqEl = document.getElementById(`req-${monthId}-${index}`);
-            // Używamy textContent, ponieważ w ukrytym divie (accordion) innerText zwraca pusty ciąg!
             if(reqEl) reqEl.textContent = perPerson.toFixed(0);
             calcTenant(monthId, index, false); 
         });
@@ -761,8 +676,6 @@
         const reqEl = document.getElementById(`req-${monthId}-${tIndex}`);
         if (!reqEl) return;
         
-        // Krytyczna poprawka: textContent czyta wartość nawet z zamkniętych kart. 
-        // Wcześniej zamknięta karta dawała 0 zł, co generowało dziwne wyniki "na plusie".
         const req = parseFloat(reqEl.textContent) || 0;
         const paidInputStr = document.getElementById(`paid-${monthId}-${tIndex}`).value.replace(',','.');
         const paid = parseFloat(paidInputStr) || 0;
@@ -770,18 +683,18 @@
 
         if (paidInputStr.trim() === "" || isNaN(paid)) {
             statusEl.innerHTML = `Brak`;
-            statusEl.className = "text-xs font-bold text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-lg inline-block";
+            statusEl.className = "text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-md inline-block";
         } else if (Math.abs(req - paid) < 0.05) { 
-            statusEl.innerHTML = `<i class="ph-fill ph-check-circle text-lg"></i> OK`;
-            statusEl.className = "text-sm font-black text-green-500 flex items-center justify-end gap-1";
+            statusEl.innerHTML = `<i class="ph-fill ph-check-circle text-sm"></i> OK`;
+            statusEl.className = "text-[11px] font-black text-green-500 flex items-center justify-end gap-1";
         } else if (paid < req) {
             const diff = (req - paid).toFixed(0);
-            statusEl.innerHTML = `<i class="ph-bold ph-warning-circle"></i> -${diff}`;
-            statusEl.className = "text-xs font-black text-red-500 bg-red-50 dark:bg-red-500/10 px-2 py-1 rounded-lg flex items-center justify-end gap-1";
+            statusEl.innerHTML = `<i class="ph-bold ph-warning-circle text-xs"></i> -${diff}`;
+            statusEl.className = "text-[11px] font-black text-red-500 bg-red-50 dark:bg-red-500/10 px-1.5 py-0.5 rounded-md flex items-center justify-end gap-0.5";
         } else {
             const diff = (paid - req).toFixed(0);
-            statusEl.innerHTML = `<i class="ph-bold ph-arrow-u-up-left"></i> +${diff}`;
-            statusEl.className = "text-xs font-black text-green-600 bg-green-50 dark:bg-green-500/10 px-2 py-1 rounded-lg flex items-center justify-end gap-1";
+            statusEl.innerHTML = `<i class="ph-bold ph-arrow-u-up-left text-xs"></i> +${diff}`;
+            statusEl.className = "text-[11px] font-black text-green-600 bg-green-50 dark:bg-green-500/10 px-1.5 py-0.5 rounded-md flex items-center justify-end gap-0.5";
         }
         
         if(autoSave) saveToLocal();
@@ -795,12 +708,12 @@
         if(body.style.maxHeight === '0px' || body.classList.contains('opacity-0')) {
             body.style.maxHeight = '1000px';
             body.classList.remove('opacity-0', 'mt-0');
-            body.classList.add('opacity-100', 'mt-2');
+            body.classList.add('opacity-100', 'mt-1');
             caret.style.transform = 'rotate(0deg)';
         } else {
             body.style.maxHeight = '0px';
             body.classList.add('opacity-0', 'mt-0');
-            body.classList.remove('opacity-100', 'mt-2');
+            body.classList.remove('opacity-100', 'mt-1');
             caret.style.transform = 'rotate(180deg)';
         }
     }
@@ -815,19 +728,19 @@
         if(check.classList.contains('bg-green-500')) {
             body.style.maxHeight = '1000px';
             body.classList.remove('opacity-0', 'mt-0');
-            body.classList.add('opacity-100', 'mt-2');
+            body.classList.add('opacity-100', 'mt-1');
             caret.style.transform = 'rotate(0deg)';
             
-            card.classList.remove('opacity-50', 'bg-slate-50/50', 'dark:bg-black/20');
+            card.classList.remove('opacity-60', 'bg-slate-50/50', 'dark:bg-black/20');
             check.classList.remove('bg-green-500', 'text-white', 'shadow-green-500/50');
             check.classList.add('bg-slate-100', 'dark:bg-white/10', 'text-slate-300', 'dark:text-slate-600');
         } else {
             body.style.maxHeight = '0px';
             body.classList.add('opacity-0', 'mt-0');
-            body.classList.remove('opacity-100', 'mt-2');
+            body.classList.remove('opacity-100', 'mt-1');
             caret.style.transform = 'rotate(180deg)';
             
-            card.classList.add('opacity-50', 'bg-slate-50/50', 'dark:bg-black/20');
+            card.classList.add('opacity-60', 'bg-slate-50/50', 'dark:bg-black/20');
             check.classList.add('bg-green-500', 'text-white', 'shadow-green-500/50');
             check.classList.remove('bg-slate-100', 'dark:bg-white/10', 'text-slate-300', 'dark:text-slate-600');
         }
@@ -839,29 +752,33 @@
 
     function renderSavings() {
         const total = pockets.reduce((sum, p) => sum + p.balance, 0);
-        document.getElementById('total-savings-display').innerHTML = total.toFixed(0) + ' <span class="text-2xl text-white/70">zł</span>';
+        document.getElementById('total-savings-display').innerHTML = total.toFixed(0) + ' <span class="text-xl text-white/70">zł</span>';
 
         const pContainer = document.getElementById('pockets-container');
         pContainer.innerHTML = '';
         
         if(pockets.length === 0) {
-             pContainer.innerHTML = '<div class="text-sm text-slate-400 p-4 w-full">Brak kieszeni. Dodaj pierwszą!</div>';
+             pContainer.innerHTML = '<div class="text-xs text-slate-400 p-3 w-full col-span-2 text-center">Brak kieszeni.</div>';
         } else {
             pockets.forEach(p => {
-                // Bezpieczne pozycjonowanie przycisków
                 pContainer.innerHTML += `
-                    <div class="w-[calc(50%-0.375rem)] glass-card rounded-[1.25rem] p-4 relative overflow-hidden group">
-                        <div class="absolute -right-4 -bottom-4 w-12 h-12 bg-savings-400/10 rounded-full blur-xl pointer-events-none"></div>
-                        <div class="absolute top-2 right-2 flex gap-1 z-20">
-                            <button onclick="openEditPocketModal(${p.id})" class="w-6 h-6 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 active:scale-90 transition-all">
-                                <i class="ph-bold ph-pencil-simple text-[10px]"></i>
-                            </button>
-                            <button onclick="deletePocket(${p.id})" class="w-6 h-6 bg-red-100 text-red-500 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 active:scale-90 transition-all">
-                                <i class="ph-bold ph-trash text-[10px]"></i>
-                            </button>
+                    <div class="glass-card rounded-[1.25rem] p-3 relative overflow-hidden group flex flex-col justify-between min-h-[5.5rem]">
+                        <div class="absolute -right-4 -bottom-4 w-10 h-10 bg-savings-400/10 rounded-full blur-xl pointer-events-none"></div>
+                        <div class="flex justify-between items-start z-10 w-full mb-1">
+                            <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest truncate flex items-center pr-1 max-w-[70%]">
+                                <i class="ph-fill ph-folder-open text-savings-400 mr-1 shrink-0"></i> 
+                                <span class="truncate">${p.name}</span>
+                            </p>
+                            <div class="flex gap-1 shrink-0">
+                                <button onclick="openEditPocketModal(${p.id})" class="w-5 h-5 bg-blue-50 text-blue-500 dark:bg-blue-500/20 rounded-md flex items-center justify-center hover:bg-blue-100 active:scale-90 transition-all">
+                                    <i class="ph-bold ph-pencil-simple text-[9px]"></i>
+                                </button>
+                                <button onclick="deletePocket(${p.id})" class="w-5 h-5 bg-red-50 text-red-500 dark:bg-red-500/20 rounded-md flex items-center justify-center hover:bg-red-100 active:scale-90 transition-all">
+                                    <i class="ph-bold ph-trash text-[9px]"></i>
+                                </button>
+                            </div>
                         </div>
-                        <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1 truncate pr-14 relative z-10 uppercase tracking-wider mt-1"><i class="ph-fill ph-folder-open text-savings-400"></i> ${p.name}</p>
-                        <p class="text-lg font-black text-slate-800 dark:text-white relative z-10">${p.balance.toFixed(2)} <span class="text-[10px] font-bold text-slate-400">zł</span></p>
+                        <p class="text-base font-black text-slate-800 dark:text-white relative z-10 mt-auto">${p.balance.toFixed(2)} <span class="text-[9px] font-bold text-slate-400">zł</span></p>
                     </div>
                 `;
             });
@@ -870,9 +787,9 @@
         const tContainer = document.getElementById('transactions-list');
         if (transactions.length === 0) {
             tContainer.innerHTML = `
-                <div class="text-center py-6">
-                    <i class="ph-fill ph-receipt text-4xl text-slate-200 dark:text-slate-700 mb-2"></i>
-                    <p class="text-slate-400 text-sm font-semibold">Historia jest pusta.</p>
+                <div class="text-center py-5">
+                    <i class="ph-fill ph-receipt text-3xl text-slate-200 dark:text-slate-700 mb-1"></i>
+                    <p class="text-slate-400 text-xs font-semibold">Historia jest pusta.</p>
                 </div>`;
         } else {
             tContainer.innerHTML = transactions.map(t => {
@@ -880,38 +797,37 @@
                 let subtitle = pockets.find(p => p.id == t.pocketId)?.name || 'Usunięta kieszeń';
                 
                 if (t.type === 'in') {
-                    iconClass = 'ph-trend-up'; bgClass = 'bg-green-100 text-green-500 dark:bg-green-500/20'; colorClass = 'text-green-500'; sign = '+';
+                    iconClass = 'ph-trend-up'; bgClass = 'bg-green-50 text-green-500 dark:bg-green-500/20'; colorClass = 'text-green-500'; sign = '+';
                 } else if (t.type === 'out') {
-                    iconClass = 'ph-trend-down'; bgClass = 'bg-red-100 text-red-500 dark:bg-red-500/20'; colorClass = 'text-slate-800 dark:text-white'; sign = '-';
+                    iconClass = 'ph-trend-down'; bgClass = 'bg-red-50 text-red-500 dark:bg-red-500/20'; colorClass = 'text-slate-800 dark:text-white'; sign = '-';
                 } else {
-                    iconClass = 'ph-arrows-left-right'; bgClass = 'bg-transfer-500/20 text-transfer-500'; colorClass = 'text-transfer-500'; sign = '';
+                    iconClass = 'ph-arrows-left-right'; bgClass = 'bg-transfer-500/10 text-transfer-500'; colorClass = 'text-transfer-500'; sign = '';
                     let toPocketName = pockets.find(p => p.id == t.toPocketId)?.name || 'Usunięta kieszeń';
-                    subtitle = `${subtitle} <i class="ph-bold ph-arrow-right mx-0.5"></i> ${toPocketName}`;
+                    subtitle = `${subtitle} <i class="ph-bold ph-arrow-right mx-0.5 text-[8px]"></i> ${toPocketName}`;
                 }
 
-                // Struktura Flexbox uniemożliwiająca nakładanie się elementów!
                 return `
-                    <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-white/5 last:border-0 group animate-fade-in">
-                        <div class="flex items-center gap-3 flex-1 min-w-0 pr-2">
-                            <div class="w-10 h-10 shrink-0 rounded-xl ${bgClass} flex items-center justify-center shadow-sm">
-                                <i class="ph-bold ${iconClass} text-lg"></i>
+                    <div class="flex items-center justify-between py-2 border-b border-slate-100 dark:border-white/5 last:border-0 group animate-fade-in">
+                        <div class="flex items-center gap-2.5 flex-1 min-w-0 pr-2">
+                            <div class="w-8 h-8 shrink-0 rounded-lg ${bgClass} flex items-center justify-center shadow-sm">
+                                <i class="ph-bold ${iconClass} text-sm"></i>
                             </div>
                             <div class="min-w-0 flex-1">
-                                <p class="font-extrabold text-sm truncate">${t.desc}</p>
-                                <p class="text-[10px] text-slate-400 font-bold uppercase mt-0.5 flex items-center truncate">
+                                <p class="font-extrabold text-[13px] truncate">${t.desc}</p>
+                                <p class="text-[9px] text-slate-400 font-bold uppercase mt-0.5 flex items-center truncate">
                                     <i class="ph-fill ph-folder text-savings-400 mr-1 shrink-0"></i> 
                                     <span class="truncate">${subtitle}</span>
                                 </p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3 shrink-0">
-                            <p class="font-black text-sm ${colorClass} text-right">${sign}${t.amount.toFixed(2)} zł</p>
-                            <div class="flex items-center gap-1">
-                                <button onclick="openEditTransactionModal(${t.id})" class="w-7 h-7 bg-blue-100 text-blue-500 dark:bg-blue-500/20 rounded-full flex items-center justify-center active:scale-90 transition-all opacity-70 hover:opacity-100 shrink-0">
-                                    <i class="ph-bold ph-pencil-simple text-[11px]"></i>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <p class="font-black text-[13px] ${colorClass} text-right leading-none">${sign}${t.amount.toFixed(2)}<br><span class="text-[8px] text-slate-400">zł</span></p>
+                            <div class="flex flex-col gap-1">
+                                <button onclick="openEditTransactionModal(${t.id})" class="w-6 h-6 bg-blue-50 text-blue-500 dark:bg-blue-500/20 rounded-md flex items-center justify-center active:scale-90 transition-all opacity-80 hover:opacity-100 shrink-0">
+                                    <i class="ph-bold ph-pencil-simple text-[10px]"></i>
                                 </button>
-                                <button onclick="deleteTransaction(${t.id})" class="w-7 h-7 bg-red-100 text-red-500 dark:bg-red-500/20 rounded-full flex items-center justify-center active:scale-90 transition-all opacity-70 hover:opacity-100 shrink-0">
-                                    <i class="ph-bold ph-trash text-[11px]"></i>
+                                <button onclick="deleteTransaction(${t.id})" class="w-6 h-6 bg-red-50 text-red-500 dark:bg-red-500/20 rounded-md flex items-center justify-center active:scale-90 transition-all opacity-80 hover:opacity-100 shrink-0">
+                                    <i class="ph-bold ph-trash text-[10px]"></i>
                                 </button>
                             </div>
                         </div>
@@ -1053,7 +969,7 @@
         container.innerHTML = pockets.map((p, index) => {
             const isSelected = index === (isTransferTo && pockets.length > 1 ? 1 : 0);
             return `
-            <button type="button" onclick="selectPocketChip(${p.id}, '${containerId}', '${hiddenInputId}')" id="chip-${containerId}-${p.id}" class="px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors ${isSelected ? 'bg-savings-500 text-white border-savings-500' : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400'}">
+            <button type="button" onclick="selectPocketChip(${p.id}, '${containerId}', '${hiddenInputId}')" id="chip-${containerId}-${p.id}" class="px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors ${isSelected ? 'bg-savings-500 text-white border-savings-500' : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400'}">
                 <i class="ph-fill ph-folder"></i> ${p.name}
             </button>
         `}).join('');
@@ -1069,9 +985,9 @@
             const chip = document.getElementById(`chip-${containerId}-${p.id}`);
             if(chip) {
                 if (p.id === id) {
-                    chip.className = "px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors bg-savings-500 text-white border-savings-500";
+                    chip.className = "px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors bg-savings-500 text-white border-savings-500";
                 } else {
-                    chip.className = "px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400";
+                    chip.className = "px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400";
                 }
             }
         });
@@ -1147,7 +1063,7 @@
                 fromPkt.balance -= amount;
                 toPkt.balance += amount;
                 transactions.push({
-                    id: editingTransactionId || Date.now(), type: 'transfer', amount: amount, desc: desc || 'Transfer środków', pocketId: pocketId, toPocketId: toPocketId
+                    id: editingTransactionId || Date.now(), type: 'transfer', amount: amount, desc: desc || 'Transfer', pocketId: pocketId, toPocketId: toPocketId
                 });
             } else { showToast("Błąd kieszeni!"); return; }
         } else {
@@ -1167,7 +1083,7 @@
     }
 
     function deleteTransaction(id) {
-        if(confirm("Czy na pewno chcesz usunąć ten ruch z historii i cofnąć pieniądze?")) {
+        if(confirm("Cofnąć ten ruch i przywrócić saldo?")) {
             const index = transactions.findIndex(t => t.id === id);
             if (index > -1) {
                 const t = transactions[index];
@@ -1221,7 +1137,7 @@
         document.body.removeChild(a); URL.revokeObjectURL(url);
         
         closeSettingsModal();
-        showToast("Plik został pobrany!");
+        showToast("Plik pobrany!");
     }
 
     function handleFileUpload(event) {
@@ -1234,7 +1150,7 @@
                 applyLoadedData(data);
                 saveToLocal();
                 closeSettingsModal();
-                showToast("Dane wczytane pomyślnie!");
+                showToast("Dane wczytane!");
             } catch(error) {
                 showToast("Błąd! Nieprawidłowy plik.");
             }
@@ -1251,12 +1167,8 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
-                .then(registration => {
-                    console.log('ServiceWorker zarejestrowany pomyślnie!');
-                })
-                .catch(err => {
-                    console.log('Błąd rejestracji ServiceWorkera: ', err);
-                });
+                .then(registration => { console.log('SW OK'); })
+                .catch(err => { console.log('SW Error: ', err); });
         });
     }
 </script>
