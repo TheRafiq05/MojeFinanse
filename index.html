@@ -2,12 +2,13 @@
 <html lang="pl" class="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MojeFinanse</title>
     
     <!-- Ikony i ustawienia PWA (Aplikacji Mobilnej) -->
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#FF8A65">
@@ -40,12 +41,14 @@
                             gradientStart: '#FF4081',
                             gradientEnd: '#E040FB'
                         },
+                        transfer: {
+                            500: '#8B5CF6', // Fioletowy dla transferów
+                        },
                         darkBg: '#121212',
                         darkCard: '#1E1E1E'
                     },
                     animation: {
                         'blob': 'blob 7s infinite',
-                        'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'fade-in': 'fadeIn 0.3s ease-out forwards'
                     },
                     keyframes: {
@@ -54,10 +57,6 @@
                             '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
                             '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
                             '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(100%)' },
-                            '100%': { transform: 'translateY(0)' },
                         },
                         fadeIn: {
                             '0%': { opacity: '0' },
@@ -76,12 +75,12 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* Ukrywanie paska przewijania */
         ::-webkit-scrollbar { display: none; }
 
-        /* Stylizacja Liquid Glass */
         .glass-card {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(20px);
@@ -108,7 +107,6 @@
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Pola input formularzy */
         .input-wow {
             width: 100%;
             background: rgba(255, 255, 255, 0.8);
@@ -134,11 +132,9 @@
             border-color: rgba(255,255,255,0.1);
         }
 
-        /* Przełączanie zakładek */
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
 
-        /* Tła gradientowe dynamiczne */
         .bg-dynamic-rent {
             background: linear-gradient(135deg, #FFF0ED 0%, #FFE0B2 100%);
         }
@@ -152,7 +148,6 @@
             background: linear-gradient(135deg, #1A1014 0%, #1A1220 100%);
         }
 
-        /* Ukrycie systemowych strzałek (spinnerów) w polach liczbowych */
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -161,46 +156,45 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
+        
+        .safe-pb { padding-bottom: calc(env(safe-area-inset-bottom) + 1rem); }
+        .safe-pt { padding-top: calc(env(safe-area-inset-top) + 1rem); }
     </style>
 </head>
 <body class="bg-dynamic-rent text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative" id="body-bg">
 
-    <!-- Animowane rozmyte kształty (Blobs) w tle -->
     <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <div id="blob1" class="absolute top-[-10%] left-[-10%] w-72 h-72 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700"></div>
         <div id="blob2" class="absolute top-[20%] right-[-10%] w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 dark:opacity-20 transition-colors duration-700"></div>
         <div id="blob3" class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700"></div>
     </div>
 
-    <!-- Pływający Header -->
-    <header class="fixed top-4 left-4 right-4 z-40 glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg">
-        <h1 id="app-title" class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
-            Czynsz
-        </h1>
-        <div class="flex items-center gap-2">
-            <button onclick="openSettingsModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
-                <i class="ph-fill ph-gear text-xl text-slate-600 dark:text-slate-300"></i>
-            </button>
-            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
-                <i class="ph-fill ph-moon text-xl dark:hidden text-slate-700"></i>
-                <i class="ph-fill ph-sun text-xl hidden dark:block text-yellow-400"></i>
-            </button>
+    <!-- Pływający Header (Safe-pt uwzględnia Notcha) -->
+    <header class="fixed safe-pt left-4 right-4 z-40">
+        <div class="glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg">
+            <h1 id="app-title" class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
+                MojeFinanse
+            </h1>
+            <div class="flex items-center gap-2">
+                <button onclick="openSettingsModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
+                    <i class="ph-fill ph-gear text-xl text-slate-600 dark:text-slate-300"></i>
+                </button>
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
+                    <i class="ph-fill ph-moon text-xl dark:hidden text-slate-700"></i>
+                    <i class="ph-fill ph-sun text-xl hidden dark:block text-yellow-400"></i>
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Powiadomienia (Toast) -->
-    <div id="toast" class="fixed top-24 left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="toast" class="fixed top-32 left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300">
         Komunikat
     </div>
 
-    <main class="pt-28 pb-32 px-4 max-w-md mx-auto min-h-screen relative z-10">
+    <main class="pt-32 pb-32 px-4 max-w-md mx-auto min-h-screen relative z-10">
         
-        <!-- ======================= -->
-        <!-- ZAKŁADKA 1: CZYNSZ      -->
-        <!-- ======================= -->
+        <!-- ZAKŁADKA 1: CZYNSZ -->
         <div id="view-rent" class="tab-content active space-y-6">
-            
-            <!-- Główna karta sumy -->
             <div class="glass-card rounded-[2rem] p-6 text-center shadow-xl relative overflow-hidden group">
                 <div class="absolute inset-0 bg-gradient-to-br from-rent-gradientStart to-rent-gradientEnd opacity-10 group-hover:opacity-20 transition-opacity"></div>
                 <div class="relative z-10">
@@ -208,16 +202,16 @@
                         <i class="ph-fill ph-house-line text-2xl text-rent-500"></i>
                     </div>
                     <p class="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-1 uppercase tracking-wider">Baza czynszu</p>
-                    <h2 class="text-5xl font-black text-slate-800 dark:text-white tracking-tight" id="total-rent-display">0.00 <span class="text-2xl text-slate-400">zł</span></h2>
+                    <h2 class="text-5xl font-black text-slate-800 dark:text-white tracking-tight" id="total-rent-display">0 <span class="text-2xl text-slate-400">zł</span></h2>
                     <div class="mt-3 inline-block bg-rent-100 dark:bg-rent-900/30 px-4 py-1.5 rounded-full">
-                        <p class="text-sm font-bold text-rent-600 dark:text-rent-400">≈ <span id="per-person-display">0.00</span> zł / osobę</p>
+                        <p class="text-sm font-bold text-rent-600 dark:text-rent-400">≈ <span id="per-person-display">0</span> zł / osobę</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Ustawienia Wynajmu (Akordeon) -->
+            <!-- Ustawienia Wynajmu -->
             <div class="glass-card rounded-3xl p-2 shadow-sm border border-rent-200 dark:border-white/5">
-                <div class="p-4 flex justify-between items-center cursor-pointer" onclick="toggleSettingsAccordion()">
+                <div class="p-4 flex justify-between items-center cursor-pointer" onclick="toggleSettings()">
                     <div class="flex items-center gap-3">
                         <div class="p-2.5 bg-rent-100 dark:bg-rent-900/30 rounded-xl text-rent-500">
                             <i class="ph-fill ph-sliders-horizontal text-xl"></i>
@@ -230,58 +224,50 @@
                 <div id="settings-content" class="hidden px-4 pb-4 space-y-5">
                     <div class="w-full h-px bg-slate-200 dark:bg-white/10 mb-4"></div>
                     
-                    <!-- Kwoty -->
                     <div>
                         <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block flex items-center gap-1"><i class="ph-fill ph-coins"></i> Kwoty stałe</label>
                         <div class="space-y-3">
                             <div class="relative focus-within:text-rent-500 text-slate-400 transition-colors">
                                 <i class="ph-fill ph-key absolute left-4 top-1/2 transform -translate-y-1/2 text-lg"></i>
-                                <input type="number" id="base-rent" placeholder="Odstępne (dla właściciela)" class="input-wow pl-12 border-rent-100 focus:border-rent-500" onchange="calculateRent()">
+                                <input type="number" id="base-rent" placeholder="Odstępne" class="input-wow pl-12 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
                             </div>
                             <div class="relative focus-within:text-rent-500 text-slate-400 transition-colors">
                                 <i class="ph-fill ph-buildings absolute left-4 top-1/2 transform -translate-y-1/2 text-lg"></i>
-                                <input type="number" id="base-admin" placeholder="Czynsz adm. (spółdzielnia)" class="input-wow pl-12 border-rent-100 focus:border-rent-500" onchange="calculateRent()">
+                                <input type="number" id="base-admin" placeholder="Czynsz adm." class="input-wow pl-12 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
                             </div>
                             <div class="relative focus-within:text-rent-500 text-slate-400 transition-colors">
                                 <i class="ph-fill ph-lightning absolute left-4 top-1/2 transform -translate-y-1/2 text-lg"></i>
-                                <input type="number" id="base-electric" placeholder="Zaliczki (prąd, gaz itp.)" class="input-wow pl-12 border-rent-100 focus:border-rent-500" onchange="calculateRent()">
+                                <input type="number" id="base-electric" placeholder="Zaliczki" class="input-wow pl-12 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Początek umowy -->
                     <div>
                         <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block flex items-center gap-1"><i class="ph-fill ph-calendar-blank"></i> Start umowy</label>
-                        <div id="start-month-chips" class="grid grid-cols-4 gap-2">
-                            <!-- Wypełniane z JS -->
-                        </div>
+                        <div id="start-month-chips" class="grid grid-cols-4 gap-2"></div>
                         <input type="hidden" id="start-month" value="0">
                     </div>
 
-                    <!-- Lokatorzy -->
                     <div class="pt-2">
                         <div class="flex justify-between items-center mb-2">
                             <label class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><i class="ph-fill ph-users"></i> Lokatorzy</label>
                             <span class="bg-slate-200 dark:bg-slate-700 text-xs px-2 py-0.5 rounded-full font-bold" id="tenant-count">0</span>
                         </div>
                         <div class="flex gap-2 mb-3">
-                            <input type="text" id="new-tenant-name" placeholder="Imię (np. Ania)" class="input-wow border-rent-100 focus:border-rent-500">
+                            <input type="text" id="new-tenant-name" placeholder="Imię" class="input-wow border-rent-100 focus:border-rent-500">
                             <button onclick="addTenant()" class="bg-rent-500 hover:bg-rent-600 text-white w-14 rounded-xl flex items-center justify-center font-bold active:scale-90 transition-all shadow-lg shadow-rent-500/30">
                                 <i class="ph-bold ph-plus text-xl"></i>
                             </button>
                         </div>
-                        <div id="tenants-list" class="flex flex-wrap gap-2">
-                            <!-- Lokatorzy tutaj -->
-                        </div>
+                        <div id="tenants-list" class="flex flex-wrap gap-2"></div>
                     </div>
 
-                    <button onclick="toggleSettingsAccordion()" class="w-full mt-4 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-4 rounded-xl font-bold shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2">
+                    <button onclick="toggleSettings()" class="w-full mt-4 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-4 rounded-xl font-bold shadow-lg active:scale-95 transition-all flex justify-center items-center gap-2">
                         <i class="ph-bold ph-check"></i> Gotowe, schowaj
                     </button>
                 </div>
             </div>
 
-            <!-- Harmonogram -->
             <div class="flex items-center justify-between mb-2 mt-8 px-2">
                 <h3 class="font-extrabold text-xl">Rozliczenie miesięcy</h3>
                 <button class="bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd text-white px-4 py-2 rounded-full text-sm font-bold shadow-md shadow-rent-500/30 active:scale-95 transition-transform flex items-center gap-1" onclick="generateMonths()">
@@ -297,15 +283,10 @@
                     <p class="text-sm font-semibold text-slate-500">Brak miesięcy.<br>Ustaw dane i kliknij "Generuj".</p>
                 </div>
             </div>
-
         </div>
 
-        <!-- ======================= -->
         <!-- ZAKŁADKA 2: OSZCZĘDNOŚCI-->
-        <!-- ======================= -->
         <div id="view-savings" class="tab-content space-y-6">
-            
-            <!-- Główna karta oszczędności -->
             <div class="bg-gradient-to-br from-savings-gradientStart to-savings-gradientEnd rounded-[2rem] p-8 text-center shadow-2xl shadow-savings-500/40 relative overflow-hidden text-white">
                 <div class="absolute top-0 right-0 w-48 h-48 bg-white/20 rounded-full filter blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
                 <div class="absolute bottom-0 left-0 w-32 h-32 bg-black/10 rounded-full filter blur-xl transform -translate-x-1/2 translate-y-1/2"></div>
@@ -313,11 +294,10 @@
                 <div class="relative z-10">
                     <i class="ph-fill ph-piggy-bank text-5xl mb-2 drop-shadow-md"></i>
                     <p class="text-savings-light font-semibold mb-1 uppercase tracking-wider text-sm">Twoje oszczędności</p>
-                    <h2 class="text-5xl font-black tracking-tight drop-shadow-lg" id="total-savings-display">0.00 <span class="text-2xl text-white/70">zł</span></h2>
+                    <h2 class="text-5xl font-black tracking-tight drop-shadow-lg" id="total-savings-display">0 <span class="text-2xl text-white/70">zł</span></h2>
                 </div>
             </div>
 
-            <!-- Kieszenie (Pockets) -->
             <div>
                 <div class="flex justify-between items-end mb-4 px-2">
                     <h3 class="font-extrabold text-xl">Kieszenie</h3>
@@ -325,13 +305,9 @@
                         <i class="ph-bold ph-plus"></i> Dodaj
                     </button>
                 </div>
-                <!-- Siatka zawijana (Wrap) -->
-                <div id="pockets-container" class="flex flex-wrap gap-3 pb-2">
-                    <!-- Kieszenie generowane przez JS -->
-                </div>
+                <div id="pockets-container" class="flex flex-wrap gap-3 pb-2"></div>
             </div>
 
-            <!-- Historia operacji -->
             <div class="glass-card rounded-3xl p-6">
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-2 cursor-pointer flex-1" onclick="toggleTransactions()">
@@ -346,17 +322,14 @@
                     </button>
                 </div>
                 <div id="transactions-list-wrapper" class="transition-all duration-300 overflow-hidden max-h-[2000px]">
-                    <div id="transactions-list" class="space-y-4">
-                        <!-- Historia -->
-                    </div>
+                    <div id="transactions-list" class="space-y-4"></div>
                 </div>
             </div>
-            
         </div>
     </main>
 
-    <!-- Dolny pasek nawigacyjny (Bottom Nav) -->
-    <nav class="fixed bottom-0 w-full z-50 glass-nav pb-safe rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
+    <!-- Dolny pasek nawigacyjny (Safe-pb uwzględnia gesty systemowe) -->
+    <nav class="fixed bottom-0 w-full z-50 glass-nav safe-pb rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
         <div class="flex justify-center items-center px-6 py-4 gap-8 max-w-md mx-auto">
             <button id="nav-rent" class="flex flex-col items-center justify-center w-20 relative text-rent-500 transition-colors" onclick="switchTab('rent')">
                 <div id="nav-rent-bg" class="absolute inset-0 bg-rent-100 dark:bg-rent-900/30 rounded-2xl transition-opacity opacity-100"></div>
@@ -371,10 +344,10 @@
         </div>
     </nav>
 
-    <!-- Modal: Dodaj Operację (Bottom Sheet) z opcją fioletowego transferu -->
+    <!-- Modal: Dodaj Operację / Transfer -->
     <div id="transaction-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="trans-backdrop" onclick="closeTransactionModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 transform transition-transform translate-y-full shadow-2xl" id="trans-panel">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 safe-pb transform transition-transform translate-y-full shadow-2xl" id="trans-panel">
             <button onclick="closeTransactionModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -384,9 +357,9 @@
             <div class="space-y-4">
                 <div class="flex bg-slate-100 dark:bg-black/30 p-1 rounded-2xl relative">
                     <div id="type-bg" class="absolute w-1/3 h-[calc(100%-8px)] bg-white dark:bg-slate-700 shadow-sm rounded-xl transition-transform top-1 left-1"></div>
-                    <button type="button" class="w-1/3 py-3 text-sm font-bold relative z-10 text-green-600 transition-colors" onclick="setType('in', this)">WPŁYWA</button>
-                    <button type="button" class="w-1/3 py-3 text-sm font-bold relative z-10 text-slate-500 transition-colors" onclick="setType('out', this)">WYDAJĘ</button>
-                    <button type="button" class="w-1/3 py-3 text-sm font-bold relative z-10 text-slate-500 transition-colors" onclick="setType('transfer', this)">TRANSFER</button>
+                    <button type="button" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-green-600 transition-colors tracking-wide" onclick="setType('in', this)">WPŁYWA</button>
+                    <button type="button" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('out', this)">WYDAJĘ</button>
+                    <button type="button" class="w-1/3 py-3 text-[11px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('transfer', this)">TRANSFER</button>
                 </div>
                 <input type="hidden" id="trans-type" value="in">
                 
@@ -400,20 +373,18 @@
                     <input type="text" id="trans-desc" placeholder="Tytuł (np. Wynagrodzenie)" class="input-wow pl-12 focus:border-savings-500 border-savings-100">
                 </div>
                 
+                <!-- Wybór pierwszej kieszeni -->
                 <div>
-                    <label id="source-pocket-label" class="text-xs font-bold text-slate-400 mb-2 block">Wybierz kieszeń</label>
-                    <div id="trans-pocket-chips" class="flex flex-wrap gap-2">
-                        <!-- Chipsy z JS -->
-                    </div>
+                    <label id="pocket-from-label" class="text-xs font-bold text-slate-400 mb-2 block">Wybierz kieszeń</label>
+                    <div id="trans-pocket-chips" class="flex flex-wrap gap-2"></div>
                     <input type="hidden" id="trans-pocket-id" value="">
                 </div>
 
-                <div id="target-pocket-container" class="hidden">
+                <!-- Wybór drugiej kieszeni (tylko w Transferze) -->
+                <div id="trans-to-pocket-div" class="hidden">
                     <label class="text-xs font-bold text-slate-400 mb-2 block">Do kieszeni</label>
-                    <div id="trans-target-pocket-chips" class="flex flex-wrap gap-2">
-                        <!-- Chipsy docelowe z JS -->
-                    </div>
-                    <input type="hidden" id="trans-target-pocket-id" value="">
+                    <div id="trans-to-pocket-chips" class="flex flex-wrap gap-2"></div>
+                    <input type="hidden" id="trans-to-pocket-id" value="">
                 </div>
                 
                 <button onclick="saveTransaction()" class="w-full mt-4 bg-gradient-to-r from-savings-gradientStart to-savings-gradientEnd text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-savings-500/30 active:scale-95 transition-transform flex justify-center items-center gap-2">
@@ -423,10 +394,10 @@
         </div>
     </div>
 
-    <!-- Modal: Dodaj Kieszeń (Bottom Sheet) -->
+    <!-- Modal: Dodaj Kieszeń -->
     <div id="pocket-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="pocket-backdrop" onclick="closePocketModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 transform transition-transform translate-y-full shadow-2xl" id="pocket-panel">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 safe-pb transform transition-transform translate-y-full shadow-2xl" id="pocket-panel">
             <button onclick="closePocketModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -438,7 +409,6 @@
                     <i class="ph-fill ph-tag absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-lg"></i>
                     <input type="text" id="pocket-name" placeholder="Nazwa (np. Na wakacje)" class="input-wow pl-12 focus:border-savings-500 border-savings-100">
                 </div>
-                
                 <button onclick="savePocket()" class="w-full mt-4 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-transform">
                     Utwórz
                 </button>
@@ -446,10 +416,10 @@
         </div>
     </div>
 
-    <!-- Modal: Ustawienia (Zapis/Odczyt Danych) -->
+    <!-- Modal: Ustawienia (Zapis/Odczyt) -->
     <div id="settings-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="settings-backdrop" onclick="closeSettingsModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 transform transition-transform translate-y-full shadow-2xl" id="settings-panel">
+        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[2rem] p-6 safe-pb transform transition-transform translate-y-full shadow-2xl" id="settings-panel">
             <button onclick="closeSettingsModal()" class="absolute top-6 right-6 w-8 h-8 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
                 <i class="ph-bold ph-x"></i>
             </button>
@@ -457,159 +427,243 @@
             <h3 class="text-2xl font-black mb-6 flex items-center gap-2"><i class="ph-fill ph-gear text-slate-500"></i> Ustawienia</h3>
             
             <div class="space-y-4">
-                <p class="text-sm font-semibold text-slate-500">Zapisz kopię zapasową swoich danych do pliku, albo wczytaj je, by przywrócić stan z pliku.</p>
-                
+                <p class="text-sm font-semibold text-slate-500">Zapisz kopię zapasową swoich danych, albo wczytaj je z pliku. Aplikacja zapisuje się automatycznie sama na tym urządzeniu.</p>
                 <div class="relative focus-within:text-savings-500 text-slate-400 transition-colors">
                     <i class="ph-fill ph-file-text absolute left-4 top-1/2 transform -translate-y-1/2 text-lg"></i>
-                    <input type="text" id="export-filename" placeholder="Nazwa pliku (np. moje_finanse)" class="input-wow pl-12 focus:border-slate-500 border-slate-200 w-full" value="moje_finanse">
+                    <input type="text" id="export-filename" placeholder="Nazwa pliku" class="input-wow pl-12 focus:border-slate-500 border-slate-200 w-full" value="moje_finanse">
                 </div>
-                
                 <input type="file" id="import-file" class="hidden" accept=".json" onchange="handleFileUpload(event)">
                 
                 <div class="flex gap-3 mt-2">
-                    <button onclick="exportData()" class="w-1/2 bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white py-3 rounded-2xl font-bold active:scale-95 transition-transform flex justify-center items-center gap-2">
-                        <i class="ph-bold ph-export"></i> Zapisz plik
+                    <button onclick="exportDataFile()" class="w-1/2 bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white py-3 rounded-2xl font-bold active:scale-95 transition-transform flex justify-center items-center gap-2">
+                        <i class="ph-bold ph-export"></i> Zapisz
                     </button>
                     <button onclick="document.getElementById('import-file').click()" class="w-1/2 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-3 rounded-2xl font-bold active:scale-95 transition-transform flex justify-center items-center gap-2 shadow-lg">
-                        <i class="ph-bold ph-download-simple"></i> Wczytaj plik
+                        <i class="ph-bold ph-download-simple"></i> Wczytaj
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        // ==========================================
-        // SYSTEM POWIADOMIEŃ (TOAST)
-        // ==========================================
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.innerText = message;
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 3000);
-        }
+<script>
+    // ==========================================
+    // AUTO-ZAPIS W PRZEGLĄDARCE (LOCAL STORAGE)
+    // ==========================================
+    const STORAGE_KEY = 'mojeFinanseAutoSaveData';
 
-        // ==========================================
-        // NAWIGACJA I MOTYW
-        // ==========================================
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-        }
-
-        function switchTab(tabId) {
-            document.getElementById('view-rent').classList.remove('active');
-            document.getElementById('view-savings').classList.remove('active');
-            
-            document.getElementById(`view-${tabId}`).classList.add('active');
-
-            const bg = document.getElementById('body-bg');
-            const title = document.getElementById('app-title');
-            const btnRent = document.getElementById('nav-rent');
-            const btnRentBg = document.getElementById('nav-rent-bg');
-            const btnSavings = document.getElementById('nav-savings');
-            const btnSavingsBg = document.getElementById('nav-savings-bg');
-
-            btnRent.className = "flex flex-col items-center justify-center w-20 relative text-slate-400 transition-colors";
-            btnSavings.className = "flex flex-col items-center justify-center w-20 relative text-slate-400 transition-colors";
-            btnRentBg.classList.replace('opacity-100', 'opacity-0');
-            btnSavingsBg.classList.replace('opacity-100', 'opacity-0');
-
-            if(tabId === 'rent') {
-                bg.className = "bg-dynamic-rent text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative";
-                title.innerText = "Czynsz";
-                title.className = "text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500";
-                
-                btnRent.classList.add('text-rent-500');
-                btnRentBg.classList.replace('opacity-0', 'opacity-100');
-                
-                document.getElementById('blob1').className = "absolute top-[-10%] left-[-10%] w-72 h-72 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700";
-                document.getElementById('blob3').className = "absolute bottom-[-20%] left-[20%] w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700";
-            } else {
-                bg.className = "bg-dynamic-savings text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative";
-                title.innerText = "Oszczędności";
-                title.className = "text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-savings-gradientStart to-savings-gradientEnd transition-all duration-500";
-                
-                btnSavings.classList.add('text-savings-500');
-                btnSavingsBg.classList.replace('opacity-0', 'opacity-100');
-                
-                document.getElementById('blob1').className = "absolute top-[-10%] left-[-10%] w-72 h-72 bg-savings-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700";
-                document.getElementById('blob3').className = "absolute bottom-[-20%] left-[20%] w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700";
-            }
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // ==========================================
-        // ZAKŁADKA CZYNSZ - Logika
-        // ==========================================
-        let tenants = [];
-        let totalBaseRent = 0;
-
-        function toggleSettings() {
-            const content = document.getElementById('settings-content');
-            const icon = document.getElementById('settings-icon');
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                content.classList.add('hidden');
-                icon.style.transform = 'rotate(0deg)';
+    function getAppStateData() {
+        const data = {
+            tenants, pockets, transactions,
+            baseRent: document.getElementById('base-rent').value,
+            baseAdmin: document.getElementById('base-admin').value,
+            baseElectric: document.getElementById('base-electric').value,
+            startMonth: document.getElementById('start-month').value,
+            monthsData: []
+        };
+        for(let i=0; i<12; i++) {
+            if(document.getElementById(`month-card-${i}`)) {
+                let month = { 
+                    id: i, 
+                    invoice: document.getElementById(`invoice-${i}`).value, 
+                    done: document.getElementById(`check-${i}`).classList.contains('bg-green-500'),
+                    payments: [] 
+                };
+                tenants.forEach((_, tIndex) => {
+                    const paidEl = document.getElementById(`paid-${i}-${tIndex}`);
+                    month.payments.push(paidEl ? paidEl.value : "");
+                });
+                data.monthsData.push(month);
             }
         }
+        return data;
+    }
+
+    function saveToLocal() {
+        try {
+            const data = getAppStateData();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch(e) {
+            console.error("Błąd autozapisu", e);
+        }
+    }
+
+    function loadFromLocal() {
+        try {
+            const str = localStorage.getItem(STORAGE_KEY);
+            if(str) {
+                applyLoadedData(JSON.parse(str));
+            } else {
+                renderStartMonths();
+                renderSavings();
+            }
+        } catch(e) {
+            renderStartMonths();
+            renderSavings();
+        }
+    }
+
+    function applyLoadedData(data) {
+        tenants = data.tenants || [];
+        pockets = data.pockets || [];
+        transactions = data.transactions || [];
         
-        function toggleSettingsAccordion() {
-            toggleSettings();
+        document.getElementById('base-rent').value = data.baseRent || '';
+        document.getElementById('base-admin').value = data.baseAdmin || '';
+        document.getElementById('base-electric').value = data.baseElectric || '';
+        document.getElementById('start-month').value = data.startMonth || '0';
+        
+        renderStartMonths();
+        calculateRent(false);
+        renderTenants();
+        renderSavings();
+        
+        if (data.monthsData && data.monthsData.length > 0) {
+            generateMonths(false);
+            data.monthsData.forEach(m => {
+                const invEl = document.getElementById(`invoice-${m.id}`);
+                if(invEl) invEl.value = m.invoice;
+                updateInvoice(m.id, false);
+                
+                m.payments.forEach((p, tIndex) => {
+                    const paidEl = document.getElementById(`paid-${m.id}-${tIndex}`);
+                    if (paidEl) {
+                        paidEl.value = p;
+                        calcTenant(m.id, tIndex, false);
+                    }
+                });
+                
+                if (m.done) {
+                    const check = document.getElementById(`check-${m.id}`);
+                    if(check && !check.classList.contains('bg-green-500')) {
+                        toggleMonthDone(m.id, null, false);
+                    }
+                }
+            });
         }
+    }
 
-        function calculateRent() {
-            const r = parseFloat(document.getElementById('base-rent').value.replace(',','.')) || 0;
-            const a = parseFloat(document.getElementById('base-admin').value.replace(',','.')) || 0;
-            const e = parseFloat(document.getElementById('base-electric').value.replace(',','.')) || 0;
+    // ==========================================
+    // SYSTEM POWIADOMIEŃ (TOAST)
+    // ==========================================
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.innerText = message;
+        toast.classList.remove('opacity-0');
+        toast.classList.add('opacity-100');
+        setTimeout(() => {
+            toast.classList.remove('opacity-100');
+            toast.classList.add('opacity-0');
+        }, 3000);
+    }
+
+    // ==========================================
+    // NAWIGACJA I MOTYW
+    // ==========================================
+    function toggleTheme() {
+        document.documentElement.classList.toggle('dark');
+    }
+
+    function switchTab(tabId) {
+        document.getElementById('view-rent').classList.remove('active');
+        document.getElementById('view-savings').classList.remove('active');
+        document.getElementById(`view-${tabId}`).classList.add('active');
+
+        const bg = document.getElementById('body-bg');
+        const title = document.getElementById('app-title');
+        const btnRent = document.getElementById('nav-rent');
+        const btnRentBg = document.getElementById('nav-rent-bg');
+        const btnSavings = document.getElementById('nav-savings');
+        const btnSavingsBg = document.getElementById('nav-savings-bg');
+
+        btnRent.className = "flex flex-col items-center justify-center w-20 relative text-slate-400 transition-colors";
+        btnSavings.className = "flex flex-col items-center justify-center w-20 relative text-slate-400 transition-colors";
+        btnRentBg.classList.replace('opacity-100', 'opacity-0');
+        btnSavingsBg.classList.replace('opacity-100', 'opacity-0');
+
+        if(tabId === 'rent') {
+            bg.className = "bg-dynamic-rent text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative";
+            btnRent.classList.add('text-rent-500');
+            btnRentBg.classList.replace('opacity-0', 'opacity-100');
             
-            totalBaseRent = r + a + e;
-            document.getElementById('total-rent-display').innerHTML = totalBaseRent.toFixed(2) + ' <span class="text-2xl text-slate-400 dark:text-slate-500">zł</span>';
-            updatePerPerson();
+            document.getElementById('blob1').className = "absolute top-[-10%] left-[-10%] w-72 h-72 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700";
+            document.getElementById('blob3').className = "absolute bottom-[-20%] left-[20%] w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700";
+        } else {
+            bg.className = "bg-dynamic-savings text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative";
+            btnSavings.classList.add('text-savings-500');
+            btnSavingsBg.classList.replace('opacity-0', 'opacity-100');
+            
+            document.getElementById('blob1').className = "absolute top-[-10%] left-[-10%] w-72 h-72 bg-savings-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700";
+            document.getElementById('blob3').className = "absolute bottom-[-20%] left-[20%] w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700";
         }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-        function updatePerPerson() {
-            const count = tenants.length || 1;
-            const perPerson = Math.round(totalBaseRent / count);
-            document.getElementById('per-person-display').innerText = perPerson.toFixed(0);
-            document.getElementById('tenant-count').innerText = tenants.length;
+    // ==========================================
+    // ZAKŁADKA CZYNSZ - Logika
+    // ==========================================
+    let tenants = [];
+    let totalBaseRent = 0;
+
+    function toggleSettings() {
+        const content = document.getElementById('settings-content');
+        const icon = document.getElementById('settings-icon');
+        if (content.classList.contains('hidden')) {
+            content.classList.remove('hidden');
+            icon.style.transform = 'rotate(180deg)';
+        } else {
+            content.classList.add('hidden');
+            icon.style.transform = 'rotate(0deg)';
         }
+    }
 
-        function addTenant() {
-            const nameInput = document.getElementById('new-tenant-name');
-            const name = nameInput.value.trim();
-            if (name) {
-                tenants.push(name);
-                nameInput.value = '';
-                renderTenants();
-                updatePerPerson();
-            } else {
-                showToast("Wpisz imię lokatora!");
-            }
-        }
+    function calculateRent(autoSave = true) {
+        const r = parseFloat(document.getElementById('base-rent').value.replace(',','.')) || 0;
+        const a = parseFloat(document.getElementById('base-admin').value.replace(',','.')) || 0;
+        const e = parseFloat(document.getElementById('base-electric').value.replace(',','.')) || 0;
+        
+        totalBaseRent = r + a + e;
+        document.getElementById('total-rent-display').innerHTML = totalBaseRent.toFixed(0) + ' <span class="text-2xl text-slate-400 dark:text-slate-500">zł</span>';
+        updatePerPerson();
+        if(autoSave) saveToLocal();
+    }
 
-        function removeTenant(index) {
-            tenants.splice(index, 1);
+    function updatePerPerson() {
+        const count = tenants.length || 1;
+        const perPerson = Math.round(totalBaseRent / count);
+        document.getElementById('per-person-display').innerText = perPerson.toFixed(0);
+        document.getElementById('tenant-count').innerText = tenants.length;
+    }
+
+    function addTenant() {
+        const nameInput = document.getElementById('new-tenant-name');
+        const name = nameInput.value.trim();
+        if (name) {
+            tenants.push(name);
+            nameInput.value = '';
             renderTenants();
             updatePerPerson();
+            saveToLocal();
+        } else {
+            showToast("Wpisz imię lokatora!");
         }
+    }
 
-        function renderTenants() {
-            const container = document.getElementById('tenants-list');
-            container.innerHTML = '';
-            tenants.forEach((t, i) => {
-                container.innerHTML += `
-                <div class="bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-xl flex items-center gap-2 shadow-sm text-sm font-bold animate-fade-in">
-                    ${t} <i class="ph-bold ph-x text-slate-400 cursor-pointer hover:text-red-500 ml-1" onclick="removeTenant(${i})"></i>
-                </div>
-            `;
+    function removeTenant(index) {
+        tenants.splice(index, 1);
+        renderTenants();
+        updatePerPerson();
+        saveToLocal();
+    }
+
+    function renderTenants() {
+        const container = document.getElementById('tenants-list');
+        container.innerHTML = '';
+        tenants.forEach((t, i) => {
+            container.innerHTML += `
+            <div class="bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 px-3 py-1.5 rounded-xl flex items-center gap-2 shadow-sm text-sm font-bold animate-fade-in">
+                ${t} <i class="ph-bold ph-x text-slate-400 cursor-pointer hover:text-red-500 ml-1" onclick="removeTenant(${i})"></i>
+            </div>`;
         });
     }
 
@@ -631,26 +685,29 @@
     function selectStartMonth(index) {
         document.getElementById('start-month').value = index;
         renderStartMonths();
+        saveToLocal();
     }
 
-    function generateMonths() {
+    function generateMonths(autoSave = true) {
         if (tenants.length === 0) {
             showToast("Dodaj przynajmniej jedną osobę!");
             const content = document.getElementById('settings-content');
             if (content.classList.contains('hidden')) toggleSettings();
             return;
         }
-
         const container = document.getElementById('months-container');
         container.innerHTML = '';
         
-        const startMonthIndex = parseInt(document.getElementById('start-month').value);
+        const startMonthIndex = parseInt(document.getElementById('start-month').value) || 0;
         
         for(let i=0; i<12; i++) {
             let mIndex = (startMonthIndex + i) % 12;
             renderMonthCard(container, monthNames[mIndex], i);
         }
-        showToast("Utworzono harmonogram!");
+        if(autoSave) {
+            showToast("Utworzono harmonogram!");
+            saveToLocal();
+        }
     }
 
     function renderMonthCard(container, monthName, id) {
@@ -661,35 +718,35 @@
                     <p class="text-[10px] text-slate-500 uppercase tracking-wide font-bold mt-1">Do zapłaty:</p>
                     <p class="text-lg font-black text-rent-600 dark:text-rent-400"><span id="req-${id}-${index}">0</span> <span class="text-xs text-slate-400">zł</span></p>
                 </div>
-                <div class="w-[35%] px-1 relative flex flex-col items-center justify-center">
-                    <label class="text-[9px] text-slate-400 uppercase font-bold mb-1">Przelano</label>
-                    <div class="flex items-center bg-slate-100 dark:bg-black/30 rounded-xl px-2 focus-within:ring-2 ring-rent-400 transition-all w-full max-w-[90px]">
-                        <input type="number" id="paid-${id}-${index}" placeholder="0" class="w-full min-w-[30px] bg-transparent border-transparent py-2 text-sm text-center outline-none font-bold" oninput="calcTenant(${id}, ${index})">
-                        <span class="text-xs font-bold text-slate-400 ml-1">zł</span>
+                <div class="w-[40%] px-1">
+                    <div class="relative flex items-center bg-white dark:bg-black/40 border border-transparent focus-within:border-rent-400 rounded-xl overflow-hidden transition-colors shadow-sm">
+                        <span class="pl-2 text-[9px] text-slate-400 font-bold uppercase tracking-widest hidden sm:inline-block">Przelano:</span>
+                        <input type="number" id="paid-${id}-${index}" placeholder="Wpłata" class="w-full bg-transparent p-2 text-sm text-right outline-none font-bold" oninput="calcTenant(${id}, ${index})">
+                        <span class="pr-2 pl-1 text-[10px] text-slate-500 font-bold">zł</span>
                     </div>
                 </div>
-                <div class="w-[30%] text-right flex flex-col items-end justify-center">
+                <div class="w-[25%] text-right flex flex-col items-end justify-center">
                     <span id="status-${id}-${index}" class="text-xs font-bold text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-lg">Brak</span>
                 </div>
             </div>
         `).join('');
 
         const card = `
-            <div class="glass-card rounded-[2rem] p-5 transition-all duration-300 transform origin-top animate-fade-in" id="month-card-${id}" style="animation-delay: ${id * 0.05}s">
-                <div class="flex justify-between items-center mb-4 pb-4 border-b border-slate-200 dark:border-white/10 gap-2">
-                    <div class="flex items-center gap-2 cursor-pointer flex-1" onclick="toggleMonthCollapse(${id})">
-                        <button onclick="toggleMonthDone(${id}, event)" id="check-${id}" class="w-8 h-8 shrink-0 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-slate-300 dark:text-slate-600 transition-all hover:scale-105 active:scale-95 shadow-inner">
+            <div class="glass-card rounded-[2rem] p-5 transition-all duration-300 transform origin-top animate-fade-in" id="month-card-${id}">
+                <div class="flex justify-between items-center mb-4 pb-4 border-b border-slate-200 dark:border-white/10">
+                    <div class="flex items-center gap-3 cursor-pointer flex-1" onclick="toggleMonthCollapse(${id})">
+                        <button onclick="toggleMonthDone(${id}, event)" id="check-${id}" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center text-slate-300 dark:text-slate-600 transition-all hover:scale-105 active:scale-95 shadow-inner">
                             <i class="ph-bold ph-check text-lg"></i>
                         </button>
-                        <h3 class="font-black text-lg sm:text-xl flex items-center gap-1">
+                        <h3 class="font-black text-xl flex items-center gap-2">
                             ${monthName} <i id="month-caret-${id}" class="ph-bold ph-caret-down text-sm text-slate-400 transition-transform" style="transform: rotate(180deg);"></i>
                         </h3>
                     </div>
-                    <div class="text-right w-28 shrink-0">
-                        <label class="text-[10px] text-slate-400 uppercase font-bold block mb-1">Faktura</label>
-                        <div class="flex items-center bg-white dark:bg-black/40 border border-rent-100 dark:border-white/10 rounded-xl px-2 focus-within:border-rent-500 shadow-sm transition-all">
-                            <input type="number" id="invoice-${id}" value="${totalBaseRent.toFixed(0)}" class="w-full bg-transparent py-1.5 text-right font-black text-sm outline-none" oninput="updateInvoice(${id})">
-                            <span class="text-xs font-bold text-slate-400 ml-1">zł</span>
+                    <div class="text-right">
+                        <div class="relative flex items-center bg-white dark:bg-black/40 border border-rent-100 dark:border-white/10 focus-within:border-rent-500 rounded-xl overflow-hidden shadow-sm">
+                            <span class="pl-2 text-[9px] text-slate-400 font-bold uppercase tracking-widest">Faktura:</span>
+                            <input type="number" id="invoice-${id}" value="${totalBaseRent.toFixed(0)}" class="w-16 bg-transparent p-1.5 text-right font-black text-sm outline-none" oninput="updateInvoice(${id})">
+                            <span class="pr-2 pl-1 text-[10px] text-slate-500 font-bold">zł</span>
                         </div>
                     </div>
                 </div>
@@ -699,28 +756,37 @@
             </div>
         `;
         container.innerHTML += card;
-        updateInvoice(id);
+        updateInvoice(id, false);
     }
 
-    function updateInvoice(monthId) {
+    function updateInvoice(monthId, autoSave = true) {
         const invoiceInput = document.getElementById(`invoice-${monthId}`);
         if(!invoiceInput) return;
-        const invoiceAmount = parseFloat(invoiceInput.value.replace(',','.')) || 0;
-        const perPerson = Math.round(invoiceAmount / tenants.length);
+        const val = invoiceInput.value.replace(',','.');
+        const invoiceAmount = parseFloat(val) || 0;
+        
+        let perPerson = 0;
+        if(tenants.length > 0) perPerson = Math.round(invoiceAmount / tenants.length);
 
         tenants.forEach((_, index) => {
-            document.getElementById(`req-${monthId}-${index}`).innerText = perPerson.toFixed(0);
-            calcTenant(monthId, index); 
+            const reqEl = document.getElementById(`req-${monthId}-${index}`);
+            if(reqEl) reqEl.innerText = perPerson.toFixed(0);
+            calcTenant(monthId, index, false); 
         });
+        
+        if(autoSave) saveToLocal();
     }
 
-    function calcTenant(monthId, tIndex) {
-        const req = parseFloat(document.getElementById(`req-${monthId}-${tIndex}`).innerText);
-        const paidInput = document.getElementById(`paid-${monthId}-${tIndex}`).value.replace(',','.');
-        const paid = parseFloat(paidInput) || 0;
+    function calcTenant(monthId, tIndex, autoSave = true) {
+        const reqEl = document.getElementById(`req-${monthId}-${tIndex}`);
+        if (!reqEl) return;
+        
+        const req = parseFloat(reqEl.innerText) || 0;
+        const paidInputStr = document.getElementById(`paid-${monthId}-${tIndex}`).value.replace(',','.');
+        const paid = parseFloat(paidInputStr) || 0;
         const statusEl = document.getElementById(`status-${monthId}-${tIndex}`);
 
-        if (paidInput === "") {
+        if (paidInputStr.trim() === "" || isNaN(paid)) {
             statusEl.innerHTML = `Brak`;
             statusEl.className = "text-xs font-bold text-slate-400 bg-slate-100 dark:bg-white/5 px-2 py-1 rounded-lg inline-block";
         } else if (Math.abs(req - paid) < 0.05) { 
@@ -735,11 +801,15 @@
             statusEl.innerHTML = `<i class="ph-bold ph-arrow-u-up-left"></i> +${diff}`;
             statusEl.className = "text-xs font-black text-green-600 bg-green-50 dark:bg-green-500/10 px-2 py-1 rounded-lg flex items-center justify-end gap-1";
         }
+        
+        if(autoSave) saveToLocal();
     }
 
     function toggleMonthCollapse(monthId) {
         const body = document.getElementById(`month-body-${monthId}`);
         const caret = document.getElementById(`month-caret-${monthId}`);
+        if(!body) return;
+        
         if(body.style.maxHeight === '0px' || body.classList.contains('opacity-0')) {
             body.style.maxHeight = '1000px';
             body.classList.remove('opacity-0', 'mt-0');
@@ -753,7 +823,7 @@
         }
     }
 
-    function toggleMonthDone(monthId, event) {
+    function toggleMonthDone(monthId, event, autoSave = true) {
         if(event) event.stopPropagation();
         const card = document.getElementById(`month-card-${monthId}`);
         const body = document.getElementById(`month-body-${monthId}`);
@@ -767,7 +837,6 @@
             caret.style.transform = 'rotate(0deg)';
             
             card.classList.remove('opacity-50', 'bg-slate-50/50', 'dark:bg-black/20');
-            
             check.classList.remove('bg-green-500', 'text-white', 'shadow-green-500/50');
             check.classList.add('bg-slate-100', 'dark:bg-white/10', 'text-slate-300', 'dark:text-slate-600');
         } else {
@@ -777,23 +846,21 @@
             caret.style.transform = 'rotate(180deg)';
             
             card.classList.add('opacity-50', 'bg-slate-50/50', 'dark:bg-black/20');
-            
             check.classList.add('bg-green-500', 'text-white', 'shadow-green-500/50');
             check.classList.remove('bg-slate-100', 'dark:bg-white/10', 'text-slate-300', 'dark:text-slate-600');
         }
+        if(autoSave) saveToLocal();
     }
 
     // ==========================================
     // ZAKŁADKA OSZCZĘDNOŚCI - Logika
     // ==========================================
-    let pockets = [
-        { id: 1, name: "Główne oszczędności", balance: 0 }
-    ];
+    let pockets = [];
     let transactions = [];
 
     function renderSavings() {
         const total = pockets.reduce((sum, p) => sum + p.balance, 0);
-        document.getElementById('total-savings-display').innerHTML = total.toFixed(2) + ' <span class="text-2xl text-white/70">zł</span>';
+        document.getElementById('total-savings-display').innerHTML = total.toFixed(0) + ' <span class="text-2xl text-white/70">zł</span>';
 
         const pContainer = document.getElementById('pockets-container');
         pContainer.innerHTML = '';
@@ -805,11 +872,9 @@
                 pContainer.innerHTML += `
                     <div class="w-[calc(50%-0.375rem)] glass-card rounded-[1.25rem] p-4 relative overflow-hidden group">
                         <div class="absolute -right-4 -bottom-4 w-12 h-12 bg-savings-400/10 rounded-full blur-xl"></div>
-                        
                         <button onclick="deletePocket(${p.id})" class="absolute top-2 right-2 w-6 h-6 bg-red-100 text-red-500 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 active:scale-90 transition-all z-20">
                             <i class="ph-bold ph-trash text-[10px]"></i>
                         </button>
-
                         <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1 truncate pr-5 relative z-10 uppercase tracking-wider"><i class="ph-fill ph-folder-open text-savings-400"></i> ${p.name}</p>
                         <p class="text-lg font-black text-slate-800 dark:text-white relative z-10">${p.balance.toFixed(2)} <span class="text-[10px] font-bold text-slate-400">zł</span></p>
                     </div>
@@ -826,42 +891,35 @@
                 </div>`;
         } else {
             tContainer.innerHTML = transactions.map(t => {
-                const isIncome = t.type === 'in';
-                const isTransfer = t.type === 'transfer';
+                let iconClass, bgClass, colorClass, sign;
+                let subtitle = pockets.find(p => p.id == t.pocketId)?.name || 'Usunięta kieszeń';
                 
-                let icon, color, sign, pocketName;
-                
-                if (isTransfer) {
-                    icon = 'ph-arrows-left-right text-purple-500 bg-purple-100 dark:bg-purple-500/20';
-                    color = 'text-purple-500';
-                    sign = '';
-                    const source = pockets.find(p => p.id == t.pocketId)?.name || '?';
-                    const target = pockets.find(p => p.id == t.targetPocketId)?.name || '?';
-                    pocketName = `${source} -> ${target}`;
+                if (t.type === 'in') {
+                    iconClass = 'ph-trend-up'; bgClass = 'bg-green-100 text-green-500 dark:bg-green-500/20'; colorClass = 'text-green-500'; sign = '+';
+                } else if (t.type === 'out') {
+                    iconClass = 'ph-trend-down'; bgClass = 'bg-red-100 text-red-500 dark:bg-red-500/20'; colorClass = 'text-slate-800 dark:text-white'; sign = '-';
                 } else {
-                    icon = isIncome ? 'ph-trend-up text-green-500 bg-green-100 dark:bg-green-500/20' : 'ph-trend-down text-red-500 bg-red-100 dark:bg-red-500/20';
-                    color = isIncome ? 'text-green-500' : 'text-slate-800 dark:text-white';
-                    sign = isIncome ? '+' : '-';
-                    pocketName = pockets.find(p => p.id == t.pocketId)?.name || 'Usunięta kieszeń';
+                    iconClass = 'ph-arrows-left-right'; bgClass = 'bg-transfer-500/20 text-transfer-500'; colorClass = 'text-transfer-500'; sign = '';
+                    let toPocketName = pockets.find(p => p.id == t.toPocketId)?.name || 'Usunięta kieszeń';
+                    subtitle = `${subtitle} <i class="ph-bold ph-arrow-right mx-0.5"></i> ${toPocketName}`;
                 }
 
                 return `
-                    <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-white/5 last:border-0 group animate-fade-in relative">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-[1rem] ${icon.split(' ').slice(1).join(' ')} flex items-center justify-center shadow-sm shrink-0">
-                                <i class="ph-bold ${icon.split(' ')[0]} text-xl"></i>
+                    <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-white/5 last:border-0 group animate-fade-in relative pr-8">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl ${bgClass} flex items-center justify-center shadow-sm">
+                                <i class="ph-bold ${iconClass} text-lg"></i>
                             </div>
-                            <div class="max-w-[130px] sm:max-w-[180px]">
-                                <p class="font-extrabold text-[15px] truncate">${t.desc}</p>
-                                <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mt-0.5 truncate" title="${pocketName}"><i class="ph-fill ph-folder text-savings-400"></i> ${pocketName}</p>
+                            <div>
+                                <p class="font-extrabold text-sm truncate max-w-[150px]">${t.desc}</p>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase mt-0.5 flex items-center"><i class="ph-fill ph-folder text-savings-400 mr-1"></i> ${subtitle}</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <p class="font-black text-base ${color} mr-1">${sign}${t.amount.toFixed(2)} zł</p>
-                            <button onclick="deleteTransaction(${t.id})" class="w-8 h-8 rounded-full bg-red-50 dark:bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-100 dark:hover:bg-red-500/30 transition-colors shrink-0">
-                                <i class="ph-bold ph-trash text-sm"></i>
-                            </button>
-                        </div>
+                        <p class="font-black text-sm ${colorClass}">${sign}${t.amount.toFixed(2)} zł</p>
+                        
+                        <button onclick="deleteTransaction(${t.id})" class="absolute right-0 top-1/2 -translate-y-1/2 w-7 h-7 bg-red-100 text-red-500 dark:bg-red-500/20 rounded-full flex items-center justify-center active:scale-90 transition-all opacity-70 hover:opacity-100">
+                            <i class="ph-bold ph-trash text-[11px]"></i>
+                        </button>
                     </div>
                 `;
             }).reverse().join('');
@@ -880,218 +938,13 @@
         }
     }
 
-    // ==========================================
-    // OBSŁUGA MODALI
-    // ==========================================
-    
-    function openTransactionModal() {
-        if(pockets.length === 0) {
-            showToast("Najpierw stwórz kieszeń!");
-            return;
-        }
-        const modal = document.getElementById('transaction-modal');
-        const panel = document.getElementById('trans-panel');
-        const backdrop = document.getElementById('trans-backdrop');
-        
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        
-        setTimeout(() => {
-            backdrop.classList.replace('opacity-0', 'opacity-100');
-            panel.classList.remove('translate-y-full');
-        }, 10);
-        
-        document.getElementById('trans-amount').value = '';
-        document.getElementById('trans-desc').value = '';
-        setType('in', document.querySelector('#transaction-modal button'));
-        renderPocketChips();
-    }
-
-    function renderPocketChips() {
-        const container = document.getElementById('trans-pocket-chips');
-        const targetContainer = document.getElementById('trans-target-pocket-chips');
-        
-        const renderChips = (pocketsList, wrapper, prefix, activeId) => {
-            wrapper.innerHTML = pocketsList.map((p) => `
-                <button type="button" onclick="selectPocketChip('${prefix}', ${p.id})" id="chip-${prefix}-${p.id}" class="px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors ${p.id == activeId ? (prefix==='source'?'bg-savings-500 text-white border-savings-500':'bg-purple-500 text-white border-purple-500') : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400'}">
-                    <i class="ph-fill ph-folder"></i> ${p.name}
-                </button>
-            `).join('');
-        };
-
-        let sourceId = pockets.length > 0 ? pockets[0].id : '';
-        let targetId = pockets.length > 1 ? pockets[1].id : sourceId;
-        
-        document.getElementById('trans-pocket-id').value = sourceId;
-        document.getElementById('trans-target-pocket-id').value = targetId;
-
-        renderChips(pockets, container, 'source', sourceId);
-        renderChips(pockets, targetContainer, 'target', targetId);
-    }
-
-    function selectPocketChip(prefix, id) {
-        const inputId = prefix === 'source' ? 'trans-pocket-id' : 'trans-target-pocket-id';
-        document.getElementById(inputId).value = id;
-        pockets.forEach(p => {
-            const chip = document.getElementById(`chip-${prefix}-${p.id}`);
-            if (chip) {
-                if (p.id === id) {
-                    chip.className = `px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors ${prefix==='source'?'bg-savings-500 text-white border-savings-500':'bg-purple-500 text-white border-purple-500'}`;
-                } else {
-                    chip.className = "px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400";
-                }
-            }
-        });
-    }
-
-    function closeTransactionModal() {
-        const modal = document.getElementById('transaction-modal');
-        const panel = document.getElementById('trans-panel');
-        const backdrop = document.getElementById('trans-backdrop');
-        
-        panel.classList.add('translate-y-full');
-        backdrop.classList.replace('opacity-100', 'opacity-0');
-        
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }, 300);
-    }
-
-    function setType(type, btn) {
-        document.getElementById('trans-type').value = type;
-        const bg = document.getElementById('type-bg');
-        const buttons = btn.parentElement.querySelectorAll('button');
-        
-        buttons.forEach(b => {
-            b.classList.remove('text-green-600', 'text-red-600', 'text-purple-600');
-            b.classList.add('text-slate-500');
-        });
-
-        if (type === 'in') {
-            bg.style.transform = 'translateX(0)';
-            btn.classList.add('text-green-600');
-            btn.classList.remove('text-slate-500');
-        } else if (type === 'out') {
-            bg.style.transform = 'translateX(100%)';
-            btn.classList.add('text-red-600');
-            btn.classList.remove('text-slate-500');
-        } else if (type === 'transfer') {
-            bg.style.transform = 'translateX(200%)';
-            btn.classList.add('text-purple-600');
-            btn.classList.remove('text-slate-500');
-        }
-
-        const targetContainer = document.getElementById('target-pocket-container');
-        const sourceLabel = document.getElementById('source-pocket-label');
-        if (type === 'transfer') {
-            targetContainer.classList.remove('hidden');
-            sourceLabel.innerText = "Z kieszeni";
-        } else {
-            targetContainer.classList.add('hidden');
-            sourceLabel.innerText = "Wybierz kieszeń";
-        }
-    }
-
-    function saveTransaction() {
-        const type = document.getElementById('trans-type').value;
-        const amountStr = document.getElementById('trans-amount').value.replace(',', '.');
-        const amount = parseFloat(amountStr);
-        const defaultDesc = type === 'in' ? 'Wpływ' : (type === 'out' ? 'Wydatek' : 'Transfer');
-        const desc = document.getElementById('trans-desc').value.trim() || defaultDesc;
-        const pocketId = parseInt(document.getElementById('trans-pocket-id').value);
-        const targetPocketId = parseInt(document.getElementById('trans-target-pocket-id').value);
-
-        if (isNaN(amount) || amount <= 0) {
-            showToast("Podaj prawidłową kwotę!");
-            return;
-        }
-
-        const pocket = pockets.find(p => p.id === pocketId);
-        if (!pocket) {
-            showToast("Błąd wyboru kieszeni!");
-            return;
-        }
-
-        if (type === 'transfer') {
-            const targetPocket = pockets.find(p => p.id === targetPocketId);
-            if (!targetPocket) {
-                showToast("Błąd wyboru kieszeni docelowej!");
-                return;
-            }
-            if (pocketId === targetPocketId) {
-                showToast("Wybierz dwie różne kieszenie!");
-                return;
-            }
-            pocket.balance -= amount;
-            targetPocket.balance += amount;
-            
-            transactions.push({
-                id: Date.now(),
-                type: type,
-                amount: amount,
-                desc: desc,
-                pocketId: pocketId,
-                targetPocketId: targetPocketId
-            });
-        } else {
-            if (type === 'in') {
-                pocket.balance += amount;
-            } else {
-                pocket.balance -= amount;
-            }
-            
-            transactions.push({
-                id: Date.now(),
-                type: type,
-                amount: amount,
-                desc: desc,
-                pocketId: pocketId
-            });
-        }
-
-        closeTransactionModal();
-        renderSavings();
-        showToast("Zapisano operację!");
-    }
-
-    function deleteTransaction(id) {
-        const index = transactions.findIndex(t => t.id === id);
-        if (index !== -1) {
-            const t = transactions[index];
-            const pocket = pockets.find(p => p.id === t.pocketId);
-            
-            if (t.type === 'transfer') {
-                const targetPocket = pockets.find(p => p.id === t.targetPocketId);
-                if (pocket) pocket.balance += t.amount;
-                if (targetPocket) targetPocket.balance -= t.amount;
-            } else {
-                if (pocket) {
-                    if (t.type === 'in') pocket.balance -= t.amount;
-                    else if (t.type === 'out') pocket.balance += t.amount;
-                }
-            }
-            
-            transactions.splice(index, 1);
-            renderSavings();
-            showToast("Usunięto operację!");
-        }
-    }
-
-    // Modal Kieszeni
+    // Modal: Kieszenie
     function openPocketModal() {
         const modal = document.getElementById('pocket-modal');
         const panel = document.getElementById('pocket-panel');
         const backdrop = document.getElementById('pocket-backdrop');
-        
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        
-        setTimeout(() => {
-            backdrop.classList.replace('opacity-0', 'opacity-100');
-            panel.classList.remove('translate-y-full');
-        }, 10);
-        
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+        setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
         document.getElementById('pocket-name').value = '';
     }
 
@@ -1099,110 +952,205 @@
         const modal = document.getElementById('pocket-modal');
         const panel = document.getElementById('pocket-panel');
         const backdrop = document.getElementById('pocket-backdrop');
-        
-        panel.classList.add('translate-y-full');
-        backdrop.classList.replace('opacity-100', 'opacity-0');
-        
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }, 300);
+        panel.classList.add('translate-y-full'); backdrop.classList.replace('opacity-100', 'opacity-0');
+        setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
     }
 
     function savePocket() {
         const name = document.getElementById('pocket-name').value.trim();
-        if (name === "") {
-            showToast("Podaj nazwę kieszeni!");
-            return;
-        }
-        
+        if (name === "") { showToast("Podaj nazwę kieszeni!"); return; }
         pockets.push({ id: Date.now(), name: name, balance: 0 });
         closePocketModal();
         renderSavings();
+        saveToLocal();
         showToast("Utworzono kieszeń!");
     }
 
     function deletePocket(id) {
-        pockets = pockets.filter(p => p.id !== id);
-        renderSavings();
-        showToast("Usunięto kieszeń!");
+        if(confirm("Na pewno usunąć tę kieszeń? Jej zawartość przepadnie.")) {
+            pockets = pockets.filter(p => p.id !== id);
+            renderSavings();
+            saveToLocal();
+            showToast("Usunięto kieszeń!");
+        }
     }
 
-    // ==========================================
-    // SYSTEM EKSPORTU / IMPORTU USTAWIEN (SETTINGS)
-    // ==========================================
+    // Modal: Operacje / Transfer
+    function openTransactionModal() {
+        if(pockets.length === 0) { showToast("Najpierw stwórz kieszeń!"); return; }
+        const modal = document.getElementById('transaction-modal');
+        const panel = document.getElementById('trans-panel');
+        const backdrop = document.getElementById('trans-backdrop');
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+        setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
+        
+        document.getElementById('trans-amount').value = '';
+        document.getElementById('trans-desc').value = '';
+        setType('in', document.querySelector('#transaction-modal button'));
+        renderPocketChips('trans-pocket-chips', 'trans-pocket-id');
+        renderPocketChips('trans-to-pocket-chips', 'trans-to-pocket-id', true);
+    }
 
+    function closeTransactionModal() {
+        const modal = document.getElementById('transaction-modal');
+        const panel = document.getElementById('trans-panel');
+        const backdrop = document.getElementById('trans-backdrop');
+        panel.classList.add('translate-y-full'); backdrop.classList.replace('opacity-100', 'opacity-0');
+        setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
+    }
+
+    function renderPocketChips(containerId, hiddenInputId, isTransferTo = false) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = pockets.map((p, index) => {
+            const isSelected = index === (isTransferTo && pockets.length > 1 ? 1 : 0);
+            return `
+            <button type="button" onclick="selectPocketChip(${p.id}, '${containerId}', '${hiddenInputId}')" id="chip-${containerId}-${p.id}" class="px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors ${isSelected ? 'bg-savings-500 text-white border-savings-500' : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400'}">
+                <i class="ph-fill ph-folder"></i> ${p.name}
+            </button>
+        `}).join('');
+        
+        if(pockets.length > 0) {
+            document.getElementById(hiddenInputId).value = isTransferTo && pockets.length > 1 ? pockets[1].id : pockets[0].id;
+        }
+    }
+
+    function selectPocketChip(id, containerId, hiddenInputId) {
+        document.getElementById(hiddenInputId).value = id;
+        pockets.forEach(p => {
+            const chip = document.getElementById(`chip-${containerId}-${p.id}`);
+            if(chip) {
+                if (p.id === id) {
+                    chip.className = "px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors bg-savings-500 text-white border-savings-500";
+                } else {
+                    chip.className = "px-3 py-1.5 rounded-xl text-xs font-bold border transition-colors bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400";
+                }
+            }
+        });
+    }
+
+    function setType(type, btn) {
+        document.getElementById('trans-type').value = type;
+        const bg = document.getElementById('type-bg');
+        const buttons = btn.parentElement.querySelectorAll('button');
+        const toPocketDiv = document.getElementById('trans-to-pocket-div');
+        const fromLabel = document.getElementById('pocket-from-label');
+        
+        buttons.forEach(b => {
+            b.classList.remove('text-green-600', 'text-red-600', 'text-transfer-500');
+            b.classList.add('text-slate-500');
+        });
+
+        if (type === 'in') {
+            bg.style.transform = 'translateX(0)';
+            btn.classList.add('text-green-600');
+            toPocketDiv.classList.add('hidden');
+            fromLabel.innerText = "Wybierz kieszeń";
+        } else if (type === 'out') {
+            bg.style.transform = 'translateX(100%)';
+            btn.classList.add('text-red-600');
+            toPocketDiv.classList.add('hidden');
+            fromLabel.innerText = "Wybierz kieszeń";
+        } else {
+            bg.style.transform = 'translateX(200%)';
+            btn.classList.add('text-transfer-500');
+            toPocketDiv.classList.remove('hidden');
+            fromLabel.innerText = "Z kieszeni";
+        }
+    }
+
+    function saveTransaction() {
+        const type = document.getElementById('trans-type').value;
+        const amountStr = document.getElementById('trans-amount').value.replace(',', '.');
+        const amount = parseFloat(amountStr);
+        let desc = document.getElementById('trans-desc').value.trim();
+        const pocketId = parseInt(document.getElementById('trans-pocket-id').value);
+
+        if (isNaN(amount) || amount <= 0) { showToast("Podaj prawidłową kwotę!"); return; }
+
+        if (type === 'transfer') {
+            const toPocketId = parseInt(document.getElementById('trans-to-pocket-id').value);
+            if(pocketId === toPocketId) { showToast("Wybierz różne kieszenie!"); return; }
+            
+            const fromPkt = pockets.find(p => p.id === pocketId);
+            const toPkt = pockets.find(p => p.id === toPocketId);
+            
+            if(fromPkt && toPkt) {
+                fromPkt.balance -= amount;
+                toPkt.balance += amount;
+                transactions.push({
+                    id: Date.now(), type: 'transfer', amount: amount, desc: desc || 'Transfer środków', pocketId: pocketId, toPocketId: toPocketId
+                });
+            } else { showToast("Błąd kieszeni!"); return; }
+        } else {
+            const pocket = pockets.find(p => p.id === pocketId);
+            if (pocket) {
+                if (type === 'in') { pocket.balance += amount; } else { pocket.balance -= amount; }
+                transactions.push({
+                    id: Date.now(), type: type, amount: amount, desc: desc || (type === 'in' ? 'Wpływ' : 'Wydatek'), pocketId: pocketId
+                });
+            } else { showToast("Błąd kieszeni!"); return; }
+        }
+
+        closeTransactionModal();
+        renderSavings();
+        saveToLocal();
+        showToast("Zapisano operację!");
+    }
+
+    function deleteTransaction(id) {
+        if(confirm("Czy na pewno chcesz usunąć ten ruch z historii i cofnąć pieniądze?")) {
+            const index = transactions.findIndex(t => t.id === id);
+            if (index > -1) {
+                const t = transactions[index];
+                if(t.type === 'in') {
+                    const p = pockets.find(p => p.id === t.pocketId);
+                    if(p) p.balance -= t.amount;
+                } else if(t.type === 'out') {
+                    const p = pockets.find(p => p.id === t.pocketId);
+                    if(p) p.balance += t.amount;
+                } else if(t.type === 'transfer') {
+                    const pFrom = pockets.find(p => p.id === t.pocketId);
+                    const pTo = pockets.find(p => p.id === t.toPocketId);
+                    if(pFrom) pFrom.balance += t.amount;
+                    if(pTo) pTo.balance -= t.amount;
+                }
+                transactions.splice(index, 1);
+                renderSavings();
+                saveToLocal();
+                showToast("Cofnięto operację.");
+            }
+        }
+    }
+
+    // Modal: Ustawienia
     function openSettingsModal() {
         const modal = document.getElementById('settings-modal');
         const panel = document.getElementById('settings-panel');
         const backdrop = document.getElementById('settings-backdrop');
-        
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        
-        setTimeout(() => {
-            backdrop.classList.replace('opacity-0', 'opacity-100');
-            panel.classList.remove('translate-y-full');
-        }, 10);
-        
-        document.getElementById('export-filename').value = 'moje_finanse';
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+        setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
     }
 
     function closeSettingsModal() {
         const modal = document.getElementById('settings-modal');
         const panel = document.getElementById('settings-panel');
         const backdrop = document.getElementById('settings-backdrop');
-        
-        panel.classList.add('translate-y-full');
-        backdrop.classList.replace('opacity-100', 'opacity-0');
-        
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }, 300);
+        panel.classList.add('translate-y-full'); backdrop.classList.replace('opacity-100', 'opacity-0');
+        setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
     }
 
-    function exportData() {
-        const data = {
-            tenants, pockets, transactions,
-            baseRent: document.getElementById('base-rent').value,
-            baseAdmin: document.getElementById('base-admin').value,
-            baseElectric: document.getElementById('base-electric').value,
-            startMonth: document.getElementById('start-month').value,
-            monthsData: []
-        };
-        
-        for(let i=0; i<12; i++) {
-            if(document.getElementById(`month-card-${i}`)) {
-                let month = { 
-                    id: i, 
-                    invoice: document.getElementById(`invoice-${i}`).value, 
-                    done: document.getElementById(`check-${i}`).classList.contains('bg-green-500'),
-                    payments: [] 
-                };
-                tenants.forEach((_, tIndex) => {
-                    const paidEl = document.getElementById(`paid-${i}-${tIndex}`);
-                    month.payments.push(paidEl ? paidEl.value : "");
-                });
-                data.monthsData.push(month);
-            }
-        }
-        
-        const dataStr = JSON.stringify(data);
+    function exportDataFile() {
+        const dataStr = JSON.stringify(getAppStateData());
         const blob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         
-        let filename = document.getElementById('export-filename').value.trim();
-        if (!filename) filename = "moje_finanse";
+        let filename = document.getElementById('export-filename').value.trim() || "moje_finanse";
         if (!filename.endsWith('.json')) filename += ".json";
         
         const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        a.href = url; a.download = filename;
+        document.body.appendChild(a); a.click();
+        document.body.removeChild(a); URL.revokeObjectURL(url);
         
         closeSettingsModal();
         showToast("Plik został pobrany!");
@@ -1211,48 +1159,12 @@
     function handleFileUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
                 const data = JSON.parse(e.target.result);
-                tenants = data.tenants || [];
-                pockets = data.pockets || [];
-                transactions = data.transactions || [];
-                
-                document.getElementById('base-rent').value = data.baseRent || '';
-                document.getElementById('base-admin').value = data.baseAdmin || '';
-                document.getElementById('base-electric').value = data.baseElectric || '';
-                document.getElementById('start-month').value = data.startMonth || '0';
-                renderStartMonths();
-                
-                calculateRent();
-                renderTenants();
-                renderSavings();
-                
-                if (data.monthsData && data.monthsData.length > 0) {
-                    generateMonths();
-                    data.monthsData.forEach(m => {
-                        const invEl = document.getElementById(`invoice-${m.id}`);
-                        if(invEl) invEl.value = m.invoice;
-                        updateInvoice(m.id);
-                        
-                        m.payments.forEach((p, tIndex) => {
-                            const paidEl = document.getElementById(`paid-${m.id}-${tIndex}`);
-                            if (paidEl) {
-                                paidEl.value = p;
-                                calcTenant(m.id, tIndex);
-                            }
-                        });
-                        if (m.done) {
-                            const check = document.getElementById(`check-${m.id}`);
-                            if(check && !check.classList.contains('bg-green-500')) {
-                                toggleMonthDone(m.id);
-                            }
-                        }
-                    });
-                }
-                
+                applyLoadedData(data);
+                saveToLocal(); // Nadpisz LocalStorage
                 closeSettingsModal();
                 showToast("Dane wczytane pomyślnie!");
             } catch(error) {
@@ -1263,10 +1175,9 @@
         reader.readAsText(file);
     }
 
-    // Inicjalizacja
-    renderStartMonths();
-    renderSavings();
+    // Start
+    window.onload = loadFromLocal;
 
-    </script>
+</script>
 </body>
 </html>
