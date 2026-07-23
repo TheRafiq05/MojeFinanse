@@ -1,16 +1,14 @@
-const CACHE_NAME = 'mojakasa-v1';
-const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
-];
-
-self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));
-});
-
-self.addEventListener('fetch', (e) => {
-  e.respondWith(caches.match(e.request).then((response) => response || fetch(e.request)));
-});
+    <!-- Rejestracja Service Workera (PWA / Offline) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker zarejestrowany pomyślnie!');
+                    })
+                    .catch(err => {
+                        console.log('Błąd rejestracji ServiceWorkera: ', err);
+                    });
+            });
+        }
+    </script>
