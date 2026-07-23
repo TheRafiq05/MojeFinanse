@@ -160,28 +160,30 @@
         <div id="blob3" class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700"></div>
     </div>
 
-    <!-- Pływający Header (Sztywne marginesy Tailwind) -->
-    <header class="fixed top-6 left-4 right-4 z-40 glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg max-w-md mx-auto">
-        <h1 id="app-title" class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
-            MojeFinanse
-        </h1>
-        <div class="flex items-center gap-2">
-            <button onclick="openSettingsModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
-                <i class="ph-fill ph-gear text-xl text-slate-600 dark:text-slate-300"></i>
-            </button>
-            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
-                <i class="ph-fill ph-moon text-xl dark:hidden text-slate-700"></i>
-                <i class="ph-fill ph-sun text-xl hidden dark:block text-yellow-400"></i>
-            </button>
-        </div>
-    </header>
+    <!-- Pływający Header (Inteligentnie omijający Dynamic Island) -->
+    <div class="fixed top-0 left-0 right-0 z-40 pointer-events-none" style="padding-top: env(safe-area-inset-top);">
+        <header class="mt-4 mx-4 glass-card rounded-3xl px-6 py-4 flex justify-between items-center shadow-lg max-w-md sm:mx-auto pointer-events-auto">
+            <h1 id="app-title" class="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
+                MojeFinanse
+            </h1>
+            <div class="flex items-center gap-2">
+                <button onclick="openSettingsModal()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
+                    <i class="ph-fill ph-gear text-xl text-slate-600 dark:text-slate-300"></i>
+                </button>
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
+                    <i class="ph-fill ph-moon text-xl dark:hidden text-slate-700"></i>
+                    <i class="ph-fill ph-sun text-xl hidden dark:block text-yellow-400"></i>
+                </button>
+            </div>
+        </header>
+    </div>
 
-    <div id="toast" class="fixed top-28 left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="toast" class="fixed left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-6 py-3 rounded-full font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300" style="top: calc(env(safe-area-inset-top) + 6rem);">
         Komunikat
     </div>
 
-    <!-- Główna zawartość ze sztywnymi, dużymi marginesami góra/dół (pt-32, pb-36) -->
-    <main class="pt-32 pb-36 px-4 max-w-md mx-auto min-h-screen relative z-10">
+    <!-- Główna zawartość z bezpiecznym paddinigem dla każdej wielkości ekranu -->
+    <main class="px-4 max-w-md mx-auto min-h-screen relative z-10" style="padding-top: calc(env(safe-area-inset-top) + 7rem); padding-bottom: calc(env(safe-area-inset-bottom) + 7rem);">
         
         <!-- ZAKŁADKA 1: CZYNSZ -->
         <div id="view-rent" class="tab-content active space-y-6">
@@ -318,9 +320,9 @@
         </div>
     </main>
 
-    <!-- Pasek Nawigacyjny ze sztywnymi marginesami -->
-    <nav class="fixed bottom-0 left-0 right-0 w-full z-50 glass-nav pb-8 pt-3 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
-        <div class="flex justify-center items-center px-6 gap-8 max-w-md mx-auto">
+    <!-- Pasek Nawigacyjny inteligentny wobec dolnej strefy gestów -->
+    <nav class="fixed bottom-0 left-0 right-0 w-full z-50 glass-nav rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]" style="padding-bottom: env(safe-area-inset-bottom);">
+        <div class="flex justify-center items-center px-6 pt-3 pb-3 gap-8 max-w-md mx-auto">
             <button id="nav-rent" class="flex flex-col items-center justify-center w-20 relative text-rent-500 transition-colors" onclick="switchTab('rent')">
                 <div id="nav-rent-bg" class="absolute inset-0 bg-rent-100 dark:bg-rent-900/30 rounded-2xl transition-opacity opacity-100"></div>
                 <i class="ph-fill ph-house text-[22px] mb-1 relative z-10 mt-1"></i>
@@ -747,7 +749,8 @@
 
         tenants.forEach((_, index) => {
             const reqEl = document.getElementById(`req-${monthId}-${index}`);
-            if(reqEl) reqEl.innerText = perPerson.toFixed(0);
+            // Używamy textContent, ponieważ w ukrytym divie (accordion) innerText zwraca pusty ciąg!
+            if(reqEl) reqEl.textContent = perPerson.toFixed(0);
             calcTenant(monthId, index, false); 
         });
         
@@ -758,7 +761,9 @@
         const reqEl = document.getElementById(`req-${monthId}-${tIndex}`);
         if (!reqEl) return;
         
-        const req = parseFloat(reqEl.innerText) || 0;
+        // Krytyczna poprawka: textContent czyta wartość nawet z zamkniętych kart. 
+        // Wcześniej zamknięta karta dawała 0 zł, co generowało dziwne wyniki "na plusie".
+        const req = parseFloat(reqEl.textContent) || 0;
         const paidInputStr = document.getElementById(`paid-${monthId}-${tIndex}`).value.replace(',','.');
         const paid = parseFloat(paidInputStr) || 0;
         const statusEl = document.getElementById(`status-${monthId}-${tIndex}`);
@@ -843,16 +848,19 @@
              pContainer.innerHTML = '<div class="text-sm text-slate-400 p-4 w-full">Brak kieszeni. Dodaj pierwszą!</div>';
         } else {
             pockets.forEach(p => {
+                // Bezpieczne pozycjonowanie przycisków
                 pContainer.innerHTML += `
                     <div class="w-[calc(50%-0.375rem)] glass-card rounded-[1.25rem] p-4 relative overflow-hidden group">
-                        <div class="absolute -right-4 -bottom-4 w-12 h-12 bg-savings-400/10 rounded-full blur-xl"></div>
-                        <button onclick="deletePocket(${p.id})" class="absolute top-2 right-2 w-6 h-6 bg-red-100 text-red-500 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 active:scale-90 transition-all z-20">
-                            <i class="ph-bold ph-trash text-[10px]"></i>
-                        </button>
-                        <button onclick="openEditPocketModal(${p.id})" class="absolute top-2 right-10 w-6 h-6 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 active:scale-90 transition-all z-20">
-                            <i class="ph-bold ph-pencil-simple text-[10px]"></i>
-                        </button>
-                        <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1 truncate pr-5 relative z-10 uppercase tracking-wider"><i class="ph-fill ph-folder-open text-savings-400"></i> ${p.name}</p>
+                        <div class="absolute -right-4 -bottom-4 w-12 h-12 bg-savings-400/10 rounded-full blur-xl pointer-events-none"></div>
+                        <div class="absolute top-2 right-2 flex gap-1 z-20">
+                            <button onclick="openEditPocketModal(${p.id})" class="w-6 h-6 bg-blue-100 text-blue-500 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 active:scale-90 transition-all">
+                                <i class="ph-bold ph-pencil-simple text-[10px]"></i>
+                            </button>
+                            <button onclick="deletePocket(${p.id})" class="w-6 h-6 bg-red-100 text-red-500 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 active:scale-90 transition-all">
+                                <i class="ph-bold ph-trash text-[10px]"></i>
+                            </button>
+                        </div>
+                        <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-1 truncate pr-14 relative z-10 uppercase tracking-wider mt-1"><i class="ph-fill ph-folder-open text-savings-400"></i> ${p.name}</p>
                         <p class="text-lg font-black text-slate-800 dark:text-white relative z-10">${p.balance.toFixed(2)} <span class="text-[10px] font-bold text-slate-400">zł</span></p>
                     </div>
                 `;
@@ -881,25 +889,32 @@
                     subtitle = `${subtitle} <i class="ph-bold ph-arrow-right mx-0.5"></i> ${toPocketName}`;
                 }
 
+                // Struktura Flexbox uniemożliwiająca nakładanie się elementów!
                 return `
-                    <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-white/5 last:border-0 group animate-fade-in relative pr-16">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl ${bgClass} flex items-center justify-center shadow-sm">
+                    <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-white/5 last:border-0 group animate-fade-in">
+                        <div class="flex items-center gap-3 flex-1 min-w-0 pr-2">
+                            <div class="w-10 h-10 shrink-0 rounded-xl ${bgClass} flex items-center justify-center shadow-sm">
                                 <i class="ph-bold ${iconClass} text-lg"></i>
                             </div>
-                            <div>
-                                <p class="font-extrabold text-sm truncate max-w-[130px]">${t.desc}</p>
-                                <p class="text-[10px] text-slate-400 font-bold uppercase mt-0.5 flex items-center"><i class="ph-fill ph-folder text-savings-400 mr-1"></i> ${subtitle}</p>
+                            <div class="min-w-0 flex-1">
+                                <p class="font-extrabold text-sm truncate">${t.desc}</p>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase mt-0.5 flex items-center truncate">
+                                    <i class="ph-fill ph-folder text-savings-400 mr-1 shrink-0"></i> 
+                                    <span class="truncate">${subtitle}</span>
+                                </p>
                             </div>
                         </div>
-                        <p class="font-black text-sm ${colorClass}">${sign}${t.amount.toFixed(2)} zł</p>
-                        
-                        <button onclick="openEditTransactionModal(${t.id})" class="absolute right-8 top-1/2 -translate-y-1/2 w-7 h-7 bg-blue-100 text-blue-500 dark:bg-blue-500/20 rounded-full flex items-center justify-center active:scale-90 transition-all opacity-70 hover:opacity-100">
-                            <i class="ph-bold ph-pencil-simple text-[11px]"></i>
-                        </button>
-                        <button onclick="deleteTransaction(${t.id})" class="absolute right-0 top-1/2 -translate-y-1/2 w-7 h-7 bg-red-100 text-red-500 dark:bg-red-500/20 rounded-full flex items-center justify-center active:scale-90 transition-all opacity-70 hover:opacity-100">
-                            <i class="ph-bold ph-trash text-[11px]"></i>
-                        </button>
+                        <div class="flex items-center gap-3 shrink-0">
+                            <p class="font-black text-sm ${colorClass} text-right">${sign}${t.amount.toFixed(2)} zł</p>
+                            <div class="flex items-center gap-1">
+                                <button onclick="openEditTransactionModal(${t.id})" class="w-7 h-7 bg-blue-100 text-blue-500 dark:bg-blue-500/20 rounded-full flex items-center justify-center active:scale-90 transition-all opacity-70 hover:opacity-100 shrink-0">
+                                    <i class="ph-bold ph-pencil-simple text-[11px]"></i>
+                                </button>
+                                <button onclick="deleteTransaction(${t.id})" class="w-7 h-7 bg-red-100 text-red-500 dark:bg-red-500/20 rounded-full flex items-center justify-center active:scale-90 transition-all opacity-70 hover:opacity-100 shrink-0">
+                                    <i class="ph-bold ph-trash text-[11px]"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 `;
             }).reverse().join('');
@@ -1011,7 +1026,6 @@
         renderPocketChips('trans-pocket-chips', 'trans-pocket-id');
         renderPocketChips('trans-to-pocket-chips', 'trans-to-pocket-id', true);
         
-        // Zaznaczamy odpowiednie chipy po chwili
         setTimeout(() => {
             selectPocketChip(t.pocketId, 'trans-pocket-chips', 'trans-pocket-id');
             if(t.type === 'transfer' && t.toPocketId) {
@@ -1102,7 +1116,6 @@
 
         if (isNaN(amount) || amount <= 0) { showToast("Podaj prawidłową kwotę!"); return; }
 
-        // Odwracamy efekt starej transakcji przed zapisaniem nowej (jeśli edytujemy)
         if (editingTransactionId) {
             const oldTIndex = transactions.findIndex(t => t.id === editingTransactionId);
             if (oldTIndex > -1) {
