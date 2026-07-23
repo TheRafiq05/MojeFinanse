@@ -798,7 +798,7 @@
                 if (t.type === 'in') {
                     iconClass = 'ph-trend-up'; bgClass = 'bg-green-50 text-green-500 dark:bg-green-500/20'; colorClass = 'text-green-500'; sign = '+';
                 } else if (t.type === 'out') {
-                    iconClass = 'ph-trend-down'; bgClass = 'bg-red-50 text-red-500 dark:bg-red-500/20'; colorClass = 'text-slate-800 dark:text-white'; sign = '-';
+                    iconClass = 'ph-trend-down'; bgClass = 'bg-red-50 text-red-500 dark:bg-red-500/20'; colorClass = 'text-red-500'; sign = '-';
                 } else {
                     iconClass = 'ph-arrows-left-right'; bgClass = 'bg-transfer-500/10 text-transfer-500'; colorClass = 'text-transfer-500'; sign = '';
                     let toPocketName = pockets.find(p => p.id == t.toPocketId)?.name || 'Usunięta kieszeń';
@@ -973,7 +973,8 @@
             </button>
         `}).join('');
         
-        if(pockets.length > 0 && !editingTransactionId) {
+        // ZAWSZE Ustawiaj poprawną wartość początkową (nawet podczas edycji), by uniknąć NaN
+        if(pockets.length > 0) {
             document.getElementById(hiddenInputId).value = isTransferTo && pockets.length > 1 ? pockets[1].id : pockets[0].id;
         }
     }
@@ -1031,6 +1032,25 @@
 
         if (isNaN(amount) || amount <= 0) { showToast("Podaj prawidłową kwotę!"); return; }
 
+        let fromPkt = null;
+        let toPkt = null;
+
+        // 1. NAJPIERW BEZPIECZNA WALIDACJA KIESZENI
+        if (type === 'transfer') {
+            const toPocketId = parseInt(document.getElementById('trans-to-pocket-id').value);
+            if (isNaN(toPocketId)) { showToast("Wybierz docelową kieszeń!"); return; }
+            if (pocketId === toPocketId) { showToast("Wybierz różne kieszenie!"); return; }
+            
+            fromPkt = pockets.find(p => p.id === pocketId);
+            toPkt = pockets.find(p => p.id === toPocketId);
+            
+            if(!fromPkt || !toPkt) { showToast("Błąd kieszeni!"); return; }
+        } else {
+            fromPkt = pockets.find(p => p.id === pocketId);
+            if (!fromPkt) { showToast("Błąd kieszeni!"); return; }
+        }
+
+        // 2. DOPIERO TERAZ MOŻEMY COFNĄĆ STARY RUCH (jeśli edytujemy)
         if (editingTransactionId) {
             const oldTIndex = transactions.findIndex(t => t.id === editingTransactionId);
             if (oldTIndex > -1) {
@@ -1051,28 +1071,18 @@
             }
         }
 
+        // 3. I ZAPISUJEMY NOWY
         if (type === 'transfer') {
-            const toPocketId = parseInt(document.getElementById('trans-to-pocket-id').value);
-            if(pocketId === toPocketId) { showToast("Wybierz różne kieszenie!"); return; }
-            
-            const fromPkt = pockets.find(p => p.id === pocketId);
-            const toPkt = pockets.find(p => p.id === toPocketId);
-            
-            if(fromPkt && toPkt) {
-                fromPkt.balance -= amount;
-                toPkt.balance += amount;
-                transactions.push({
-                    id: editingTransactionId || Date.now(), type: 'transfer', amount: amount, desc: desc || 'Transfer środków', pocketId: pocketId, toPocketId: toPocketId
-                });
-            } else { showToast("Błąd kieszeni!"); return; }
+            fromPkt.balance -= amount;
+            toPkt.balance += amount;
+            transactions.push({
+                id: editingTransactionId || Date.now(), type: 'transfer', amount: amount, desc: desc || 'Transfer środków', pocketId: pocketId, toPocketId: toPkt.id
+            });
         } else {
-            const pocket = pockets.find(p => p.id === pocketId);
-            if (pocket) {
-                if (type === 'in') { pocket.balance += amount; } else { pocket.balance -= amount; }
-                transactions.push({
-                    id: editingTransactionId || Date.now(), type: type, amount: amount, desc: desc || (type === 'in' ? 'Wpływ' : 'Wydatek'), pocketId: pocketId
-                });
-            } else { showToast("Błąd kieszeni!"); return; }
+            if (type === 'in') { fromPkt.balance += amount; } else { fromPkt.balance -= amount; }
+            transactions.push({
+                id: editingTransactionId || Date.now(), type: type, amount: amount, desc: desc || (type === 'in' ? 'Wpływ' : 'Wydatek'), pocketId: pocketId
+            });
         }
 
         closeTransactionModal();
@@ -1174,3 +1184,4 @@
 
 </body>
 </html>
+
