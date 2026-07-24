@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MojeFinanse</title>
+    <title>Rentney - Czynsz pod kontrolą</title>
     
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#FF8A65">
+    <meta name="theme-color" content="#10B981">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -21,12 +21,25 @@
             theme: {
                 extend: {
                     colors: {
-                        rent: { light: '#FFF0ED', 400: '#FF8A65', 500: '#FF7043', 600: '#F4511E', gradientStart: '#FF8A65', gradientEnd: '#FF5252' },
-                        savings: { light: '#FCE4EC', 400: '#F06292', 500: '#E91E63', 600: '#D81B60', gradientStart: '#FF4081', gradientEnd: '#E040FB' },
-                        transfer: { 500: '#8B5CF6' },
-                        darkBg: '#121212', darkCard: '#1E1E1E'
+                        rentney: { 
+                            light: '#ECFDF5', 
+                            50: '#ECFDF5',
+                            100: '#D1FAE5',
+                            200: '#A7F3D0',
+                            400: '#34D399', 
+                            500: '#10B981', 
+                            600: '#059669', 
+                            900: '#064E3B',
+                            gradientStart: '#34D399', 
+                            gradientEnd: '#0D9488' 
+                        },
+                        darkBg: '#121212', 
+                        darkCard: '#1E1E1E'
                     },
-                    animation: { 'blob': 'blob 7s infinite', 'fade-in': 'fadeIn 0.3s ease-out forwards' },
+                    animation: { 
+                        'blob': 'blob 7s infinite', 
+                        'fade-in': 'fadeIn 0.3s ease-out forwards' 
+                    },
                     keyframes: {
                         blob: {
                             '0%': { transform: 'translate(0px, 0px) scale(1)' },
@@ -34,7 +47,10 @@
                             '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
                             '100%': { transform: 'translate(0px, 0px) scale(1)' },
                         },
-                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } }
+                        fadeIn: { 
+                            '0%': { opacity: '0', transform: 'translateY(10px)' }, 
+                            '100%': { opacity: '1', transform: 'translateY(0)' } 
+                        }
                     }
                 }
             }
@@ -58,32 +74,38 @@
         .dark .input-wow { background: rgba(0, 0, 0, 0.3); color: #f3f4f6; border-color: rgba(255,255,255,0.05); }
         .dark .input-wow:focus { background: rgba(0, 0, 0, 0.5); border-color: rgba(255,255,255,0.1); }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
-
-        .bg-dynamic-rent { background: linear-gradient(135deg, #FFF0ED 0%, #FFE0B2 100%); }
-        .dark .bg-dynamic-rent { background: linear-gradient(135deg, #1A1210 0%, #2D1A15 100%); }
-        .bg-dynamic-savings { background: linear-gradient(135deg, #FCE4EC 0%, #F3E5F5 100%); }
-        .dark .bg-dynamic-savings { background: linear-gradient(135deg, #1A1014 0%, #1A1220 100%); }
+        .bg-dynamic-rentney { background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%); }
+        .dark .bg-dynamic-rentney { background: linear-gradient(135deg, #022C22 0%, #064E3B 100%); }
 
         input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type="number"] { -moz-appearance: textfield; }
         
         html { font-size: 15px; }
+
+        /* Style ekranu ładowania */
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ECFDF5; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease; }
+        .dark #splash-screen { background: #022C22; }
+        #splash-screen.hide-splash { opacity: 0; pointer-events: none; }
+        .splash-logo-container { width: 110px; height: 110px; border-radius: 28px; margin-bottom: 24px; box-shadow: 0 20px 40px -10px rgba(16, 185, 129, 0.5); animation: logo-breathe 3s ease-in-out infinite; overflow: hidden; display: flex; align-items: center; justify-content: center; background: transparent; }
+        .splash-logo-container img { width: 100%; height: 100%; object-fit: cover; }
+        @keyframes logo-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        #main-content-wrapper { opacity: 0; transition: opacity 0.5s ease-in; }
+        #main-content-wrapper.content-visible { opacity: 1; }
     </style>
 </head>
-<body class="bg-dynamic-rent text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative" id="body-bg">
+<body class="bg-dynamic-rentney text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative" id="body-bg">
 
     <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div id="blob1" class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700"></div>
-        <div id="blob2" class="absolute top-[20%] right-[-10%] w-64 h-64 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 dark:opacity-20 transition-colors duration-700"></div>
-        <div id="blob3" class="absolute bottom-[-20%] left-[20%] w-80 h-80 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700"></div>
+        <div id="blob1" class="absolute top-[-10%] left-[-10%] w-64 h-64 bg-rentney-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700"></div>
+        <div id="blob2" class="absolute top-[20%] right-[-10%] w-64 h-64 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 dark:opacity-20 transition-colors duration-700"></div>
+        <div id="blob3" class="absolute bottom-[-20%] left-[20%] w-80 h-80 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700"></div>
     </div>
 
-    <!-- Pływający Header: Obniżony na 68px, by dać oddech pod Dynamic Island -->
-    <header class="fixed top-[68px] sm:top-[75px] left-4 right-4 z-40 glass-card rounded-[1.5rem] px-5 py-3 flex justify-between items-center shadow-md max-w-md mx-auto">
-        <h1 id="app-title" class="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd transition-all duration-500">
-            MojeFinanse
+    <!-- Pływający Header -->
+    <header class="fixed top-[40px] sm:top-[50px] left-4 right-4 z-40 glass-card rounded-[1.5rem] px-5 py-3 flex justify-between items-center shadow-md max-w-md mx-auto">
+        <h1 id="app-title" class="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rentney-gradientStart to-rentney-gradientEnd transition-all duration-500">
+            Rentney
         </h1>
         <div class="flex items-center gap-2">
             <button onclick="openSettingsModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center active:scale-90 transition-transform shadow-sm">
@@ -96,231 +118,112 @@
         </div>
     </header>
 
+    <div id="splash-screen">
+        <div class="splash-logo-container">
+            <img src="icon-512.png" alt="Rentney Logo" onerror="this.onerror=null; this.src='https://placehold.co/512x512/10B981/ffffff?text=R'">
+        </div>
+        <h1 class="text-3xl font-extrabold text-slate-800 dark:text-white tracking-tight mb-2">Rentney</h1>
+        <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Czynsz pod kontrolą</p>
+    </div>
+
     <div id="toast" class="fixed top-36 left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white px-5 py-2.5 rounded-full text-sm font-semibold shadow-xl opacity-0 pointer-events-none transition-opacity duration-300">
         Komunikat
     </div>
 
-    <!-- Zawartość dostosowana do nowego ułożenia headera i footera -->
-    <main class="px-4 max-w-md mx-auto min-h-screen relative z-10" style="padding-top: 145px; padding-bottom: 95px;">
-        
-        <!-- ZAKŁADKA 1: CZYNSZ -->
-        <div id="view-rent" class="tab-content active space-y-4">
+    <div id="main-content-wrapper">
+        <main class="px-4 max-w-md mx-auto min-h-screen relative z-10" style="padding-top: 115px; padding-bottom: 40px;">
             
-            <div class="glass-card rounded-[1.5rem] p-5 text-center shadow-lg relative overflow-hidden group">
-                <div class="absolute inset-0 bg-gradient-to-br from-rent-gradientStart to-rent-gradientEnd opacity-10 group-hover:opacity-20 transition-opacity"></div>
-                <div class="relative z-10">
-                    <div class="w-10 h-10 mx-auto bg-rent-100 dark:bg-rent-900/40 rounded-full flex items-center justify-center mb-2">
-                        <i class="ph-fill ph-house-line text-xl text-rent-500"></i>
-                    </div>
-                    <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-0.5 uppercase tracking-wider">Baza czynszu</p>
-                    <h2 class="text-4xl font-black text-slate-800 dark:text-white tracking-tight" id="total-rent-display">0 <span class="text-xl text-slate-400">zł</span></h2>
-                    <div class="mt-2 inline-block bg-rent-100 dark:bg-rent-900/30 px-3 py-1 rounded-full">
-                        <p class="text-[11px] font-bold text-rent-600 dark:text-rent-400">≈ <span id="per-person-display">0</span> zł / osobę</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card rounded-[1.5rem] p-1.5 shadow-sm border border-rent-200 dark:border-white/5">
-                <div class="p-3 flex justify-between items-center cursor-pointer" onclick="toggleSettings()">
-                    <div class="flex items-center gap-2">
-                        <div class="p-2 bg-rent-100 dark:bg-rent-900/30 rounded-xl text-rent-500">
-                            <i class="ph-fill ph-sliders-horizontal text-lg"></i>
-                        </div>
-                        <h2 class="font-bold text-base">Parametry wynajmu</h2>
-                    </div>
-                    <i id="settings-icon" class="ph-bold ph-caret-down text-lg text-slate-400 transition-transform duration-300 mr-2"></i>
-                </div>
+            <div id="view-rent" class="space-y-4">
                 
-                <div id="settings-content" class="hidden px-3 pb-3 space-y-4">
-                    <div class="w-full h-px bg-slate-200 dark:bg-white/10 mb-2"></div>
+                <div class="glass-card rounded-[1.5rem] p-5 text-center shadow-lg relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gradient-to-br from-rentney-gradientStart to-rentney-gradientEnd opacity-10 group-hover:opacity-20 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 mx-auto bg-rentney-100 dark:bg-rentney-900/40 rounded-full flex items-center justify-center mb-2">
+                            <i class="ph-fill ph-house-line text-xl text-rentney-500"></i>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-0.5 uppercase tracking-wider">Baza czynszu</p>
+                        <h2 class="text-4xl font-black text-slate-800 dark:text-white tracking-tight" id="total-rent-display">0 <span class="text-xl text-slate-400">zł</span></h2>
+                        <div class="mt-2 inline-block bg-rentney-100 dark:bg-rentney-900/30 px-3 py-1 rounded-full">
+                            <p class="text-[11px] font-bold text-rentney-600 dark:text-rentney-400">≈ <span id="per-person-display">0</span> zł / osobę</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-[1.5rem] p-1.5 shadow-sm border border-rentney-200 dark:border-white/5">
+                    <div class="p-3 flex justify-between items-center cursor-pointer" onclick="toggleSettings()">
+                        <div class="flex items-center gap-2">
+                            <div class="p-2 bg-rentney-100 dark:bg-rentney-900/30 rounded-xl text-rentney-500">
+                                <i class="ph-fill ph-sliders-horizontal text-lg"></i>
+                            </div>
+                            <h2 class="font-bold text-base">Parametry wynajmu</h2>
+                        </div>
+                        <i id="settings-icon" class="ph-bold ph-caret-down text-lg text-slate-400 transition-transform duration-300 mr-2"></i>
+                    </div>
                     
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block flex items-center gap-1"><i class="ph-fill ph-coins"></i> Kwoty stałe</label>
-                        <div class="space-y-2">
-                            <div class="relative focus-within:text-rent-500 text-slate-400 transition-colors">
-                                <i class="ph-fill ph-key absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
-                                <input type="number" id="base-rent" placeholder="Odstępne" class="input-wow pl-9 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
-                            </div>
-                            <div class="relative focus-within:text-rent-500 text-slate-400 transition-colors">
-                                <i class="ph-fill ph-buildings absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
-                                <input type="number" id="base-admin" placeholder="Czynsz adm." class="input-wow pl-9 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
-                            </div>
-                            <div class="relative focus-within:text-rent-500 text-slate-400 transition-colors">
-                                <i class="ph-fill ph-lightning absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
-                                <input type="number" id="base-electric" placeholder="Zaliczki (prąd, gaz)" class="input-wow pl-9 border-rent-100 focus:border-rent-500" oninput="calculateRent()">
+                    <div id="settings-content" class="hidden px-3 pb-3 space-y-4">
+                        <div class="w-full h-px bg-slate-200 dark:bg-white/10 mb-2"></div>
+                        
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block flex items-center gap-1"><i class="ph-fill ph-coins"></i> Kwoty stałe</label>
+                            <div class="space-y-2">
+                                <div class="relative focus-within:text-rentney-500 text-slate-400 transition-colors">
+                                    <i class="ph-fill ph-key absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
+                                    <input type="number" id="base-rent" placeholder="Odstępne" class="input-wow pl-9 border-rentney-100 focus:border-rentney-500" oninput="calculateRent()">
+                                </div>
+                                <div class="relative focus-within:text-rentney-500 text-slate-400 transition-colors">
+                                    <i class="ph-fill ph-buildings absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
+                                    <input type="number" id="base-admin" placeholder="Czynsz adm." class="input-wow pl-9 border-rentney-100 focus:border-rentney-500" oninput="calculateRent()">
+                                </div>
+                                <div class="relative focus-within:text-rentney-500 text-slate-400 transition-colors">
+                                    <i class="ph-fill ph-lightning absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
+                                    <input type="number" id="base-electric" placeholder="Zaliczki (prąd, gaz)" class="input-wow pl-9 border-rentney-100 focus:border-rentney-500" oninput="calculateRent()">
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block flex items-center gap-1"><i class="ph-fill ph-calendar-blank"></i> Start umowy</label>
-                        <div id="start-month-chips" class="grid grid-cols-4 gap-1.5"></div>
-                        <input type="hidden" id="start-month" value="0">
-                    </div>
-
-                    <div class="pt-1">
-                        <div class="flex justify-between items-center mb-1.5">
-                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><i class="ph-fill ph-users"></i> Lokatorzy</label>
-                            <span class="bg-slate-200 dark:bg-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold" id="tenant-count">0</span>
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 block flex items-center gap-1"><i class="ph-fill ph-calendar-blank"></i> Start umowy</label>
+                            <div id="start-month-chips" class="grid grid-cols-4 gap-1.5"></div>
+                            <input type="hidden" id="start-month" value="0">
                         </div>
-                        <div class="flex gap-1.5 mb-2">
-                            <input type="text" id="new-tenant-name" placeholder="Imię (np. Ania)" class="input-wow border-rent-100 focus:border-rent-500">
-                            <button onclick="addTenant()" class="bg-rent-500 hover:bg-rent-600 text-white w-12 rounded-xl flex items-center justify-center font-bold active:scale-90 transition-all shadow-md shadow-rent-500/30">
-                                <i class="ph-bold ph-plus text-lg"></i>
-                            </button>
-                        </div>
-                        <div id="tenants-list" class="flex flex-wrap gap-1.5"></div>
-                    </div>
 
-                    <button onclick="toggleSettings()" class="w-full mt-2 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-3 rounded-xl text-sm font-bold shadow-md active:scale-95 transition-all flex justify-center items-center gap-2">
-                        <i class="ph-bold ph-check"></i> Gotowe, schowaj
+                        <div class="pt-1">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><i class="ph-fill ph-users"></i> Lokatorzy</label>
+                                <span class="bg-slate-200 dark:bg-slate-700 text-[10px] px-2 py-0.5 rounded-full font-bold" id="tenant-count">0</span>
+                            </div>
+                            <div class="flex gap-1.5 mb-2">
+                                <input type="text" id="new-tenant-name" placeholder="Imię (np. Ania)" class="input-wow border-rentney-100 focus:border-rentney-500">
+                                <button onclick="addTenant()" class="bg-rentney-500 hover:bg-rentney-600 text-white w-12 rounded-xl flex items-center justify-center font-bold active:scale-90 transition-all shadow-md shadow-rentney-500/30">
+                                    <i class="ph-bold ph-plus text-lg"></i>
+                                </button>
+                            </div>
+                            <div id="tenants-list" class="flex flex-wrap gap-1.5"></div>
+                        </div>
+
+                        <button onclick="toggleSettings()" class="w-full mt-2 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-3 rounded-xl text-sm font-bold shadow-md active:scale-95 transition-all flex justify-center items-center gap-2">
+                            <i class="ph-bold ph-check"></i> Gotowe, schowaj
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mb-1 mt-6 px-1">
+                    <h3 class="font-extrabold text-lg">Miesiące</h3>
+                    <button class="bg-gradient-to-r from-rentney-gradientStart to-rentney-gradientEnd text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md shadow-rentney-500/30 active:scale-95 transition-transform flex items-center gap-1" onclick="generateMonths()">
+                        <i class="ph-bold ph-magic-wand"></i> Generuj
                     </button>
                 </div>
-            </div>
-
-            <div class="flex items-center justify-between mb-1 mt-6 px-1">
-                <h3 class="font-extrabold text-lg">Miesiące</h3>
-                <button class="bg-gradient-to-r from-rent-gradientStart to-rent-gradientEnd text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-md shadow-rent-500/30 active:scale-95 transition-transform flex items-center gap-1" onclick="generateMonths()">
-                    <i class="ph-bold ph-magic-wand"></i> Generuj
-                </button>
-            </div>
-            
-            <div id="months-container" class="space-y-3">
-                <div class="text-center py-8 glass-card rounded-[1.5rem]">
-                    <div class="w-12 h-12 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <i class="ph-fill ph-calendar-plus text-2xl text-slate-400"></i>
-                    </div>
-                    <p class="text-xs font-semibold text-slate-500">Brak miesięcy.<br>Ustaw dane i kliknij "Generuj".</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ZAKŁADKA 2: OSZCZĘDNOŚCI-->
-        <div id="view-savings" class="tab-content space-y-4">
-            <div class="bg-gradient-to-br from-savings-gradientStart to-savings-gradientEnd rounded-[1.5rem] p-6 text-center shadow-xl shadow-savings-500/30 relative overflow-hidden text-white">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full filter blur-2xl transform translate-x-1/2 -translate-y-1/2"></div>
                 
-                <div class="relative z-10">
-                    <i class="ph-fill ph-piggy-bank text-4xl mb-1.5 drop-shadow-sm"></i>
-                    <p class="text-savings-light font-semibold mb-0.5 uppercase tracking-wider text-[11px]">Twoje oszczędności</p>
-                    <h2 class="text-4xl font-black tracking-tight drop-shadow-md" id="total-savings-display">0 <span class="text-xl text-white/70">zł</span></h2>
-                </div>
-            </div>
-
-            <div>
-                <div class="flex justify-between items-end mb-2.5 px-1">
-                    <h3 class="font-extrabold text-lg">Kieszenie</h3>
-                    <button onclick="openPocketModal()" class="text-savings-500 dark:text-savings-400 text-xs font-bold flex items-center gap-1 bg-savings-100 dark:bg-savings-900/30 px-2.5 py-1 rounded-full active:scale-95 transition-transform">
-                        <i class="ph-bold ph-plus"></i> Dodaj
-                    </button>
-                </div>
-                <div id="pockets-container" class="grid grid-cols-2 gap-2.5"></div>
-            </div>
-
-            <div class="glass-card rounded-[1.5rem] p-4">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-2 cursor-pointer flex-1" onclick="toggleTransactions()">
-                        <div class="p-1.5 bg-slate-100 dark:bg-white/10 rounded-lg text-slate-500">
-                            <i class="ph-fill ph-clock-counter-clockwise text-lg"></i>
+                <div id="months-container" class="space-y-3">
+                    <div class="text-center py-8 glass-card rounded-[1.5rem]">
+                        <div class="w-12 h-12 bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="ph-fill ph-calendar-plus text-2xl text-slate-400"></i>
                         </div>
-                        <h3 class="font-extrabold text-base">Historia</h3>
-                        <i id="trans-toggle-icon" class="ph-bold ph-caret-down text-sm text-slate-400 transition-transform"></i>
+                        <p class="text-xs font-semibold text-slate-500">Brak miesięcy.<br>Ustaw dane i kliknij "Generuj".</p>
                     </div>
-                    <button onclick="openTransactionModal()" class="text-savings-500 dark:text-savings-400 text-xs font-bold flex items-center gap-1 bg-savings-100 dark:bg-savings-900/30 px-2.5 py-1 rounded-full active:scale-95 transition-transform">
-                        <i class="ph-bold ph-plus"></i> Nowy ruch
-                    </button>
-                </div>
-                <div id="transactions-list-wrapper" class="transition-all duration-300 overflow-hidden max-h-[2000px]">
-                    <div id="transactions-list" class="space-y-2"></div>
                 </div>
             </div>
-        </div>
-    </main>
-
-    <!-- Zgrabny Dolny pasek nawigacyjny: Odchudzony wewnętrzny padding, z bezpiecznym marginesem dolnym -->
-    <nav class="fixed bottom-0 left-0 right-0 w-full z-50 glass-nav rounded-t-[1.5rem] shadow-[0_-10px_30px_rgba(0,0,0,0.05)]" style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="flex justify-center items-center px-6 pt-2.5 pb-0.5 gap-10 max-w-md mx-auto">
-            <button id="nav-rent" class="flex flex-col items-center justify-center w-16 relative text-rent-500 transition-colors" onclick="switchTab('rent')">
-                <div id="nav-rent-bg" class="absolute inset-0 bg-rent-100 dark:bg-rent-900/30 rounded-xl transition-opacity opacity-100"></div>
-                <i class="ph-fill ph-house text-[20px] mb-0.5 relative z-10 mt-1"></i>
-                <span class="text-[9px] font-bold uppercase tracking-wider relative z-10 mb-0.5">Czynsz</span>
-            </button>
-            <button id="nav-savings" class="flex flex-col items-center justify-center w-16 relative text-slate-400 hover:text-savings-400 transition-colors" onclick="switchTab('savings')">
-                <div id="nav-savings-bg" class="absolute inset-0 bg-savings-100 dark:bg-savings-900/30 rounded-xl transition-opacity opacity-0"></div>
-                <i class="ph-fill ph-piggy-bank text-[20px] mb-0.5 relative z-10 mt-1"></i>
-                <span class="text-[9px] font-bold uppercase tracking-wider relative z-10 mb-0.5">Kasa</span>
-            </button>
-        </div>
-    </nav>
-
-    <!-- Modal: Dodaj/Edytuj Operację / Transfer -->
-    <div id="transaction-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="trans-backdrop" onclick="closeTransactionModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[1.5rem] p-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] transform transition-transform translate-y-full shadow-2xl" id="trans-panel">
-            <button onclick="closeTransactionModal()" class="absolute top-5 right-5 w-7 h-7 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
-                <i class="ph-bold ph-x text-sm"></i>
-            </button>
-            <div class="w-10 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-5"></div>
-            <h3 id="trans-modal-title" class="text-xl font-black mb-5 flex items-center gap-2"><i class="ph-fill ph-arrows-left-right text-savings-500"></i> Nowy ruch</h3>
-            
-            <div class="space-y-3">
-                <div class="flex bg-slate-100 dark:bg-black/30 p-1 rounded-xl relative">
-                    <div id="type-bg" class="absolute w-1/3 h-[calc(100%-8px)] bg-white dark:bg-slate-700 shadow-sm rounded-lg transition-transform top-1 left-1"></div>
-                    <button type="button" id="btn-type-in" class="w-1/3 py-2 text-[10px] font-bold relative z-10 text-green-600 transition-colors tracking-wide" onclick="setType('in', this)">WPŁYWA</button>
-                    <button type="button" id="btn-type-out" class="w-1/3 py-2 text-[10px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('out', this)">WYDAJĘ</button>
-                    <button type="button" id="btn-type-transfer" class="w-1/3 py-2 text-[10px] font-bold relative z-10 text-slate-500 transition-colors tracking-wide" onclick="setType('transfer', this)">TRANSFER</button>
-                </div>
-                <input type="hidden" id="trans-type" value="in">
-                
-                <div class="relative">
-                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 font-bold text-slate-400 text-sm">PLN</span>
-                    <input type="number" id="trans-amount" placeholder="0.00" class="input-wow pl-11 text-xl font-black text-center focus:border-savings-500 border-savings-100 py-3">
-                </div>
-                
-                <div class="relative">
-                    <i class="ph-fill ph-text-t absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" id="trans-desc" placeholder="Tytuł (np. Wypłata)" class="input-wow pl-9 focus:border-savings-500 border-savings-100">
-                </div>
-                
-                <div>
-                    <label id="pocket-from-label" class="text-[10px] font-bold text-slate-400 mb-1.5 block">Wybierz kieszeń</label>
-                    <div id="trans-pocket-chips" class="flex flex-wrap gap-1.5"></div>
-                    <input type="hidden" id="trans-pocket-id" value="">
-                </div>
-
-                <div id="trans-to-pocket-div" class="hidden">
-                    <label class="text-[10px] font-bold text-slate-400 mb-1.5 block">Do kieszeni</label>
-                    <div id="trans-to-pocket-chips" class="flex flex-wrap gap-1.5"></div>
-                    <input type="hidden" id="trans-to-pocket-id" value="">
-                </div>
-                
-                <button onclick="saveTransaction()" class="w-full mt-3 bg-gradient-to-r from-savings-gradientStart to-savings-gradientEnd text-white py-3 rounded-xl font-black text-base shadow-lg shadow-savings-500/30 active:scale-95 transition-transform flex justify-center items-center gap-2">
-                    <i class="ph-bold ph-check-circle"></i> Zapisz
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Dodaj/Edytuj Kieszeń -->
-    <div id="pocket-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="pocket-backdrop" onclick="closePocketModal()"></div>
-        <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[1.5rem] p-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] transform transition-transform translate-y-full shadow-2xl" id="pocket-panel">
-            <button onclick="closePocketModal()" class="absolute top-5 right-5 w-7 h-7 bg-slate-100 dark:bg-white/10 rounded-full flex items-center justify-center text-slate-500 active:scale-90 transition-transform">
-                <i class="ph-bold ph-x text-sm"></i>
-            </button>
-            <div class="w-10 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-5"></div>
-            <h3 id="pocket-modal-title" class="text-xl font-black mb-5 flex items-center gap-2"><i class="ph-fill ph-folder-plus text-savings-500"></i> Nowa kieszeń</h3>
-            
-            <div class="space-y-3">
-                <div class="relative">
-                    <i class="ph-fill ph-tag absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 text-base"></i>
-                    <input type="text" id="pocket-name" placeholder="Nazwa (np. Na wakacje)" class="input-wow pl-9 focus:border-savings-500 border-savings-100">
-                </div>
-                <button id="pocket-modal-btn" onclick="savePocket()" class="w-full mt-3 bg-slate-800 dark:bg-white text-white dark:text-slate-900 py-3 rounded-xl font-black text-base shadow-md active:scale-95 transition-transform">
-                    Utwórz
-                </button>
-            </div>
-        </div>
+        </main>
     </div>
 
     <!-- Modal: Ustawienia -->
@@ -331,13 +234,13 @@
                 <i class="ph-bold ph-x text-sm"></i>
             </button>
             <div class="w-10 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-5"></div>
-            <h3 class="text-xl font-black mb-5 flex items-center gap-2"><i class="ph-fill ph-gear text-slate-500"></i> Ustawienia</h3>
+            <h3 class="text-xl font-black mb-5 flex items-center gap-2 text-slate-800 dark:text-white"><i class="ph-fill ph-gear text-slate-500"></i> Ustawienia</h3>
             
             <div class="space-y-3">
-                <p class="text-xs font-semibold text-slate-500 leading-relaxed">Kopia zapasowa danych do pliku. Aplikacja zapisuje się automatycznie (LocalStorage).</p>
-                <div class="relative focus-within:text-savings-500 text-slate-400 transition-colors">
+                <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 leading-relaxed">Kopia zapasowa danych do pliku. Aplikacja zapisuje się automatycznie (LocalStorage).</p>
+                <div class="relative focus-within:text-rentney-500 text-slate-400 transition-colors">
                     <i class="ph-fill ph-file-text absolute left-3 top-1/2 transform -translate-y-1/2 text-base"></i>
-                    <input type="text" id="export-filename" placeholder="Nazwa pliku" class="input-wow pl-9 focus:border-slate-500 border-slate-200 w-full" value="moje_finanse">
+                    <input type="text" id="export-filename" placeholder="Nazwa pliku" class="input-wow pl-9 focus:border-slate-500 border-slate-200 w-full" value="rentney_backup">
                 </div>
                 <input type="file" id="import-file" class="hidden" accept=".json" onchange="handleFileUpload(event)">
                 
@@ -354,13 +257,11 @@
     </div>
 
 <script>
-    const STORAGE_KEY = 'mojeFinanseAutoSaveData';
-    let editingPocketId = null;
-    let editingTransactionId = null;
+    const STORAGE_KEY = 'rentneyAutoSaveData';
 
     function getAppStateData() {
         const data = {
-            tenants, pockets, transactions,
+            tenants,
             baseRent: document.getElementById('base-rent').value,
             baseAdmin: document.getElementById('base-admin').value,
             baseElectric: document.getElementById('base-electric').value,
@@ -401,18 +302,14 @@
                 applyLoadedData(JSON.parse(str));
             } else {
                 renderStartMonths();
-                renderSavings();
             }
         } catch(e) {
             renderStartMonths();
-            renderSavings();
         }
     }
 
     function applyLoadedData(data) {
         tenants = data.tenants || [];
-        pockets = data.pockets || [];
-        transactions = data.transactions || [];
         
         document.getElementById('base-rent').value = data.baseRent || '';
         document.getElementById('base-admin').value = data.baseAdmin || '';
@@ -422,7 +319,6 @@
         renderStartMonths();
         calculateRent(false);
         renderTenants();
-        renderSavings();
         
         if (data.monthsData && data.monthsData.length > 0) {
             generateMonths(false);
@@ -462,40 +358,7 @@
 
     function toggleTheme() {
         document.documentElement.classList.toggle('dark');
-    }
-
-    function switchTab(tabId) {
-        document.getElementById('view-rent').classList.remove('active');
-        document.getElementById('view-savings').classList.remove('active');
-        document.getElementById(`view-${tabId}`).classList.add('active');
-
-        const bg = document.getElementById('body-bg');
-        const btnRent = document.getElementById('nav-rent');
-        const btnRentBg = document.getElementById('nav-rent-bg');
-        const btnSavings = document.getElementById('nav-savings');
-        const btnSavingsBg = document.getElementById('nav-savings-bg');
-
-        btnRent.className = "flex flex-col items-center justify-center w-16 relative text-slate-400 transition-colors";
-        btnSavings.className = "flex flex-col items-center justify-center w-16 relative text-slate-400 transition-colors";
-        btnRentBg.classList.replace('opacity-100', 'opacity-0');
-        btnSavingsBg.classList.replace('opacity-100', 'opacity-0');
-
-        if(tabId === 'rent') {
-            bg.className = "bg-dynamic-rent text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative";
-            btnRent.classList.add('text-rent-500');
-            btnRentBg.classList.replace('opacity-0', 'opacity-100');
-            
-            document.getElementById('blob1').className = "absolute top-[-10%] left-[-10%] w-64 h-64 bg-rent-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700";
-            document.getElementById('blob3').className = "absolute bottom-[-20%] left-[20%] w-80 h-80 bg-red-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700";
-        } else {
-            bg.className = "bg-dynamic-savings text-slate-800 dark:text-slate-100 min-h-screen transition-all duration-700 relative";
-            btnSavings.classList.add('text-savings-500');
-            btnSavingsBg.classList.replace('opacity-0', 'opacity-100');
-            
-            document.getElementById('blob1').className = "absolute top-[-10%] left-[-10%] w-64 h-64 bg-savings-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:opacity-20 transition-colors duration-700";
-            document.getElementById('blob3').className = "absolute bottom-[-20%] left-[20%] w-80 h-80 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700";
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        saveToLocal(); // Zapis jest wywoływany w innych momentach, tutaj czysto informacyjnie
     }
 
     let tenants = [];
@@ -571,7 +434,7 @@
         const currentSelected = parseInt(document.getElementById('start-month').value) || 0;
         
         container.innerHTML = shortMonthNames.map((m, index) => `
-            <button type="button" onclick="selectStartMonth(${index})" class="px-1.5 py-1.5 rounded-lg text-[10px] font-bold border transition-all flex flex-col items-center justify-center gap-0.5 active:scale-90 ${index === currentSelected ? 'bg-rent-500 text-white border-rent-500 shadow-md shadow-rent-500/30' : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400'}">
+            <button type="button" onclick="selectStartMonth(${index})" class="px-1.5 py-1.5 rounded-lg text-[10px] font-bold border transition-all flex flex-col items-center justify-center gap-0.5 active:scale-90 ${index === currentSelected ? 'bg-rentney-500 text-white border-rentney-500 shadow-md shadow-rentney-500/30' : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400'}">
                 <i class="ph-fill ph-calendar-blank text-base"></i>
                 <span>${m}</span>
             </button>
@@ -612,10 +475,10 @@
                 <div class="w-[30%] pr-1">
                     <p class="font-extrabold text-[13px] truncate">${t}</p>
                     <p class="text-[9px] text-slate-500 uppercase tracking-wide font-bold mt-0.5">Do zapłaty:</p>
-                    <p class="text-[15px] font-black text-rent-600 dark:text-rent-400 leading-none mt-0.5"><span id="req-${id}-${index}">0</span><span class="text-[10px] text-slate-400 ml-0.5">zł</span></p>
+                    <p class="text-[15px] font-black text-rentney-600 dark:text-rentney-400 leading-none mt-0.5"><span id="req-${id}-${index}">0</span><span class="text-[10px] text-slate-400 ml-0.5">zł</span></p>
                 </div>
                 <div class="w-[45%] px-1">
-                    <div class="relative flex items-center bg-white dark:bg-black/40 border border-transparent focus-within:border-rent-400 rounded-lg overflow-hidden transition-colors shadow-sm">
+                    <div class="relative flex items-center bg-white dark:bg-black/40 border border-transparent focus-within:border-rentney-400 rounded-lg overflow-hidden transition-colors shadow-sm">
                         <input type="number" id="paid-${id}-${index}" placeholder="Wpłata" class="w-full bg-transparent py-1.5 px-2 text-sm text-center outline-none font-bold" oninput="calcTenant(${id}, ${index})">
                     </div>
                 </div>
@@ -637,7 +500,7 @@
                         </h3>
                     </div>
                     <div class="text-right shrink-0 ml-2">
-                        <div class="relative flex items-center bg-white dark:bg-black/40 border border-rent-100 dark:border-white/10 focus-within:border-rent-500 rounded-lg overflow-hidden shadow-sm px-1.5 py-1">
+                        <div class="relative flex items-center bg-white dark:bg-black/40 border border-rentney-100 dark:border-white/10 focus-within:border-rentney-500 rounded-lg overflow-hidden shadow-sm px-1.5 py-1">
                             <span class="text-[8px] text-slate-400 font-bold uppercase tracking-widest mr-1 hidden sm:inline-block">Faktura:</span>
                             <input type="number" id="invoice-${id}" value="${totalBaseRent.toFixed(0)}" class="w-[3.5rem] bg-transparent text-right font-black text-xs outline-none" oninput="updateInvoice(${id})">
                             <span class="text-[9px] text-slate-500 font-bold ml-0.5">zł</span>
@@ -746,376 +609,6 @@
         if(autoSave) saveToLocal();
     }
 
-    let pockets = [];
-    let transactions = [];
-
-    function renderSavings() {
-        const total = pockets.reduce((sum, p) => sum + p.balance, 0);
-        document.getElementById('total-savings-display').innerHTML = total.toFixed(0) + ' <span class="text-xl text-white/70">zł</span>';
-
-        const pContainer = document.getElementById('pockets-container');
-        pContainer.innerHTML = '';
-        
-        if(pockets.length === 0) {
-             pContainer.innerHTML = '<div class="text-xs text-slate-400 p-3 w-full col-span-2 text-center">Brak kieszeni.</div>';
-        } else {
-            pockets.forEach(p => {
-                pContainer.innerHTML += `
-                    <div class="glass-card rounded-[1.25rem] p-3 relative overflow-hidden group flex flex-col justify-between min-h-[5.5rem]">
-                        <div class="absolute -right-4 -bottom-4 w-10 h-10 bg-savings-400/10 rounded-full blur-xl pointer-events-none"></div>
-                        <div class="flex justify-between items-start z-10 w-full mb-1">
-                            <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest truncate flex items-center pr-1 max-w-[70%]">
-                                <i class="ph-fill ph-folder-open text-savings-400 mr-1 shrink-0"></i> 
-                                <span class="truncate">${p.name}</span>
-                            </p>
-                            <div class="flex gap-1 shrink-0">
-                                <button onclick="openEditPocketModal(${p.id})" class="w-5 h-5 bg-blue-50 text-blue-500 dark:bg-blue-500/20 rounded-md flex items-center justify-center hover:bg-blue-100 active:scale-90 transition-all">
-                                    <i class="ph-bold ph-pencil-simple text-[9px]"></i>
-                                </button>
-                                <button onclick="deletePocket(${p.id})" class="w-5 h-5 bg-red-50 text-red-500 dark:bg-red-500/20 rounded-md flex items-center justify-center hover:bg-red-100 active:scale-90 transition-all">
-                                    <i class="ph-bold ph-trash text-[9px]"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <p class="text-base font-black text-slate-800 dark:text-white relative z-10 mt-auto">${p.balance.toFixed(2)} <span class="text-[9px] font-bold text-slate-400">zł</span></p>
-                    </div>
-                `;
-            });
-        }
-
-        const tContainer = document.getElementById('transactions-list');
-        if (transactions.length === 0) {
-            tContainer.innerHTML = `
-                <div class="text-center py-5">
-                    <i class="ph-fill ph-receipt text-3xl text-slate-200 dark:text-slate-700 mb-1"></i>
-                    <p class="text-slate-400 text-xs font-semibold">Historia jest pusta.</p>
-                </div>`;
-        } else {
-            tContainer.innerHTML = transactions.map(t => {
-                let iconClass, bgClass, colorClass, sign;
-                let subtitle = pockets.find(p => p.id == t.pocketId)?.name || 'Usunięta kieszeń';
-                
-                if (t.type === 'in') {
-                    iconClass = 'ph-trend-up'; bgClass = 'bg-green-50 text-green-500 dark:bg-green-500/20'; colorClass = 'text-green-500'; sign = '+';
-                } else if (t.type === 'out') {
-                    iconClass = 'ph-trend-down'; bgClass = 'bg-red-50 text-red-500 dark:bg-red-500/20'; colorClass = 'text-red-500'; sign = '-';
-                } else {
-                    iconClass = 'ph-arrows-left-right'; bgClass = 'bg-transfer-500/10 text-transfer-500'; colorClass = 'text-transfer-500'; sign = '';
-                    let toPocketName = pockets.find(p => p.id == t.toPocketId)?.name || 'Usunięta kieszeń';
-                    subtitle = `${subtitle} <i class="ph-bold ph-arrow-right mx-0.5 text-[8px]"></i> ${toPocketName}`;
-                }
-
-                return `
-                    <div class="flex items-center justify-between py-2 border-b border-slate-100 dark:border-white/5 last:border-0 group animate-fade-in">
-                        <div class="flex items-center gap-2.5 flex-1 min-w-0 pr-2">
-                            <div class="w-8 h-8 shrink-0 rounded-lg ${bgClass} flex items-center justify-center shadow-sm">
-                                <i class="ph-bold ${iconClass} text-sm"></i>
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <p class="font-extrabold text-[13px] truncate">${t.desc}</p>
-                                <p class="text-[9px] text-slate-400 font-bold uppercase mt-0.5 flex items-center truncate">
-                                    <i class="ph-fill ph-folder text-savings-400 mr-1 shrink-0"></i> 
-                                    <span class="truncate">${subtitle}</span>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 shrink-0">
-                            <p class="font-black text-[13px] ${colorClass} text-right leading-none">${sign}${t.amount.toFixed(2)}<br><span class="text-[8px] text-slate-400">zł</span></p>
-                            <div class="flex flex-col gap-1">
-                                <button onclick="openEditTransactionModal(${t.id})" class="w-6 h-6 bg-blue-50 text-blue-500 dark:bg-blue-500/20 rounded-md flex items-center justify-center active:scale-90 transition-all opacity-80 hover:opacity-100 shrink-0">
-                                    <i class="ph-bold ph-pencil-simple text-[10px]"></i>
-                                </button>
-                                <button onclick="deleteTransaction(${t.id})" class="w-6 h-6 bg-red-50 text-red-500 dark:bg-red-500/20 rounded-md flex items-center justify-center active:scale-90 transition-all opacity-80 hover:opacity-100 shrink-0">
-                                    <i class="ph-bold ph-trash text-[10px]"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).reverse().join('');
-        }
-    }
-
-    function toggleTransactions() {
-        const wrapper = document.getElementById('transactions-list-wrapper');
-        const icon = document.getElementById('trans-toggle-icon');
-        if(wrapper.style.maxHeight === '0px') {
-            wrapper.style.maxHeight = '2000px';
-            icon.style.transform = 'rotate(0deg)';
-        } else {
-            wrapper.style.maxHeight = '0px';
-            icon.style.transform = 'rotate(180deg)';
-        }
-    }
-
-    function openPocketModal() {
-        editingPocketId = null;
-        document.getElementById('pocket-modal-title').innerHTML = '<i class="ph-fill ph-folder-plus text-savings-500"></i> Nowa kieszeń';
-        document.getElementById('pocket-name').value = '';
-        document.getElementById('pocket-modal-btn').innerText = 'Utwórz';
-
-        const modal = document.getElementById('pocket-modal');
-        const panel = document.getElementById('pocket-panel');
-        const backdrop = document.getElementById('pocket-backdrop');
-        modal.classList.remove('hidden'); modal.classList.add('flex');
-        setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
-    }
-
-    function openEditPocketModal(id) {
-        editingPocketId = id;
-        const pocket = pockets.find(p => p.id === id);
-        
-        document.getElementById('pocket-modal-title').innerHTML = '<i class="ph-fill ph-pencil-simple text-savings-500"></i> Edytuj kieszeń';
-        document.getElementById('pocket-name').value = pocket.name;
-        document.getElementById('pocket-modal-btn').innerText = 'Zapisz zmiany';
-
-        const modal = document.getElementById('pocket-modal');
-        const panel = document.getElementById('pocket-panel');
-        const backdrop = document.getElementById('pocket-backdrop');
-        modal.classList.remove('hidden'); modal.classList.add('flex');
-        setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
-    }
-
-    function closePocketModal() {
-        const modal = document.getElementById('pocket-modal');
-        const panel = document.getElementById('pocket-panel');
-        const backdrop = document.getElementById('pocket-backdrop');
-        panel.classList.add('translate-y-full'); backdrop.classList.replace('opacity-100', 'opacity-0');
-        setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
-    }
-
-    function savePocket() {
-        const name = document.getElementById('pocket-name').value.trim();
-        if (name === "") { showToast("Podaj nazwę kieszeni!"); return; }
-        
-        if (editingPocketId) {
-            const pocket = pockets.find(p => p.id === editingPocketId);
-            if (pocket) pocket.name = name;
-            showToast("Zaktualizowano kieszeń!");
-        } else {
-            pockets.push({ id: Date.now(), name: name, balance: 0 });
-            showToast("Utworzono kieszeń!");
-        }
-        
-        closePocketModal();
-        renderSavings();
-        saveToLocal();
-    }
-
-    function deletePocket(id) {
-        if(confirm("Na pewno usunąć tę kieszeń? Jej zawartość przepadnie.")) {
-            pockets = pockets.filter(p => p.id !== id);
-            renderSavings();
-            saveToLocal();
-            showToast("Usunięto kieszeń!");
-        }
-    }
-
-    function openTransactionModal() {
-        if(pockets.length === 0) { showToast("Najpierw stwórz kieszeń!"); return; }
-        editingTransactionId = null;
-        
-        document.getElementById('trans-modal-title').innerHTML = '<i class="ph-fill ph-arrows-left-right text-savings-500"></i> Nowy ruch';
-        document.getElementById('trans-amount').value = '';
-        document.getElementById('trans-desc').value = '';
-        setType('in', document.getElementById('btn-type-in'));
-        renderPocketChips('trans-pocket-chips', 'trans-pocket-id');
-        renderPocketChips('trans-to-pocket-chips', 'trans-to-pocket-id', true);
-
-        const modal = document.getElementById('transaction-modal');
-        const panel = document.getElementById('trans-panel');
-        const backdrop = document.getElementById('trans-backdrop');
-        modal.classList.remove('hidden'); modal.classList.add('flex');
-        setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
-    }
-
-    function openEditTransactionModal(id) {
-        editingTransactionId = id;
-        const t = transactions.find(t => t.id === id);
-        
-        document.getElementById('trans-modal-title').innerHTML = '<i class="ph-fill ph-pencil-simple text-savings-500"></i> Edytuj ruch';
-        document.getElementById('trans-amount').value = t.amount;
-        document.getElementById('trans-desc').value = t.desc;
-        
-        setType(t.type, document.getElementById('btn-type-' + t.type));
-        renderPocketChips('trans-pocket-chips', 'trans-pocket-id');
-        renderPocketChips('trans-to-pocket-chips', 'trans-to-pocket-id', true);
-        
-        setTimeout(() => {
-            selectPocketChip(t.pocketId, 'trans-pocket-chips', 'trans-pocket-id');
-            if(t.type === 'transfer' && t.toPocketId) {
-                selectPocketChip(t.toPocketId, 'trans-to-pocket-chips', 'trans-to-pocket-id');
-            }
-        }, 50);
-
-        const modal = document.getElementById('transaction-modal');
-        const panel = document.getElementById('trans-panel');
-        const backdrop = document.getElementById('trans-backdrop');
-        modal.classList.remove('hidden'); modal.classList.add('flex');
-        setTimeout(() => { backdrop.classList.replace('opacity-0', 'opacity-100'); panel.classList.remove('translate-y-full'); }, 10);
-    }
-
-    function closeTransactionModal() {
-        const modal = document.getElementById('transaction-modal');
-        const panel = document.getElementById('trans-panel');
-        const backdrop = document.getElementById('trans-backdrop');
-        panel.classList.add('translate-y-full'); backdrop.classList.replace('opacity-100', 'opacity-0');
-        setTimeout(() => { modal.classList.add('hidden'); modal.classList.remove('flex'); }, 300);
-    }
-
-    function renderPocketChips(containerId, hiddenInputId, isTransferTo = false) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = pockets.map((p, index) => {
-            const isSelected = index === (isTransferTo && pockets.length > 1 ? 1 : 0);
-            return `
-            <button type="button" onclick="selectPocketChip(${p.id}, '${containerId}', '${hiddenInputId}')" id="chip-${containerId}-${p.id}" class="px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors ${isSelected ? 'bg-savings-500 text-white border-savings-500' : 'bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400'}">
-                <i class="ph-fill ph-folder"></i> ${p.name}
-            </button>
-        `}).join('');
-        
-        // ZAWSZE Ustawiaj poprawną wartość początkową (nawet podczas edycji), by uniknąć NaN
-        if(pockets.length > 0) {
-            document.getElementById(hiddenInputId).value = isTransferTo && pockets.length > 1 ? pockets[1].id : pockets[0].id;
-        }
-    }
-
-    function selectPocketChip(id, containerId, hiddenInputId) {
-        document.getElementById(hiddenInputId).value = id;
-        pockets.forEach(p => {
-            const chip = document.getElementById(`chip-${containerId}-${p.id}`);
-            if(chip) {
-                if (p.id === id) {
-                    chip.className = "px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors bg-savings-500 text-white border-savings-500";
-                } else {
-                    chip.className = "px-2.5 py-1 rounded-lg text-[10px] font-bold border transition-colors bg-transparent text-slate-500 border-slate-200 dark:border-white/10 dark:text-slate-400";
-                }
-            }
-        });
-    }
-
-    function setType(type, btn) {
-        document.getElementById('trans-type').value = type;
-        const bg = document.getElementById('type-bg');
-        const buttons = btn.parentElement.querySelectorAll('button');
-        const toPocketDiv = document.getElementById('trans-to-pocket-div');
-        const fromLabel = document.getElementById('pocket-from-label');
-        
-        buttons.forEach(b => {
-            b.classList.remove('text-green-600', 'text-red-600', 'text-transfer-500');
-            b.classList.add('text-slate-500');
-        });
-
-        if (type === 'in') {
-            bg.style.transform = 'translateX(0)';
-            btn.classList.add('text-green-600');
-            toPocketDiv.classList.add('hidden');
-            fromLabel.innerText = "Wybierz kieszeń";
-        } else if (type === 'out') {
-            bg.style.transform = 'translateX(100%)';
-            btn.classList.add('text-red-600');
-            toPocketDiv.classList.add('hidden');
-            fromLabel.innerText = "Wybierz kieszeń";
-        } else {
-            bg.style.transform = 'translateX(200%)';
-            btn.classList.add('text-transfer-500');
-            toPocketDiv.classList.remove('hidden');
-            fromLabel.innerText = "Z kieszeni";
-        }
-    }
-
-    function saveTransaction() {
-        const type = document.getElementById('trans-type').value;
-        const amountStr = document.getElementById('trans-amount').value.replace(',', '.');
-        const amount = parseFloat(amountStr);
-        let desc = document.getElementById('trans-desc').value.trim();
-        const pocketId = parseInt(document.getElementById('trans-pocket-id').value);
-
-        if (isNaN(amount) || amount <= 0) { showToast("Podaj prawidłową kwotę!"); return; }
-
-        let fromPkt = null;
-        let toPkt = null;
-
-        // 1. NAJPIERW BEZPIECZNA WALIDACJA KIESZENI
-        if (type === 'transfer') {
-            const toPocketId = parseInt(document.getElementById('trans-to-pocket-id').value);
-            if (isNaN(toPocketId)) { showToast("Wybierz docelową kieszeń!"); return; }
-            if (pocketId === toPocketId) { showToast("Wybierz różne kieszenie!"); return; }
-            
-            fromPkt = pockets.find(p => p.id === pocketId);
-            toPkt = pockets.find(p => p.id === toPocketId);
-            
-            if(!fromPkt || !toPkt) { showToast("Błąd kieszeni!"); return; }
-        } else {
-            fromPkt = pockets.find(p => p.id === pocketId);
-            if (!fromPkt) { showToast("Błąd kieszeni!"); return; }
-        }
-
-        // 2. DOPIERO TERAZ MOŻEMY COFNĄĆ STARY RUCH (jeśli edytujemy)
-        if (editingTransactionId) {
-            const oldTIndex = transactions.findIndex(t => t.id === editingTransactionId);
-            if (oldTIndex > -1) {
-                const oldT = transactions[oldTIndex];
-                if(oldT.type === 'in') {
-                    const p = pockets.find(p => p.id === oldT.pocketId);
-                    if(p) p.balance -= oldT.amount;
-                } else if(oldT.type === 'out') {
-                    const p = pockets.find(p => p.id === oldT.pocketId);
-                    if(p) p.balance += oldT.amount;
-                } else if(oldT.type === 'transfer') {
-                    const pFrom = pockets.find(p => p.id === oldT.pocketId);
-                    const pTo = pockets.find(p => p.id === oldT.toPocketId);
-                    if(pFrom) pFrom.balance += oldT.amount;
-                    if(pTo) pTo.balance -= oldT.amount;
-                }
-                transactions.splice(oldTIndex, 1);
-            }
-        }
-
-        // 3. I ZAPISUJEMY NOWY
-        if (type === 'transfer') {
-            fromPkt.balance -= amount;
-            toPkt.balance += amount;
-            transactions.push({
-                id: editingTransactionId || Date.now(), type: 'transfer', amount: amount, desc: desc || 'Transfer środków', pocketId: pocketId, toPocketId: toPkt.id
-            });
-        } else {
-            if (type === 'in') { fromPkt.balance += amount; } else { fromPkt.balance -= amount; }
-            transactions.push({
-                id: editingTransactionId || Date.now(), type: type, amount: amount, desc: desc || (type === 'in' ? 'Wpływ' : 'Wydatek'), pocketId: pocketId
-            });
-        }
-
-        closeTransactionModal();
-        renderSavings();
-        saveToLocal();
-        showToast(editingTransactionId ? "Zaktualizowano ruch!" : "Zapisano operację!");
-    }
-
-    function deleteTransaction(id) {
-        if(confirm("Cofnąć ten ruch i przywrócić saldo?")) {
-            const index = transactions.findIndex(t => t.id === id);
-            if (index > -1) {
-                const t = transactions[index];
-                if(t.type === 'in') {
-                    const p = pockets.find(p => p.id === t.pocketId);
-                    if(p) p.balance -= t.amount;
-                } else if(t.type === 'out') {
-                    const p = pockets.find(p => p.id === t.pocketId);
-                    if(p) p.balance += t.amount;
-                } else if(t.type === 'transfer') {
-                    const pFrom = pockets.find(p => p.id === t.pocketId);
-                    const pTo = pockets.find(p => p.id === t.toPocketId);
-                    if(pFrom) pFrom.balance += t.amount;
-                    if(pTo) pTo.balance -= t.amount;
-                }
-                transactions.splice(index, 1);
-                renderSavings();
-                saveToLocal();
-                showToast("Cofnięto operację.");
-            }
-        }
-    }
-
     function openSettingsModal() {
         const modal = document.getElementById('settings-modal');
         const panel = document.getElementById('settings-panel');
@@ -1137,7 +630,7 @@
         const blob = new Blob([dataStr], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         
-        let filename = document.getElementById('export-filename').value.trim() || "moje_finanse";
+        let filename = document.getElementById('export-filename').value.trim() || "rentney_backup";
         if (!filename.endsWith('.json')) filename += ".json";
         
         const a = document.createElement('a');
@@ -1168,7 +661,33 @@
         reader.readAsText(file);
     }
 
-    window.onload = loadFromLocal;
+    function init() {
+        // Logika splash screen - dodane zabezpieczenia
+        const hideSplash = () => {
+            const splash = document.getElementById('splash-screen');
+            const wrapper = document.getElementById('main-content-wrapper');
+            if(splash && !splash.classList.contains('hide-splash')) {
+                splash.classList.add('hide-splash');
+                if(wrapper) wrapper.classList.add('content-visible');
+                setTimeout(() => { if(splash.parentNode) splash.parentNode.removeChild(splash); }, 600);
+            }
+        };
+
+        setTimeout(hideSplash, 1000);
+        
+        // Zabezpieczenie: wymuś ukrycie po max 3 sekundach, gdyby podgląd działał wolniej
+        setTimeout(hideSplash, 3000);
+
+        loadFromLocal();
+    }
+
+    // Bezpieczniejsze odpalanie inicjalizacji (lepiej działa w oknach Preview)
+    if (document.readyState === 'complete') {
+        init();
+    } else {
+        window.addEventListener('load', init);
+        document.addEventListener('DOMContentLoaded', init);
+    }
 
 </script>
 
@@ -1184,4 +703,3 @@
 
 </body>
 </html>
-
