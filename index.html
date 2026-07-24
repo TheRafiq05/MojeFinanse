@@ -82,7 +82,6 @@
         
         html { font-size: 15px; }
 
-        /* Style ekranu ładowania */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ECFDF5; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease; }
         .dark #splash-screen { background: #022C22; }
         #splash-screen.hide-splash { opacity: 0; pointer-events: none; }
@@ -102,7 +101,6 @@
         <div id="blob3" class="absolute bottom-[-20%] left-[20%] w-80 h-80 bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:opacity-20 transition-colors duration-700"></div>
     </div>
 
-    <!-- Pływający Header -->
     <header class="fixed top-[40px] sm:top-[50px] left-4 right-4 z-40 glass-card rounded-[1.5rem] px-5 py-3 flex justify-between items-center shadow-md max-w-md mx-auto">
         <h1 id="app-title" class="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-rentney-gradientStart to-rentney-gradientEnd transition-all duration-500">
             Rentney
@@ -226,7 +224,6 @@
         </main>
     </div>
 
-    <!-- Modal: Ustawienia -->
     <div id="settings-modal" class="fixed inset-0 z-[60] hidden flex-col justify-end">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity opacity-0" id="settings-backdrop" onclick="closeSettingsModal()"></div>
         <div class="relative w-full max-w-md mx-auto bg-white dark:bg-darkCard rounded-t-[1.5rem] p-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] transform transition-transform translate-y-full shadow-2xl" id="settings-panel">
@@ -258,6 +255,7 @@
 
 <script>
     const STORAGE_KEY = 'rentneyAutoSaveData';
+    let tenants = [];
 
     function getAppStateData() {
         const data = {
@@ -296,6 +294,16 @@
     }
 
     function loadFromLocal() {
+        // Przywracanie motywu
+        const savedTheme = localStorage.getItem('rentneyTheme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else if (savedTheme === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+
         try {
             const str = localStorage.getItem(STORAGE_KEY);
             if(str) {
@@ -358,11 +366,9 @@
 
     function toggleTheme() {
         document.documentElement.classList.toggle('dark');
-        saveToLocal(); // Zapis jest wywoływany w innych momentach, tutaj czysto informacyjnie
+        const isDark = document.documentElement.classList.contains('dark');
+        localStorage.setItem('rentneyTheme', isDark ? 'dark' : 'light');
     }
-
-    let tenants = [];
-    let totalBaseRent = 0;
 
     function toggleSettings() {
         const content = document.getElementById('settings-content');
@@ -381,15 +387,18 @@
         const a = parseFloat(document.getElementById('base-admin').value.replace(',','.')) || 0;
         const e = parseFloat(document.getElementById('base-electric').value.replace(',','.')) || 0;
         
-        totalBaseRent = r + a + e;
-        document.getElementById('total-rent-display').innerHTML = totalBaseRent.toFixed(0) + ' <span class="text-xl text-slate-400 dark:text-slate-500">zł</span>';
+        let total = r + a + e;
+        document.getElementById('total-rent-display').innerHTML = total.toFixed(0) + ' <span class="text-xl text-slate-400 dark:text-slate-500">zł</span>';
         updatePerPerson();
         if(autoSave) saveToLocal();
     }
 
     function updatePerPerson() {
         const count = tenants.length || 1;
-        const perPerson = Math.round(totalBaseRent / count);
+        const r = parseFloat(document.getElementById('base-rent').value.replace(',','.')) || 0;
+        const a = parseFloat(document.getElementById('base-admin').value.replace(',','.')) || 0;
+        const e = parseFloat(document.getElementById('base-electric').value.replace(',','.')) || 0;
+        const perPerson = Math.round((r + a + e) / count);
         document.getElementById('per-person-display').innerText = perPerson.toFixed(0);
         document.getElementById('tenant-count').innerText = tenants.length;
     }
@@ -502,7 +511,7 @@
                     <div class="text-right shrink-0 ml-2">
                         <div class="relative flex items-center bg-white dark:bg-black/40 border border-rentney-100 dark:border-white/10 focus-within:border-rentney-500 rounded-lg overflow-hidden shadow-sm px-1.5 py-1">
                             <span class="text-[8px] text-slate-400 font-bold uppercase tracking-widest mr-1 hidden sm:inline-block">Faktura:</span>
-                            <input type="number" id="invoice-${id}" value="${totalBaseRent.toFixed(0)}" class="w-[3.5rem] bg-transparent text-right font-black text-xs outline-none" oninput="updateInvoice(${id})">
+                            <input type="number" id="invoice-${id}" value="0" class="w-[3.5rem] bg-transparent text-right font-black text-xs outline-none" oninput="updateInvoice(${id})">
                             <span class="text-[9px] text-slate-500 font-bold ml-0.5">zł</span>
                         </div>
                     </div>
@@ -513,6 +522,11 @@
             </div>
         `;
         container.innerHTML += card;
+        // Inicjalizacja faktury
+        const totalBaseRent = parseFloat(document.getElementById('base-rent').value.replace(',','.')) || 0;
+        const totalBaseAdmin = parseFloat(document.getElementById('base-admin').value.replace(',','.')) || 0;
+        const totalBaseElec = parseFloat(document.getElementById('base-electric').value.replace(',','.')) || 0;
+        document.getElementById(`invoice-${id}`).value = (totalBaseRent + totalBaseAdmin + totalBaseElec).toFixed(0);
         updateInvoice(id, false);
     }
 
@@ -661,45 +675,19 @@
         reader.readAsText(file);
     }
 
-    function init() {
-        // Logika splash screen - dodane zabezpieczenia
-        const hideSplash = () => {
-            const splash = document.getElementById('splash-screen');
-            const wrapper = document.getElementById('main-content-wrapper');
-            if(splash && !splash.classList.contains('hide-splash')) {
-                splash.classList.add('hide-splash');
-                if(wrapper) wrapper.classList.add('content-visible');
-                setTimeout(() => { if(splash.parentNode) splash.parentNode.removeChild(splash); }, 600);
-            }
-        };
-
-        setTimeout(hideSplash, 1000);
-        
-        // Zabezpieczenie: wymuś ukrycie po max 3 sekundach, gdyby podgląd działał wolniej
-        setTimeout(hideSplash, 3000);
-
-        loadFromLocal();
-    }
-
-    // Bezpieczniejsze odpalanie inicjalizacji (lepiej działa w oknach Preview)
-    if (document.readyState === 'complete') {
-        init();
-    } else {
-        window.addEventListener('load', init);
-        document.addEventListener('DOMContentLoaded', init);
-    }
-
+    // Inicjalizacja
+    const hideSplash = () => {
+        const splash = document.getElementById('splash-screen');
+        const wrapper = document.getElementById('main-content-wrapper');
+        if(splash && !splash.classList.contains('hide-splash')) {
+            splash.classList.add('hide-splash');
+            if(wrapper) wrapper.classList.add('content-visible');
+            setTimeout(() => { if(splash.parentNode) splash.parentNode.removeChild(splash); }, 600);
+        }
+    };
+    setTimeout(hideSplash, 1000);
+    setTimeout(hideSplash, 3000);
+    loadFromLocal();
 </script>
-
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(registration => { console.log('SW OK'); })
-                .catch(err => { console.log('SW Error: ', err); });
-        });
-    }
-</script>
-
 </body>
 </html>
